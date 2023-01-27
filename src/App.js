@@ -13,7 +13,7 @@ import {
   // useParams
 } from "react-router-dom";  
 import { DataList, StateCarousel, PageHead, NavLinks } from './components/lib';
-import { DataGrid } from './components/lib';
+import { DataGrid, Diagnostics } from './components/lib';
 import { getPagination } from './util/getPagination';
 import { StatePlayer, useStatePlayer } from './components/lib';
 
@@ -38,7 +38,7 @@ function Application() {
   const media = useStatePlayer();
   const tunes = useSkytunes();
   const navigate = useNavigate()
-  const { response, logo,  search_param, pageTitle, carouselImages } =  tunes.state.context; 
+  const { response, logo,  search_param, pageTitle, playlist_db, carouselImages } =  tunes.state.context; 
 
   const lists =  {
     'list.loaded': DataList,
@@ -48,7 +48,6 @@ function Application() {
     'list.loaded': 'list',
     'grid.loaded': 'grid'
   }
-
 
   const counter = getPagination([], {
     page: tunes.state.context.page,
@@ -89,79 +88,85 @@ function Application() {
   const selectedPage = pages[selectedKey];
 
   return (
-    <div className="App"> 
-        <PageHead page={selectedPage} pageTitle={pageTitle}/>
+    <> 
 
-    <Toolbar >
-      <Avatar src={logo} alt="sky-tunes" />
-      <Typography variant="h6" sx={{mr: 6, ml: 1}}>Skytunes</Typography>
-      {Object.keys(pages).map(page => <LiteButton 
-      onClick={() => navigate('/grid/' + page + '/1')}
-      variant={page === tunes.state.context.type ? 'contained' : 'text'}
-      key={page}>{pages[page]}</LiteButton>)}
+      {/* page header */}
+      <PageHead page={selectedPage} pageTitle={pageTitle}/>
 
-      <Spacer />
+      {/* toolbar */}
+      <Toolbar >
 
-      <IconTextField 
-        label="Search"
-        placeholder="Type a song, album or artist"
-        startIcon={<i className="fa-solid fa-magnifying-glass" />}
-        endIcon={ !search_param ? null : <i onClick={() => handleChange('')} className="fa-solid fa-xmark"/>}
-        value={search_param}
-        onChange={e => {
-          handleChange(e.target.value)
-        }}
-      />
+        {/* logo  */}
+        <Avatar src={logo} alt="sky-tunes" />
+        <Typography variant="h6" sx={{mr: 6, ml: 1}}>Skytunes</Typography>
 
-      <LiteButton variant="contained" onClick={() => navigate(`/search/${search_param}/1`)}>search</LiteButton>
-        
-    </Toolbar>
+        {/* navigation buttons */}
+        {Object.keys(pages).map(page => <LiteButton 
+        onClick={() => navigate('/grid/' + page + '/1')}
+        variant={page === tunes.state.context.type ? 'contained' : 'text'}
+        key={page}>{pages[page]}</LiteButton>)}
 
-    <Stack sx={{mt: 10, mb: 20}}>
-        {!!selectedKey && <NavLinks page={selectedPage} href={`/grid/${selectedKey}/1`} pageTitle={pageTitle} />}
+        <Spacer />
 
+        {/* search box */}
+        <IconTextField 
+          label="Search"
+          placeholder="Type a song, album or artist"
+          startIcon={<i className="fa-solid fa-magnifying-glass" />}
+          endIcon={ !search_param ? null : <i onClick={() => handleChange('')} className="fa-solid fa-xmark"/>}
+          value={search_param}
+          onChange={e => {
+            handleChange(e.target.value)
+          }}
+        />
+
+        <LiteButton variant="contained" onClick={() => navigate(`/search/${search_param}/1`)}>search</LiteButton>
+          
+      </Toolbar>
+
+      {/* main workspace */}
+      <Stack sx={{mt: 10, mb: 20}}>
+
+        {/* breadcrumbs  */}
+        <Flex between>
+          {!!selectedKey && <NavLinks page={selectedPage} href={`/grid/${selectedKey}/1`} pageTitle={pageTitle} />}
+
+          {/* debugger toggle button */}
+          <Box onClick={() => tunes.send('DEBUG')} sx={{ mr: 2 }}><i class="fa-solid fa-gear"></i></Box>
+        </Flex>
+
+        {/* carousel  */}
         {!!carouselImages && <StateCarousel images={carouselImages} />}
 
-
+        {/* hero image banner */}
         <Hero {...tunes.state.context.hero} page={pages[tunes.state.context.type]}/>
 
+        {/* pagination */}
+        {counter.pageCount > 1 && <Pagination
+          count={Number(counter.pageCount)}
+          page={Number(tunes.state.context.page)}
+          onChange={(a,b) => navigate(prefix + b)}
+        />}
 
-      {counter.pageCount > 1 && <Pagination
-        count={Number(counter.pageCount)}
-        page={Number(tunes.state.context.page)}
-        onChange={(a,b) => navigate(prefix + b)}
-      />}
-
-
-      {!!Form && <Form 
-        onPlay={handlePlay} 
-        FileKey={media.state.context.FileKey} 
-        {...tunes.state.context} 
-        navigate={navigate} 
-        records={response?.records}
-         />}
+        {/* records returned from the state machine  */}
+        {!!Form && <Form 
+          onPlay={handlePlay} 
+          FileKey={media.state.context.FileKey} 
+          {...tunes.state.context} 
+          navigate={navigate} 
+          playlist_db={playlist_db}
+          records={response?.records}
+          />}
   
-
-    </Stack>
-
-
+      </Stack>
+ 
+    {/* audio player */}
     <StatePlayer {...media} />
 
-    <pre>
-   {JSON.stringify(tunes.state.value,0,2)}
-[   {JSON.stringify(tunes.state.context.pageTitle,0,2)}]
-[   {JSON.stringify(tunes.state.context.row,0,2)}]
-   </pre>
-
-   {/* <pre>
-   {JSON.stringify(media.state.context,0,2)}
-   </pre>*/}
-   <pre>
-   {JSON.stringify(response,0,2)}
-   </pre> 
-
-
-    </div>
+    {/* debugger window */}
+    <Diagnostics {...tunes.diagnosticProps} open={tunes.state.context.debug} />
+ 
+    </>
   );
 }
 

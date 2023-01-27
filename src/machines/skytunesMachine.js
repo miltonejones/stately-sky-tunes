@@ -33,7 +33,14 @@ const skytunesMachine = createMachine({
             src: 'loadArtistInfo',
             onDone: [
               {
-                target:  'loaded',
+                target:  'playlist',
+                cond: context => !context.playlists,
+                actions: assign({
+                  hero:  (context, event) => event.data
+                })
+              },
+              {
+                target: "loaded",
                 actions: assign({
                   hero:  (context, event) => event.data
                 })
@@ -41,9 +48,31 @@ const skytunesMachine = createMachine({
             ]
           }
         },
+        playlist: {
+          invoke: {
+            src: 'loadPlaylists',
+            onDone: [
+              {
+                target: '#skytunes.list.loaded',
+                actions: 'assignPlaylistsToContext'
+              }
+            ],
+            onError: [
+              {
+                target: "#skytunes.error",
+                actions: "assignProblem",
+              }
+            ]
+          }
+        },  
         loaded: {
           on: {
             OPEN: '#skytunes.init', 
+            DEBUG: {
+              actions: assign({
+                debug: (context) => !context.debug
+              })
+            }, 
             CHANGE: {
               actions: assign({
                 search_param: (context, event) => event.value
@@ -53,6 +82,7 @@ const skytunesMachine = createMachine({
         }
       }
     },
+
     grid: {
       initial: "loading",
       states: {
@@ -80,6 +110,11 @@ const skytunesMachine = createMachine({
         loaded: {
           on: {
             OPEN: '#skytunes.init', 
+            DEBUG: {
+              actions: assign({
+                debug: (context) => !context.debug
+              })
+            },
             CHANGE: {
               actions: assign({
                 search_param: (context, event) => event.value
@@ -136,6 +171,20 @@ const skytunesMachine = createMachine({
         carouselImages
       }
     }),
+    assignPlaylistsToContext: assign((context,event) => {
+      const { records } = event.data;
+      if (records) {
+        const playlist_db = records.reduce ((out, rec) => {
+          out = out.concat(rec.related);
+          return out;
+        }, []);
+  
+        return {
+          playlists: event.data,
+          playlist_db
+        }
+      }
+    }),
     assignRequestParams: assign((context,event) => {
       return {
         ...event.data
@@ -173,6 +222,11 @@ export const useSkytunes = (onRefresh) => {
         } 
         return false;
       },
+      
+      loadPlaylists: async (context) => {
+       
+        return await getGroupByType('playlist', 1, 'ID', 'DESC');
+      },
       loadRequest: async (context) => {
         const { type, page, sort, direction, id,  search_param }  = context;
         if (!!search_param) {
@@ -197,7 +251,14 @@ export const useSkytunes = (onRefresh) => {
       },  
     },
   });
+  const diagnosticProps = {
+    id: skytunesMachine.id,
+    state,
+    send,
+    states: skytunesMachine.states
+  }
 
+  
   React.useEffect(() => {
     send({
       type: 'OPEN'
@@ -206,7 +267,13 @@ export const useSkytunes = (onRefresh) => {
 
   return {
     state,
-    send
+    send,
+    diagnosticProps
   }
 
 }
+
+
+
+
+

@@ -4,7 +4,7 @@ import { TuneList, Nowrap } from '../../../styled';
 import moment from 'moment';
  
  
-const DataList = ({ onPlay, records, FileKey, navigate }) => {
+const DataList = ({ onPlay, records, FileKey, playlist_db,navigate }) => {
   if (!records?.length) {
     return <>No records to display</>
   }
@@ -36,9 +36,17 @@ const DataList = ({ onPlay, records, FileKey, navigate }) => {
       key: 'trackTime',
       time: 1
     },
+    {
+      key: 'favorite',
+      favorite: 1
+    }
   ];
 
  const  trueProp = (record, field) => {
+    if (field.favorite) {
+      const ok = playlist_db && playlist_db.indexOf(record.FileKey) > -1;
+      return <i className={`fa-${ok?"solid":"regular"} fa-heart`}/> 
+    }
     if (field.time) {
       return !record[field.key]
         ? '0:00'
@@ -52,12 +60,13 @@ const DataList = ({ onPlay, records, FileKey, navigate }) => {
  return (
   <TuneList sx={{m: 2}}>
 
-  <Box>#</Box>
+  <Box>&nbsp;</Box>
   <Nowrap variant="subtitle2">Title</Nowrap>
   <Nowrap variant="subtitle2">Artist</Nowrap>
   <Nowrap variant="subtitle2">Album</Nowrap>
   <Nowrap variant="subtitle2">Genre</Nowrap>
   <Nowrap variant="subtitle2">Time</Nowrap>
+  <Box>&nbsp;</Box>
     {records.map(record => fields.map(field =>  (
     <Nowrap 
       variant="body2"
