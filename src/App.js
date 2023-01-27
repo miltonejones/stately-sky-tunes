@@ -1,23 +1,166 @@
-import logo from './logo.svg';
+ 
 import './App.css';
+import { useSkytunes } from './machines';
+import { LiteButton, Flex, IconTextField, TuneGrid, Spacer, Toolbar, Hero } from './styled';
+import { Avatar, Box, Pagination , Stack, Typography} from '@mui/material';
 
-function App() {
+import { 
+  BrowserRouter,  
+  Routes, 
+  Route,
+  useNavigate,
+  // useLocation,
+  // useParams
+} from "react-router-dom";  
+import { DataList, StateCarousel, PageHead, NavLinks } from './components/lib';
+import { DataGrid } from './components/lib';
+import { getPagination } from './util/getPagination';
+import { StatePlayer, useStatePlayer } from './components/lib';
+
+function App () {
+  return <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<Application  />} /> 
+      <Route path="/search/:param/:page" element={<Application  />} /> 
+      <Route path="/list/:type/:id" element={<Application  />} /> 
+      <Route path="/list/:type/:id/:page" element={<Application  />} />  
+      <Route path="/list/:type/:id/:page/:sort" element={<Application  />} />  
+      <Route path="/list/:type/:id/:page/:sort/:direction" element={<Application  />} />  
+      <Route path="/grid/:type" element={<Application  />} /> 
+      <Route path="/grid/:type/:page" element={<Application  />} />  
+      <Route path="/grid/:type/:page/:sort" element={<Application  />} />  
+      <Route path="/grid/:type/:page/:sort/:direction" element={<Application  />} />  
+    </Routes>
+</BrowserRouter>
+}
+
+function Application() {
+  const media = useStatePlayer();
+  const tunes = useSkytunes();
+  const navigate = useNavigate()
+  const { response, logo,  search_param, pageTitle, carouselImages } =  tunes.state.context; 
+
+  const lists =  {
+    'list.loaded': DataList,
+    'grid.loaded': DataGrid
+  }
+  const types =  {
+    'list.loaded': 'list',
+    'grid.loaded': 'grid'
+  }
+
+
+  const counter = getPagination([], {
+    page: tunes.state.context.page,
+    count:  response?.count,
+    pageSize: 100, 
+  })
+
+  const listKey = Object.keys(lists).find(tunes.state.matches)
+  const Form = lists[listKey];
+  const pages = {
+    music: 'Library',
+    album: 'Albums',
+    artist: 'Artists',
+    genre: 'Genres',
+    playlist: 'Playlists',
+  }
+
+  const typeKey =  tunes.state.context.type === 'music'
+    ? 'grid'
+    : types[listKey]
+
+  const prefix = typeKey === 'list' 
+    ? `/${typeKey}/${tunes.state.context.type}/${tunes.state.context.id}/`
+    : `/${typeKey}/${tunes.state.context.type}/`
+
+  const handlePlay = file => {
+    media.handlePlay(file.FileKey, response.records, file)
+  }
+
+  const handleChange = value  => {
+    tunes.send({
+      type: 'CHANGE',
+      value 
+     })
+  }
+
+  const selectedKey = Object.keys(pages).find(key => key === tunes.state.context.type);;
+  const selectedPage = pages[selectedKey];
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App"> 
+        <PageHead page={selectedPage} pageTitle={pageTitle}/>
+
+    <Toolbar >
+      <Avatar src={logo} alt="sky-tunes" />
+      <Typography variant="h6" sx={{mr: 6, ml: 1}}>Skytunes</Typography>
+      {Object.keys(pages).map(page => <LiteButton 
+      onClick={() => navigate('/grid/' + page + '/1')}
+      variant={page === tunes.state.context.type ? 'contained' : 'text'}
+      key={page}>{pages[page]}</LiteButton>)}
+
+      <Spacer />
+
+      <IconTextField 
+        label="Search"
+        placeholder="Type a song, album or artist"
+        startIcon={<i className="fa-solid fa-magnifying-glass" />}
+        endIcon={ !search_param ? null : <i onClick={() => handleChange('')} className="fa-solid fa-xmark"/>}
+        value={search_param}
+        onChange={e => {
+          handleChange(e.target.value)
+        }}
+      />
+
+      <LiteButton variant="contained" onClick={() => navigate(`/search/${search_param}/1`)}>search</LiteButton>
+        
+    </Toolbar>
+
+    <Stack sx={{mt: 10, mb: 20}}>
+        {!!selectedKey && <NavLinks page={selectedPage} href={`/grid/${selectedKey}/1`} pageTitle={pageTitle} />}
+
+        {!!carouselImages && <StateCarousel images={carouselImages} />}
+
+
+        <Hero {...tunes.state.context.hero} page={pages[tunes.state.context.type]}/>
+
+
+      {counter.pageCount > 1 && <Pagination
+        count={Number(counter.pageCount)}
+        page={Number(tunes.state.context.page)}
+        onChange={(a,b) => navigate(prefix + b)}
+      />}
+
+
+      {!!Form && <Form 
+        onPlay={handlePlay} 
+        FileKey={media.state.context.FileKey} 
+        {...tunes.state.context} 
+        navigate={navigate} 
+        records={response?.records}
+         />}
+  
+
+    </Stack>
+
+
+    <StatePlayer {...media} />
+
+    <pre>
+   {JSON.stringify(tunes.state.value,0,2)}
+[   {JSON.stringify(tunes.state.context.pageTitle,0,2)}]
+[   {JSON.stringify(tunes.state.context.row,0,2)}]
+   </pre>
+
+   {/* <pre>
+   {JSON.stringify(media.state.context,0,2)}
+   </pre>*/}
+   <pre>
+   {JSON.stringify(response,0,2)}
+   </pre> 
+
+
     </div>
   );
 }
