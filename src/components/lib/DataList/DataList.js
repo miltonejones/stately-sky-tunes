@@ -4,7 +4,7 @@ import { TuneList, Nowrap } from '../../../styled';
 import moment from 'moment';
  
  
-const DataList = ({ onPlay, records, FileKey, playlist_db,navigate }) => {
+const DataList = ({ onPlay, onList, records, FileKey, playlist_db,navigate }) => {
   if (!records?.length) {
     return <>No records to display</>
   }
@@ -73,6 +73,7 @@ const DataList = ({ onPlay, records, FileKey, playlist_db,navigate }) => {
       bold={FileKey === record.FileKey}
       hover={!!field.href || !!field.play}
       onClick={() => {
+        !!field.favorite && onList && onList(record)
         !!field.href && navigate(`/list/${field.href}/${record[field.id]}`);
         !!field.play && onPlay && onPlay(record)
       }}

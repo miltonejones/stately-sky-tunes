@@ -1,6 +1,6 @@
  
 import './App.css';
-import { useSkytunes } from './machines';
+import { useSkytunes, usePlaylist } from './machines';
 import { LiteButton, Flex, IconTextField, TuneGrid, Spacer, Toolbar, Hero } from './styled';
 import { Avatar, Box, Pagination , Stack, Typography} from '@mui/material';
 
@@ -8,11 +8,9 @@ import {
   BrowserRouter,  
   Routes, 
   Route,
-  useNavigate,
-  // useLocation,
-  // useParams
+  useNavigate, 
 } from "react-router-dom";  
-import { DataList, StateCarousel, PageHead, NavLinks } from './components/lib';
+import { DataList, PlaylistDrawer, StateCarousel, PageHead, NavLinks } from './components/lib';
 import { DataGrid, Diagnostics } from './components/lib';
 import { getPagination } from './util/getPagination';
 import { StatePlayer, useStatePlayer } from './components/lib';
@@ -35,10 +33,12 @@ function App () {
 }
 
 function Application() {
+  const stateList = usePlaylist();
   const media = useStatePlayer();
   const tunes = useSkytunes();
   const navigate = useNavigate()
-  const { response, logo,  search_param, pageTitle, playlist_db, carouselImages } =  tunes.state.context; 
+  const { response, logo,  search_param, pageTitle,  carouselImages } =  tunes.state.context; 
+  const { playlist_db } =  stateList.state.context; 
 
   const lists =  {
     'list.loaded': DataList,
@@ -151,6 +151,7 @@ function Application() {
         {/* records returned from the state machine  */}
         {!!Form && <Form 
           onPlay={handlePlay} 
+          onList={stateList.handleOpen}
           FileKey={media.state.context.FileKey} 
           {...tunes.state.context} 
           navigate={navigate} 
@@ -162,6 +163,8 @@ function Application() {
  
     {/* audio player */}
     <StatePlayer {...media} />
+
+    <PlaylistDrawer {...stateList} />
 
     {/* debugger window */}
     <Diagnostics {...tunes.diagnosticProps} open={tunes.state.context.debug} />

@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Avatar,
   Card,
   IconButton,
   Paper,
@@ -8,13 +9,13 @@ import {
   Box,
   LinearProgress,
   Typography,
-  Drawer,
-  Badge,
+  Drawer, 
   styled,
 } from '@mui/material';
 import Marquee from 'react-fast-marquee';
 import { useMachine } from '@xstate/react'; 
 import { audioMachine } from '../../../machines';
+import { Flex } from '../../../styled';
 import { AudioConnector, frameLooper } from './eq'; 
 
 const Bureau = styled(Paper)(({ open }) => ({
@@ -129,6 +130,8 @@ export const useStatePlayer = () => {
     });
   };
 
+  const handleList =  () => send('LIST')
+
   const icon = state.matches('opened.playing') ? (
     <i class="fa-regular fa-circle-pause"></i>
   ) : (
@@ -149,6 +152,7 @@ export const useStatePlayer = () => {
     handleSeek,
     handleSkip,
     handlePlay,
+    handleList,
     handleEq,
     ...state.context,
   };
@@ -208,6 +212,7 @@ const StatePlayer = ({
   trackList,
   eq,
   retries,
+  listopen,
   ...rest
 }) => {
   // const ref = useRef(null);
@@ -215,13 +220,39 @@ const StatePlayer = ({
   const red =
     'linear-gradient(0deg, rgba(2,160,5,1) 0%, rgba(226,163,15,1) 18px, rgba(255,0,42,1) 30px)';
 
-
+    // "ID": 212,
+    // "Title": "Prologue",
+    // "FileKey": "Prologue.opus.mp3",
+    // "albumImage": "https://s3.amazonaws.com/fapbucket.com/assets/a902ebb0-8d3a-a2e9-5b36-5070ab3c50f5.jpg",
+    // "trackId": 84469,
+    // "Genre": "R&B/Soul",
+    // "genreKey": "r&bsoul",
+    // "albumFk": 94,
+    // "albumArtistFk": 73,
+    // "artistFk": 73,
+    // "discNumber": 1,
+    // "trackTime": 47627,
+    // "trackNumber": 1,
+    // "FileSize": 1084077,
+    // "explicit": null,
+    // "artistName": "Parliament",
+    // "albumName": "Gloryhallastoopid",
+    // "albumArtistName": "Parliament"
   // if (idle) return <i />;
   return (
     <>
-      {/* <Drawer anchor="top" open={!idle}>
-        <pre>{JSON.stringify(trackList, 0, 2)}</pre>
-      </Drawer> */}
+      <Drawer anchor="left" onClose={handleList} open={listopen}><Box sx={{p: 2}}>
+        {!!trackList && trackList.map(track => 
+          <Flex spacing={1} sx={{mb: 1}} onClick={() => handlePlay(track.FileKey, trackList, track)}>
+          <Avatar src={track.albumImage} />
+          <Stack>
+          <Typography variant="body2">{(FileKey === track.FileKey) && <i class="fa-solid fa-volume-high"></i>} {track.Title}</Typography>
+          <Typography variant="caption">{track.artistName || track.albumName}</Typography>
+          </Stack>
+        </Flex>
+       )} </Box>
+        {/* <pre>{JSON.stringify(trackList, 0, 2)}</pre> */}
+      </Drawer>
 
       <Bureau
         elevation={4}
@@ -255,9 +286,7 @@ const StatePlayer = ({
           )}
 
           <Stack sx={{ width: 300 }}>
-            <Badge badgeContent={retries} color="secondary">
-              <Typography>{artistName}</Typography>
-            </Badge>
+          <Typography>{artistName}</Typography>
             <Text scrolling={scrolling}>
               <Typography sx={{ whiteSpace: 'nowrap ' }} variant="body2">
                 {Title}

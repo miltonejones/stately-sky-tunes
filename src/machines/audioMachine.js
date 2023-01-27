@@ -164,6 +164,11 @@ export const audioMachine = createMachine(
                 target: '#audio_player.replay', 
                 actions: 'assignNextTrackToContext'
               },
+              LIST: {
+                actions: assign({
+                  listopen: context => !context.listopen
+                })
+              }
             },
           },
           paused: {
@@ -176,6 +181,11 @@ export const audioMachine = createMachine(
                 target: '#audio_player.replay',
                 actions: ['assignSourceToContext'],
               },
+              LIST: {
+                actions: assign({
+                  listopen: context => !context.listopen
+                })
+              }
             },
           },
         },

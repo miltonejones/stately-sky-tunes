@@ -224,7 +224,6 @@ export const useSkytunes = (onRefresh) => {
       },
       
       loadPlaylists: async (context) => {
-       
         return await getGroupByType('playlist', 1, 'ID', 'DESC');
       },
       loadRequest: async (context) => {
@@ -239,6 +238,7 @@ export const useSkytunes = (onRefresh) => {
         return await getGroupByType(type, page, sort, direction)
       },
       loadRequestParams: async(context) => {
+        
         return {
           type ,
           page,
@@ -246,7 +246,8 @@ export const useSkytunes = (onRefresh) => {
           direction,
           id,
           search_param: param,
-          carouselImages:  null
+          carouselImages:  null,
+          ...requestProps[type]
         }
       },  
     },
@@ -273,7 +274,24 @@ export const useSkytunes = (onRefresh) => {
 
 }
 
-
+const requestProps = {
+  album: {
+    sort: 'discNumber,trackNumber',
+    direction: 'ASC'
+  },
+  artist: {
+    sort: 'albumFk, discNumber, trackNumber',
+    direction: 'ASC'
+  },
+  playlist: {
+    sort: 'ID',
+    direction: 'DESC'
+  },
+  genre: {
+    sort: 'Title',
+    direction: 'DESC'
+  }
+}
 
 
 

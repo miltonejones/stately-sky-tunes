@@ -8,7 +8,7 @@ const Flex = styled(Box)(({ theme, between, spacing, bottom }) => ({
   display: 'flex',
   borderBottom: bottom ? `solid 1px ${theme.palette.divider}` : '',
   alignItems: 'center',
-  justifyContent: between ? 'space-between' : 'center'
+  justifyContent: between ? 'space-between' : 'flex-start'
 }))
 
 export default Flex;
