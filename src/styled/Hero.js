@@ -1,43 +1,49 @@
+import React from "react";
+import { styled, Collapse, Typography, Box } from "@mui/material";
 
-import React from 'react';
-import { styled, Collapse, Typography, Box } from '@mui/material';
+const Banner = styled(Box)(() => ({
+  width: "100vw",
+  height: "40vh",
+  position: "relative",
+  overflow: "hidden",
+  "& img": {
+    width: "100%",
+    position: "absolute",
+    top: "-50%",
+  },
+}));
 
-
-const Banner = styled(Box)(({})=> ({
-  width: '100vw',
-  height: '40vh',
-  position: 'relative',
-  overflow: 'hidden',
-  '& img': {
-    width: '100%',
-    position:'absolute',
-    top:  '-50%'
-  }
-}))
-
-const TitleBox = styled(Box)(({})=> ({ 
-  position: 'absolute',
+const TitleBox = styled(Box)(() => ({
+  position: "absolute",
   top: 200,
-  left: 40 
-}))
+  left: 40,
+}));
 
 const Hero = ({ page, imageLg, Name, TrackCount }) => {
   if (!imageLg) {
-    return <i />
+    return <i />;
   }
-  return <Collapse in={!!imageLg}>
-
-    {!!imageLg && <Banner>
-    <img src={imageLg} />
-    <TitleBox  sx={{color: 'white', mixBlendMode:  'difference'}}>
-      <Typography sx={{lineHeight: 1}} variant="button">{page}</Typography>
-      <Typography sx={{lineHeight: 0.7}} variant="h4">{Name}</Typography>
-      <Typography sx={{lineHeight: 1.2}} variant="body2">{TrackCount} tracks in your library</Typography>
-    </TitleBox>
-  </Banner>}
-  
-  </Collapse>
-}
+  return (
+    <Collapse in={!!imageLg}>
+      {!!imageLg && (
+        <Banner>
+          <img src={imageLg} alt={Name} />
+          <TitleBox sx={{ color: "white", mixBlendMode: "difference" }}>
+            <Typography sx={{ lineHeight: 1 }} variant="button">
+              {page}
+            </Typography>
+            <Typography sx={{ lineHeight: 0.7 }} variant="h4">
+              {Name}
+            </Typography>
+            <Typography sx={{ lineHeight: 1.2 }} variant="body2">
+              {TrackCount} tracks in your library
+            </Typography>
+          </TitleBox>
+        </Banner>
+      )}
+    </Collapse>
+  );
+};
 
 export default Hero;
 /**

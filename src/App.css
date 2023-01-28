@@ -1,16 +1,25 @@
- i {
+i {
   cursor: pointer;
- }
+}
 
- i:hover  {
-  color: red
- }
+body {
+  margin: 0;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+i:hover {
+  color: red;
+}
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
-} 
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

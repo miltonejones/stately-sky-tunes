@@ -5,6 +5,7 @@ import PageHead from "./PageHead/PageHead";
 import Diagnostics from "./Diagnostics/Diagnostics";
 import PlaylistDrawer from "./PlaylistDrawer/PlaylistDrawer";
 import StateCarousel from "./StateCarousel/StateCarousel";
+import TrackMenuDrawer from "./TrackMenuDrawer/TrackMenuDrawer";
 import StatePlayer, { useStatePlayer } from "./StatePlayer/StatePlayer";
 
 export {
@@ -16,5 +17,6 @@ export {
   Diagnostics,
   useStatePlayer,
   PlaylistDrawer,
-  NavLinks
-}
+  NavLinks,
+  TrackMenuDrawer,
+};

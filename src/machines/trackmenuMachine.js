@@ -1,200 +1,206 @@
-import { createMachine, assign } from 'xstate';
-import { useMachine } from '@xstate/react'; 
+import { createMachine, assign } from "xstate";
+import { useMachine } from "@xstate/react";
+import { useNavigate } from "react-router-dom";
 
-export  const trackmenuMachine = createMachine({
-  id: "track_menu",
-  initial: "idle",
-  states: {
-    idle: {
-      on: {
-        OPEN: {
-          target: "opened",
-          actions: "assignTrack",
+export const trackmenuMachine = createMachine(
+  {
+    id: "track_menu",
+    initial: "idle",
+    states: {
+      idle: {
+        on: {
+          OPEN: {
+            target: "opened",
+            actions: "assignTrack",
+          },
         },
       },
-    },
-    opened: {
-      initial: "idle",
-      states: {
-        idle: {
-          on: {
-            QUEUE: {
-              target: "queue",
-            },
-            GO: {
-              target: "navigate",
-              actions: "assignLocation",
-            },
-            ADD: {
-              target: "playlist",
-            },
-            EDIT: {
-              target: "#track_menu.editing",
-            },
-          },
-        },
-        queue: {
-          invoke: {
-            src: "addToQueue",
-            onDone: [
-              {
-                target: "closing",
-                actions: "logResponse",
+      opened: {
+        initial: "idle",
+        states: {
+          idle: {
+            on: {
+              QUEUE: {
+                target: "queue",
               },
-            ],
-          },
-        },
-        closing: {
-          invoke: {
-            src: "setResponse",
-            onDone: [
-              {
+              GO: {
+                target: "navigate",
+                actions: "assignLocation",
+              },
+              ADD: {
+                target: "playlist",
+              },
+              EDIT: {
+                target: "#track_menu.editing",
+              },
+              CLOSE: {
                 target: "#track_menu.idle",
-                actions: assign({ open: false }),
+                actions: assign({
+                  open: false,
+                }),
               },
-            ],
+            },
           },
-        },
-        navigate: {
-          invoke: {
-            src: "handleNavigation",
-            onDone: [
-              {
-                target: "closing",
-              },
-            ],
+          queue: {
+            invoke: {
+              src: "addToQueue",
+              onDone: [
+                {
+                  target: "closing",
+                  actions: "logResponse",
+                },
+              ],
+            },
           },
-        },
-        playlist: {
-          invoke: {
-            src: "openPlaylist",
-            onDone: [
-              {
-                target: "closing",
-              },
-            ],
+          closing: {
+            invoke: {
+              src: "setResponse",
+              onDone: [
+                {
+                  target: "#track_menu.idle",
+                  actions: assign({ open: false }),
+                },
+              ],
+            },
+          },
+          navigate: {
+            invoke: {
+              src: "handleNavigation",
+              onDone: [
+                {
+                  target: "closing",
+                },
+              ],
+            },
+          },
+          playlist: {
+            invoke: {
+              src: "openPlaylist",
+              onDone: [
+                {
+                  target: "closing",
+                },
+              ],
+            },
           },
         },
       },
-    },
-    editing: {
-      initial: "idle",
-      states: {
-        idle: {
-          on: {
-            LOOKUP: {
-              target: "itunes",
-            },
-            CLOSE: {
-              target: "#track_menu.opened.idle",
-            },
-            SAVE: {
-              target: "saving",
-            },
-          },
-        },
-        itunes: {
-          initial: "loading",
-          states: {
-            loading: {
-              invoke: {
-                src: "iTunesSearch",
-                onDone: [
-                  {
-                    target: "loaded",
-                    actions: "assignResults",
-                  },
-                ],
-                onError: [
-                  {
-                    target: "error",
-                  },
-                ],
+      editing: {
+        initial: "idle",
+        states: {
+          idle: {
+            on: {
+              LOOKUP: {
+                target: "itunes",
               },
-            },
-            loaded: {
-              on: {
-                CLOSE: {
-                  target: "#track_menu.editing.idle",
-                  actions: "assignSuggestion",
-                },
-              },
-            },
-            error: {
-              on: {
-                RECOVER: {
-                  target: "#track_menu.editing.idle",
-                },
-              },
-            },
-          },
-        },
-        saving: {
-          invoke: {
-            src: "saveTrack",
-            onDone: [
-              {
+              CLOSE: {
                 target: "#track_menu.opened.idle",
-                actions: "assignResponse",
               },
-            ],
+              SAVE: {
+                target: "saving",
+              },
+            },
+          },
+          itunes: {
+            initial: "loading",
+            states: {
+              loading: {
+                invoke: {
+                  src: "iTunesSearch",
+                  onDone: [
+                    {
+                      target: "loaded",
+                      actions: "assignResults",
+                    },
+                  ],
+                  onError: [
+                    {
+                      target: "error",
+                    },
+                  ],
+                },
+              },
+              loaded: {
+                on: {
+                  CLOSE: {
+                    target: "#track_menu.editing.idle",
+                    actions: "assignSuggestion",
+                  },
+                },
+              },
+              error: {
+                on: {
+                  RECOVER: {
+                    target: "#track_menu.editing.idle",
+                  },
+                },
+              },
+            },
+          },
+          saving: {
+            invoke: {
+              src: "saveTrack",
+              onDone: [
+                {
+                  target: "#track_menu.opened.idle",
+                  actions: "assignResponse",
+                },
+              ],
+            },
           },
         },
       },
     },
+    context: { track: {}, open: false },
+    predictableActionArguments: true,
+    preserveActionOrder: true,
   },
-  context: { track: {},  open: false },
-  predictableActionArguments: true,
-  preserveActionOrder: true,
-},
-{
-  actions: { 
-    assignProblem: assign((context, event) => {
-      return {
-        errorMsg: event.data.message,
-        stack: event.data.stack
-      }
-    }),
-    assignTrack: assign((context, event) => {
-      return {
-        track: event.track,
-        open: true
-      }
-    }),
-    assignLocation: assign((context, event) => {
-      return {
-        href: event.href
-      }
-    }),
-    logResponse: assign((context, event) => {
-      return event
-    }),
-    assignSuggestion: assign((context, event) => {
-      return event
-    }),
-    assignResponse: assign((context, event) => {
-      return event
-    }),
-    
+  {
+    actions: {
+      assignProblem: assign((context, event) => {
+        return {
+          errorMsg: event.data.message,
+          stack: event.data.stack,
+        };
+      }),
+      assignTrack: assign((context, event) => {
+        return {
+          track: event.track,
+          open: true,
+        };
+      }),
+      assignLocation: assign((context, event) => {
+        return {
+          href: event.href,
+        };
+      }),
+      logResponse: assign((context, event) => {
+        return event;
+      }),
+      assignSuggestion: assign((context, event) => {
+        return event;
+      }),
+      assignResponse: assign((context, event) => {
+        return event;
+      }),
+    },
   }
-});
+);
 
-export const useTrackmenuMachine = () => {
-
+export const useTrackmenuMachine = (onResponse) => {
+  const navigate = useNavigate();
   const [state, send] = useMachine(trackmenuMachine, {
-    services: {  
-      addToQueue: async (context) => { 
-      }, 
-      setResponse: async (context) => { 
-      }, 
-      handleNavigation: async (context) => { 
-      }, 
-      openPlaylist: async (context) => { 
-      }, 
-      iTunesSearch: async (context) => { 
-      }, 
-      saveTrack: async (context) => { 
-      }, 
+    services: {
+      addToQueue: async (context) => {},
+      setResponse: async (context) => {
+        onResponse && onResponse(context.response);
+      },
+      handleNavigation: async (context) => {
+        navigate(context.href);
+      },
+      openPlaylist: async (context) => {},
+      iTunesSearch: async (context) => {},
+      saveTrack: async (context) => {},
     },
   });
 
@@ -203,22 +209,28 @@ export const useTrackmenuMachine = () => {
     states: trackmenuMachine.states,
     state,
     send,
-  }
+  };
 
-  const handleOpen = track => { 
+  const handleGoto = (href) => {
     send({
-      type: 'OPEN',
-      track
-    })
-  }
- 
-   
+      type: "GO",
+      href,
+    });
+  };
+
+  const handleOpen = (track) => {
+    send({
+      type: "OPEN",
+      track,
+    });
+  };
 
   return {
     state,
     send,
-    handleOpen, 
-    diagnosticProps, 
-  }
-
-}
+    ...state.context,
+    handleOpen,
+    handleGoto,
+    diagnosticProps,
+  };
+};
