@@ -11,6 +11,11 @@ const DataList = ({
   FileKey,
   playlist_db,
   navigate,
+  type,
+  page,
+  id,
+  direction ,
+  sort: sortKey
 }) => {
   if (!records?.length) {
     return <>No records to display</>;
@@ -23,25 +28,32 @@ const DataList = ({
     {
       key: "Title",
       play: 1,
+      id: "Title",
+      label: "Title"
     },
     {
       key: "artistName",
       href: "artist",
       id: "artistFk",
+      label: "Artist"
     },
     {
       key: "albumName",
       href: "album",
       id: "albumFk",
+      label: "Album"
     },
     {
       key: "Genre",
       href: "genre",
       id: "Genre",
+      label: "Genre"
     },
     {
       key: "trackTime",
       time: 1,
+      id: "trackTime",
+      label: "Time"
     },
     {
       key: "favorite",
@@ -75,16 +87,24 @@ const DataList = ({
     return record[field.key];
   };
 
+  const prefix = [type === 'music' ? 'grid' : 'list',type,id,page||1].filter(f => !!f).join('/')
+  const dir = direction === 'DESC' ? 'ASC' : 'DESC'
+  const sortIcon = <i className={`fa-solid fa-caret-${dir === 'ASC' ? 'up' : 'down'}`}></i>
+
   return (
-    <TuneList sx={{ m: 2 }}>
-      <Box>&nbsp;</Box>
+<>
+{/* [{type}][{page}][{id}][{direction}]---[{prefix}][{sortKey}] */}
+<TuneList sx={{ m: 2 }}>
+      {fields.map(field =>  <Nowrap hover bold={sortKey === field.key} onClick={() => navigate(`/${prefix}/${field.key}/${dir}`)} variant="subtitle2"
+        >{!!field.key ? field.label : <>&nbsp;</>}{" "}{sortKey === field.key && <>{sortIcon}</>}</Nowrap>)}
+      {/* <Box>&nbsp;</Box>
       <Nowrap variant="subtitle2">Title</Nowrap>
       <Nowrap variant="subtitle2">Artist</Nowrap>
       <Nowrap variant="subtitle2">Album</Nowrap>
       <Nowrap variant="subtitle2">Genre</Nowrap>
       <Nowrap variant="subtitle2">Time</Nowrap>
       <Box>&nbsp;</Box>
-      <Box>&nbsp;</Box>
+      <Box>&nbsp;</Box> */}
       {records.map((record) =>
         fields.map((field) => (
           <Nowrap
@@ -114,6 +134,7 @@ const DataList = ({
         ))
       )}
     </TuneList>
+</>
   );
 };
 DataList.defaultProps = {};

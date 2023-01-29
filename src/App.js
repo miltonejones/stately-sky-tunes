@@ -9,9 +9,9 @@ import {
   Toolbar,
   Hero,
 } from "./styled";
-import { Avatar, Box, Pagination, Stack, Typography, LinearProgress } from "@mui/material";
+import { Avatar, Box, Collapse, Pagination, Stack, Typography, LinearProgress } from "@mui/material";
 
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate, useParams } from "react-router-dom";
 import {
   DataList,
   PlaylistDrawer,
@@ -26,6 +26,7 @@ import {
 import { DataGrid, Diagnostics } from "./components/lib";
 import { getPagination } from "./util/getPagination";
 import { StatePlayer, useStatePlayer } from "./components/lib";
+import { typeIcons } from './styled';
 
 function App() {
   return (
@@ -55,6 +56,7 @@ function App() {
 }
 
 function Application() { 
+  const { sort: headerSort } = useParams();
   const stateList = usePlaylist();
   const stateSkyTunes = useSkytunes(files =>  statePlayer.handlePlay(files[0].FileKey, files, files[0]));
   const statePlayer = useStatePlayer((artistFk) => stateSkyTunes.send({ type: 'HERO',  artistFk }));
@@ -70,6 +72,9 @@ function Application() {
     carouselImages,
     hero,
     debug, 
+    sort: sortKey,
+    showSort,
+    direction,
     page: currentPage,
     type: mediaType,
     id: mediaID,
@@ -97,6 +102,8 @@ function Application() {
   });
 
   const listKey = Object.keys(forms).find(stateSkyTunes.state.matches);
+  const isLoaded = ["list","grid"].find(stateSkyTunes.state.matches);
+  const isGrid = stateSkyTunes.state.matches("grid.loaded");
   const Form = forms[listKey];
   const pages = {
     music: "Library",
@@ -130,6 +137,20 @@ function Application() {
   );
   const selectedPage = !!search_param ? "Search" : pages[selectedKey];
 
+  const sortPage = (num, field, dir) => {
+    const url = [
+      typeKey,
+      mediaType,
+      mediaID,
+      num,
+      field,
+      dir
+
+    ].filter(k => !!k)
+    .join('/')
+    navigate(`/${url}`);
+  }
+ 
   const interfaceProps = {
     onPlay: handlePlay,
     onList: stateList.handleOpen,
@@ -137,6 +158,7 @@ function Application() {
     onAuto: stateSkyTunes.handleAuto,
     onTab: (value) => stateSkyTunes.send({type: 'TAB', value}),
     FileKey: statePlayer.state.context.FileKey,
+    sortPage,
     navigate,
     memory,
     playlist_db,
@@ -144,6 +166,9 @@ function Application() {
     ...stateSkyTunes.state.context
   }
 
+  const openPage = num => {
+    sortPage(num, sortKey, direction) 
+  }
  
 
   return (
@@ -245,11 +270,12 @@ function Application() {
             )
              }
  
-         {!['splash', 'find'].some(stateSkyTunes.state.matches) &&   <ChipMenu value={mediaType} 
+         {!['splash', 'find'].some(stateSkyTunes.state.matches) &&  isLoaded && <ChipMenu value={mediaType} 
             onChange={(val) => navigate(!val ? "/grid/music/1" : `/grid/${val}/1`)}
             options={Object.keys(pages).map(value => ({
             value,
-            label: pages[value]
+            label: pages[value],
+            icon: typeIcons[value]
           }))}/>}
           </Flex>
  
@@ -264,14 +290,56 @@ function Application() {
         <Hero {...hero} page={pages[mediaType]} />
  
         {/* pagination */}
-        <Flex sx={{m: 1}}>
+        <Flex sx={{ml: 1, mr: 4, mt: 2}} spacing={2}>
           {counter.pageCount > 1 && (
             <Pagination
               count={Number(counter.pageCount)}
               page={Number(currentPage)}
-              onChange={(a, b) => navigate(prefix + b)}
+              onChange={(a, b) => openPage(b)}
             />
           )}
+          
+          <Spacer />
+
+          {isGrid && <> 
+            <i className="fa-solid fa-arrow-up-a-z"
+              onClick={() => {
+                stateSkyTunes.send({
+                  type: "CHANGE",
+                  key: 'showSort',
+                  value: !showSort,
+                });
+              }}
+              ></i>
+              <Collapse orientation="horizontal" in={showSort}>
+                 <Flex>
+                 
+                  {[mediaType === 'genre' ? 'Genre' : (
+                    mediaType === 'playlist' ? 'Title' : 'Name'
+                  ), 'TrackCount'].map(key => (
+                    <LiteButton
+                    size="small"
+                      rounded onClick={() => sortPage(currentPage, key, direction === 'ASC' ? 'DESC' : 'ASC')}
+                      variant={sortKey === key ? "contained" : "text"}
+                      key={key}
+                    >
+                      {key}
+                    </LiteButton>
+                  ))}
+                </Flex>                
+              </Collapse>
+          </>}
+          {/* </>}`/${typeKey}/${mediaType}/1` */}
+
+          { !!headerSort && isLoaded && <LiteButton
+            size="small"
+            onClick={() => navigate('/' + [typeKey,mediaType,mediaID, currentPage]
+                .filter(e => !!e)
+                .join('/'))}
+            startIcon={<i className="fa-solid fa-arrow-up-a-z"/>}>
+              reset sort
+            </LiteButton>}
+
         </Flex>
         {/* records returned from the state machine  */}
         {!!Form &&  <Form {...interfaceProps}/> }

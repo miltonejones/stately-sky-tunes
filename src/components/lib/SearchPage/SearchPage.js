@@ -44,9 +44,10 @@ const ArtistList = ({ records, onClick }) => {
 
 const SearchPage = ({searches, search_param, onPlay , memory, history, navigate, FileKey, onTab, selected_search}) => {
   if (!searches) return <>
-  <Divider textAlign="left" sx={{m: 1}}>Recent listens</Divider>
+  <Nowrap variant="h5" sx={{p: 2}}>Explore recent listens</Nowrap>
+  <Divider textAlign="left" sx={{m: 1}}>Listen again</Divider>
   {!!memory && <TuneGrid sx={{m:  3}}>
-    {memory.map(rec => <InfoCard 
+    {memory.slice(memory.length - 15).map(rec => <InfoCard 
       selected={FileKey === rec.FileKey}
       onClick={() => onPlay(rec, [rec])}
       key={rec.ID}
@@ -56,7 +57,7 @@ const SearchPage = ({searches, search_param, onPlay , memory, history, navigate,
   </TuneGrid>}
   <Divider textAlign="left" sx={{m: 1}}>Jump back in</Divider>
   {!!history && <TuneGrid sx={{m:  3}}>
-    {history.map(rec => <InfoCard 
+    {history.slice(history.length - 15).map(rec => <InfoCard 
       onClick={() => navigate(`/list/artist/${rec.ID}`)}
       key={rec.ID}
       {...rec} 

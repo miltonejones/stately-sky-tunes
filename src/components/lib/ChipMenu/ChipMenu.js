@@ -1,7 +1,7 @@
 import React from 'react';
 import { styled, Box, Chip, Collapse } from '@mui/material';
 import { useSelector } from "../../../machines";
-import { Flex } from "../../../styled";
+import { Flex, LiteButton, typeIcons } from '../../../styled';
   
 const ChipMenu = ({ options, value, onChange }) => {
   const menu = useSelector(onChange)
@@ -9,7 +9,7 @@ const ChipMenu = ({ options, value, onChange }) => {
     <Flex spacing={1} sx={{mr: 2}}> 
  
       {!!(menu.selected || value) && value !== 'music' && <i onClick={menu.handleClose} className="fa-solid fa-xmark"></i>}
-{/* [{menu.selected}][{value}] */}
+ 
       {options
         .filter(option => option.value !== 'music')
         .map(option =>  (
@@ -17,12 +17,14 @@ const ChipMenu = ({ options, value, onChange }) => {
           orientation="horizontal" 
           in={!value || value === 'music' || value === option.value}
         >
-          <Chip size="small"
-            onClick={() => menu.handleClick(option.value)}
-            label={option.label} 
+        <LiteButton 
+            rounded 
+            size="small"
+            startIcon={typeIcons[option.value]}
+            onClick={() => menu.handleClick(option.value)} 
             color="primary" 
-            variant={option.value === value ? "filled" : "outlined"} 
-          />
+            variant={option.value === value ? "contained" : "outlined"} 
+          >{option.label}  </LiteButton>
         </Collapse>))}
     </Flex>
  );

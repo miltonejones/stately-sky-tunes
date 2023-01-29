@@ -5,6 +5,9 @@ import { Flex, Spacer, Nowrap, LiteButton } from "../../../styled";
 import { AutoSelect, Diagnostics } from "..";
 
 const TrackMenuDrawer = ({ track, open, busy, state, diagnosticProps, results, debug, handleGoto, send }) => {
+  
+
+
   const navLinks = [
     {
       label: "View Artist",

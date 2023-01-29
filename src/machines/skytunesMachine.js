@@ -312,9 +312,9 @@ const skytunesMachine = createMachine(
                 }),
               },
               CHANGE: {
-                actions: assign({
-                  search_param: (context, event) => event.value,
-                }),
+                actions: assign((context, event) => ({
+                  [event.key || 'search_param']: event.value
+                })), 
               },
             },
           },
@@ -486,16 +486,17 @@ export const useSkytunes = (onRefresh) => {
         return location.pathname;
       },
       loadRequestParams: async (context) => { 
-        const props = !!id ? requestProps[type] : listProps[type];
+        const innerProps = !!id ? requestProps[type] : listProps[type];
+        const sortProps = !!sort ? { sort, direction } : innerProps; 
         return {
           type,
           page,
-          sort,
-          direction,
           id,
           search_param: param,
           carouselImages: null,
-          ...props,
+          ...sortProps,
+          // sort,
+          // direction,
         };
       },
     },
