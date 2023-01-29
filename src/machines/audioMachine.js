@@ -262,12 +262,14 @@ export const audioMachine = createMachine(
       assignResultsToContext: assign((context, event) => {
         return {
           player: event.data,
+          memory: getPersistedTracks()
         };
       }),
       assignNextTrackToContext: assign((context, event) => {
         const index =
           context.trackList.map((f) => f.FileKey).indexOf(context.FileKey) + 1;
         const track = context.trackList[index];
+        persistTrack(track);
         return {
           ...track,
           FileKey: track.FileKey,
@@ -276,6 +278,8 @@ export const audioMachine = createMachine(
         };
       }),
       assignSourceToContext: assign((context, event) => {
+        const { value, options, trackList, type, ...rest} = event;
+        persistTrack(rest); 
         return {
           ...event,
           FileKey: event.value,
@@ -287,3 +291,16 @@ export const audioMachine = createMachine(
     },
   }
 );
+
+
+
+const COOKIE_NAME = 'track-memory';
+const persistTrack = track => {
+  const memory = JSON.parse(localStorage.getItem(COOKIE_NAME) || "[]");
+  const update = memory.find(f => f.ID === track.ID)
+    ? memory 
+    : memory.concat(track);
+  localStorage.setItem(COOKIE_NAME, JSON.stringify(update));
+}
+
+const getPersistedTracks = () => JSON.parse(localStorage.getItem(COOKIE_NAME) || "[]")

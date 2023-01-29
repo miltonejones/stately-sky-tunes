@@ -19,7 +19,9 @@ import {
   PageHead,
   NavLinks,
   TrackMenuDrawer,
-  Splash
+  ChipMenu,
+  Splash,
+  SearchPage
 } from "./components/lib";
 import { DataGrid, Diagnostics } from "./components/lib";
 import { getPagination } from "./util/getPagination";
@@ -30,6 +32,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Application />} />
+        <Route path="/find" element={<Application />} />
+        <Route path="/find/:param" element={<Application />} />
         <Route path="/search/:param/:page" element={<Application />} />
         <Route path="/list/:type/:id" element={<Application />} />
         <Route path="/list/:type/:id/:page" element={<Application />} />
@@ -72,10 +76,12 @@ function Application() {
   } = stateSkyTunes.state.context;
 
   const { playlist_db } = stateList.state.context;
+  const { memory } = statePlayer.state.context;
 
   const forms = {
     "hero": DataList,
     "splash": Splash,
+    "find": SearchPage,
     "list.loaded": DataList,
     "grid.loaded": DataGrid,
   };
@@ -108,8 +114,8 @@ function Application() {
       ? `/${typeKey}/${mediaType}/${mediaID}/`
       : `/${typeKey}/${mediaType}/`;
 
-  const handlePlay = (file) => {
-    statePlayer.handlePlay(file.FileKey, response.records, file);
+  const handlePlay = (file, records) => {
+    statePlayer.handlePlay(file.FileKey, records || response.records, file);
   };
 
   const handleChange = (value) => {
@@ -129,8 +135,10 @@ function Application() {
     onList: stateList.handleOpen,
     onMenu: stateMenu.handleOpen,
     onAuto: stateSkyTunes.handleAuto,
+    onTab: (value) => stateSkyTunes.send({type: 'TAB', value}),
     FileKey: statePlayer.state.context.FileKey,
     navigate,
+    memory,
     playlist_db,
     records: response?.records || response,
     ...stateSkyTunes.state.context
@@ -159,8 +167,22 @@ function Application() {
           home
         </LiteButton>
 
+        <LiteButton
+          onClick={() => navigate("/grid/music/1")}
+          variant={mediaType === 'music' ? "contained" : "text"}
+        >
+          library
+        </LiteButton>
+
+        <LiteButton
+          variant={stateSkyTunes.state.matches("find") ? "contained" : "text"}
+          onClick={() => navigate(`/find`)}
+        >
+          search
+        </LiteButton>
+
         {/* navigation buttons */}
-        {Object.keys(pages).map((pageType) => (
+        {/* {Object.keys(pages).map((pageType) => (
           <LiteButton
             onClick={() => navigate("/grid/" + pageType + "/1")}
             variant={pageType === mediaType ? "contained" : "text"}
@@ -168,7 +190,7 @@ function Application() {
           >
             {pages[pageType]}
           </LiteButton>
-        ))}
+        ))} */}
 
         <Spacer /> 
         {/* search box */}
@@ -188,7 +210,9 @@ function Application() {
             )
           }
           value={search_param}
-          onKeyUp={e => e.keyCode === 13 && navigate(`/search/${search_param}/1`)}
+          onKeyUp={e => e.keyCode === 13 && navigate(stateSkyTunes.state.matches("find")
+            ? `/find/${search_param}`
+            : `/search/${search_param}/1`)}
           onChange={(e) => {
             handleChange(e.target.value);
           }}
@@ -206,47 +230,49 @@ function Application() {
         <i class="fa-solid fa-gear"></i>
       </Box>
       </Toolbar>
-
       {/* main workspace */}
       <Stack sx={{ mt: 9, mb: 20 }}>
         {/* breadcrumbs  */}
-        { !stateSkyTunes.state.matches('splash') && 
-            !stateSkyTunes.busy && 
-            !!selectedKey && 
-            (
             <Flex between>
-              {!!selectedKey && (
-                <NavLinks
-                  navigate={navigate}
-                  page={selectedPage}
-                  href={`/grid/${selectedKey}/1`}
-                  pageTitle={pageTitle}
-                />
-              )}
-
+        { !['splash', 'find'].some(stateSkyTunes.state.matches) &&  
+            !!selectedKey && !!selectedKey && (
+              <NavLinks
+                navigate={navigate}
+                page={selectedPage}
+                href={`/grid/${selectedKey}/1`}
+                pageTitle={pageTitle}
+              />
+            )
+             }
+ 
+         {!['splash', 'find'].some(stateSkyTunes.state.matches) &&   <ChipMenu value={mediaType} 
+            onChange={(val) => navigate(!val ? "/grid/music/1" : `/grid/${val}/1`)}
+            options={Object.keys(pages).map(value => ({
+            value,
+            label: pages[value]
+          }))}/>}
           </Flex>
-          )}
  
         {stateSkyTunes.busy &&  <LinearProgress variant="indeterminate" sx={{width: '100vw'}} color="primary"/> }
-        
+   
+ 
  
         {/* carousel  */}
         {!!carouselImages && <StateCarousel images={carouselImages} />}
 
         {/* hero image banner */}
         <Hero {...hero} page={pages[mediaType]} />
-
+ 
         {/* pagination */}
-        {counter.pageCount > 1 && (
-          <Box sx={{m: 1}}>
+        <Flex sx={{m: 1}}>
+          {counter.pageCount > 1 && (
             <Pagination
               count={Number(counter.pageCount)}
               page={Number(currentPage)}
               onChange={(a, b) => navigate(prefix + b)}
             />
-          </Box>
-        )}
-
+          )}
+        </Flex>
         {/* records returned from the state machine  */}
         {!!Form &&  <Form {...interfaceProps}/> }
       </Stack>

@@ -102,7 +102,7 @@ const TrackMenuDrawer = ({ track, open, busy, state, diagnosticProps, results, d
         </Collapse>
    
         <Collapse in={state.matches("editing.idle")}>
-          <EditForm send={send} {...track} />
+          {state.matches("editing.idle") && <EditForm send={send} {...track} />}
         </Collapse>
    
         <Collapse in={state.matches("opened.idle")}>

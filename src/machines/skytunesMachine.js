@@ -13,27 +13,133 @@ import {
 } from "../connector";
 import { useParams, useLocation } from "react-router-dom";
 
+const searchTypes = ['music', 'album', 'artist']
+
 const skytunesMachine = createMachine(
   {
     id: "skytunes",
     initial: "init",
     states: {
       init: {
-        invoke: {
-          src: "loadRequestParams",
-          onDone: [
-            {
-              target: "grid",
-              actions: "assignRequestParams",
-            }, 
-          ],
-          onError: [
-            {
-              target: "error",
-              actions: "assignProblem",
+        initial: 'go',
+        states: {
+          locate: {
+            invoke: {
+              src: "getLocation",
+              onDone: [
+                {
+                  target: "#skytunes.find",
+                  cond: (context, event) => event.data.indexOf("find") > -1
+                },
+                {
+                  target: "#skytunes.grid"
+                }
+              ]
+            }
+          },
+          go: {
+
+            invoke: {
+              src: "loadRequestParams",
+              onDone: [
+                {
+                  target: "locate",
+                  actions: "assignRequestParams",
+                }, 
+              ],
+              onError: [
+                {
+                  target: "#skytunes.error",
+                  actions: "assignProblem",
+                },
+              ],
             },
-          ],
-        },
+          }
+        }
+      },
+      find: {
+        initial: "check",
+        states: {
+          check: {
+            after: {
+              1: [
+                {
+                target: "idle", 
+                cond: context => !context.search_param
+              },
+              {
+                target: "lookup", 
+                actions: assign(({
+                  search_index: 0,
+                  search_type: searchTypes[0]
+                }))
+              }
+            ]
+            },
+          },
+          lookup: {
+            initial: 'find',
+            states: {
+              next: {
+                after: {
+                  1: [
+                    {
+                      target: "find",
+                      cond: context => context.search_index < searchTypes.length,
+                      actions: assign(({ 
+                        search_type: context => searchTypes[context.search_index]
+                      }))
+                    },
+                    {
+                      target: "#skytunes.find.idle",
+                      actions: assign(({
+                        selected_search: 0
+                      }))
+                    },
+                  ]
+                }
+              },
+              find: {
+                invoke: {
+                  src: "searchGroup",
+                  onDone: [
+                    {
+                      target: "next", 
+                      actions: assign((context, event) => ({
+                       search_index: context.search_index + 1,
+                       searches: {
+                        ...context.searches,
+                        [context.search_type]: event.data
+                       }
+                      }))
+                    },
+
+                  ]
+                }
+              }
+            }
+          },
+          idle: {
+            on: {
+              OPEN: "#skytunes.init",
+              DEBUG: {
+                actions: assign({
+                  debug: (context) => !context.debug,
+                }),
+              },
+              CHANGE: {
+                actions: assign({
+                  search_param: (context, event) => event.value,
+                }),
+              },
+              TAB: {
+                actions: assign({
+                  selected_search: (context, event) => event.value,
+                }),
+              },
+            }
+          }
+        }
       },
       splash:{
         initial: 'init',
@@ -164,7 +270,6 @@ const skytunesMachine = createMachine(
           },
         },
       },
-
       grid: {
         initial: "loading",
         states: {
@@ -343,17 +448,19 @@ export const useSkytunes = (onRefresh) => {
         }
         return false;
       },
-
       playDashTracks: async (context) => {
         onRefresh(context.items.related.records);
         // alert (JSON.stringify(context.items.related.records,0,2))
       },
-
       loadDashTracks: async (context) => {
         return await getGroupById(context.dashType, context.dashID, 1, 'trackNumber', 'ASC');
       },
       loadPlaylists: async (context) => {
         return await getGroupByType("playlist", 1, "ID", "DESC");
+      },
+      searchGroup: async (context) => {
+        const { search_type, search_param } = context;
+        return await searchGroupByType(search_type, search_param, 1); 
       },
       loadRequest: async (context) => {
         const { type, page, sort, direction, id, search_param } = context;
@@ -368,7 +475,10 @@ export const useSkytunes = (onRefresh) => {
         }
         return await getGroupByType(type, page, sort, direction);
       },
-      loadRequestParams: async (context) => {
+      getLocation: async() => {
+        return location.pathname;
+      },
+      loadRequestParams: async (context) => { 
         return {
           type,
           page,

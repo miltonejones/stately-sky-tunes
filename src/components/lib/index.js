@@ -8,6 +8,8 @@ import StateCarousel from "./StateCarousel/StateCarousel";
 import TrackMenuDrawer from "./TrackMenuDrawer/TrackMenuDrawer";
 import AutoSelect from "./AutoSelect/AutoSelect";
 import Splash from "./Splash/Splash";
+import SearchPage from "./SearchPage/SearchPage";
+import ChipMenu from "./ChipMenu/ChipMenu";
 import StatePlayer, { useStatePlayer } from "./StatePlayer/StatePlayer";
 
 export {
@@ -21,6 +23,8 @@ export {
   useStatePlayer,
   PlaylistDrawer,
   NavLinks,
+  SearchPage,
   Splash,
+  ChipMenu,
   TrackMenuDrawer,
 };
