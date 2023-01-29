@@ -3,11 +3,11 @@ import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 
-const NavLinks = ({ page, href, pageTitle }) => {
+const NavLinks = ({ page, href, pageTitle, navigate }) => {
   if (!pageTitle) {
     return (
       <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
-        <Link underline="hover" color="inherit" href="/">
+        <Link underline="hover" color="inherit" onClick={() => navigate('/')}>
           Home
         </Link>
         <Typography color="text.primary">{page}</Typography>
@@ -16,10 +16,10 @@ const NavLinks = ({ page, href, pageTitle }) => {
   }
   return (
     <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
-      <Link underline="hover" color="inherit" href="/">
+      <Link underline="hover" color="inherit"  onClick={() => navigate('/')}>
         Home
       </Link>
-      <Link underline="hover" color="inherit" href={href}>
+      <Link underline="hover" color="inherit"  onClick={() => navigate(href)}>
         {page}
       </Link>
       <Typography color="text.primary">{pageTitle}</Typography>

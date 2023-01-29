@@ -182,7 +182,7 @@ const Progress = ({ progress, handleSeek, src }) => {
     return (
       <>
         <LinearProgress />
-        <Typography>Loading {src?.substr(0, 50)}...</Typography>
+        <Typography variant="caption">Loading {src?.substr(0, 50)}...</Typography>
       </>
     );
   return (
@@ -215,7 +215,7 @@ const StatePlayer = ({
   handlePlay,
   handleSkip,
   handleList,
-  handleEq,
+  handleEq, 
 
   // context vars
   src,
@@ -310,9 +310,6 @@ const StatePlayer = ({
           </Stack>
 
           <Stack direction="row" sx={{ alignItems: "center" }}>
-            <IconButton>
-            {favoriteIcon}
-            </IconButton>
             {!!handleList && (
               <IconButton onClick={handleList}>
                 <i class="fa-solid fa-list-check"></i>
@@ -323,6 +320,9 @@ const StatePlayer = ({
               {icon}
             </IconButton>
             <ThirtyButton direction="right" onClick={() => handleSkip(30)} />
+            <IconButton onClick={() => send('END')}>
+              <i class="fa-solid fa-forward"></i>
+            </IconButton>
           </Stack>
 
           <Typography variant="caption">{current_time_formatted}</Typography>
@@ -342,6 +342,9 @@ const StatePlayer = ({
             )}
           </Box>
 
+            <IconButton>
+            {favoriteIcon}
+            </IconButton>
           <Typography variant="caption">{duration_formatted}</Typography>
 
           {!!coords && eq && (
