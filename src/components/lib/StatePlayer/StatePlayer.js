@@ -8,13 +8,14 @@ import {
   Slider,
   Box,
   LinearProgress,
+  Popover,
   Typography,
   Drawer,
   styled,
 } from "@mui/material";
 import Marquee from "react-fast-marquee";
 import { useMachine } from "@xstate/react";
-import { audioMachine } from "../../../machines";
+import { audioMachine, useMenu } from "../../../machines"; 
 import { Flex } from "../../../styled";
 import { AudioConnector, frameLooper } from "./eq";
 import { Diagnostics } from "..";
@@ -196,6 +197,27 @@ const Progress = ({ progress, handleSeek, src }) => {
   );
 };
 
+const VolumeMenu = ({ volume, onChange }) => {
+  const menu = useMenu(onChange)
+  const { anchorEl } = menu.state.context;
+  const className = volume > 0 
+    ? "fa-solid fa-volume-high"
+    : "fa-solid fa-volume-xmark"
+  return <>
+     <i onClick={menu.handleClick} class={className}></i>
+     {/* {JSON.stringify(menu.state.value)}
+     {JSON.stringify(!!anchorEl)} */}
+     <Popover anchorEl={anchorEl} open={!!anchorEl} onClose={menu.handleClose()}>
+      <Flex spacing={2} sx={{ p: 2, width: 200}}>
+      <i onClick={() => menu.handleClose (0)()} className={className}></i>
+        <Slider value={volume} min={0} max={1} step={0.1} onChange={(e, num) => {
+          menu.handleClose (num)()
+        }} /> 
+      </Flex>
+   </Popover>
+  </>
+}
+
 const StatePlayer = ({
   // handleDiagnoticsClose,
   diagnosticProps,
@@ -220,6 +242,7 @@ const StatePlayer = ({
   // context vars
   src,
   owner,
+  volume,
   progress,
   duration,
   scrolling,
@@ -323,6 +346,7 @@ const StatePlayer = ({
             <IconButton onClick={() => send('END')}>
               <i class="fa-solid fa-forward"></i>
             </IconButton>
+            {/* [{volume}] */}
           </Stack>
 
           <Typography variant="caption">{current_time_formatted}</Typography>
@@ -385,6 +409,12 @@ const StatePlayer = ({
               </Card>
             </Box>
           )}
+          <VolumeMenu volume={volume} onChange={val => {
+            send({
+              type: 'SOUND',
+              value: val
+            })
+          }}/>
             <i onClick={() => onMenu(rest)} className="fa-solid fa-ellipsis-vertical"></i>
           <i onClick={handleClose} className="fa-solid fa-xmark"></i>
           <Box onClick={handleDebug} sx={{ mr: 2 }}>

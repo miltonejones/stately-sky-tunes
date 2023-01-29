@@ -178,6 +178,9 @@ export const audioMachine = createMachine(
                   [event.key]: !context[event.key],
                 })),
               }, 
+              SOUND: {
+                actions: "assignVolume",
+              }, 
             },
           },
           paused: {
@@ -212,6 +215,12 @@ export const audioMachine = createMachine(
           duration: 0,
           current_time_formatted: "0:00",
         };
+      }),
+      assignVolume: assign((context, event) => {
+        context.player.volume = event.value;
+        return {
+          volume: event.value,
+        }
       }),
       pausePlayer: assign((context, event) => {
         context.player.pause();
@@ -262,6 +271,7 @@ export const audioMachine = createMachine(
       assignResultsToContext: assign((context, event) => {
         return {
           player: event.data,
+          volume: event.data.volume,
           memory: getPersistedTracks()
         };
       }),

@@ -62,9 +62,9 @@ const SearchPage = ({searches, search_param, onPlay , memory, history, navigate,
       {...rec} 
       />)}
   </TuneGrid>}
-    <pre>
+    {/* <pre>
       {JSON.stringify({memory, history}, 0, 2)}
-    </pre>
+    </pre> */}
   </>
   const icons = {
     music: <i class="fa-solid fa-music"></i>,

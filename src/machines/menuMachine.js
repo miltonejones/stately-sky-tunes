@@ -52,7 +52,7 @@ export const useMenu = (onChange) => {
   const [state, send] = useMachine(menuMachine, {
     services: {
       menuClicked: async (context, event) => { 
-        onChange(event.value);
+        onChange && onChange(event.value);
       }, 
     },
   });
@@ -62,11 +62,12 @@ export const useMenu = (onChange) => {
       type: 'close',
       value,
     });
-  const handleClick = (event) =>
-    send({
-      type: 'open',
-      anchorEl: event.currentTarget,
-    });
+  const handleClick = (event) =>  { 
+  send({
+    type: 'open',
+    anchorEl: event.currentTarget,
+  });
+  }
 
   const diagnosticProps = {
     id: menuMachine.id,
