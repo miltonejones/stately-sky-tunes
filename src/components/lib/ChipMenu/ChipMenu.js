@@ -8,7 +8,7 @@ const ChipMenu = ({ options, value, onChange }) => {
  return (
     <Flex spacing={1} sx={{mr: 2}}> 
  
-      {!!menu.selected && <i onClick={menu.handleClose} className="fa-solid fa-xmark"></i>}
+      {!!(menu.selected || value) && <i onClick={menu.handleClose} className="fa-solid fa-xmark"></i>}
 {/* [{menu.selected}][{value}] */}
       {options
         .filter(option => option.value !== 'music')
