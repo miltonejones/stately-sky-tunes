@@ -276,13 +276,13 @@ const StatePlayer = ({
               >
                 <Avatar src={track.albumImage} />
                 <Stack>
-                  <Nowrap variant="body2">
+                  <Nowrap variant="body2" width={260}>
                     {FileKey === track.FileKey && (
                       <i class="fa-solid fa-volume-high"></i>
                     )}{" "}
                     {track.Title}
                   </Nowrap>
-                  <Nowrap variant="caption">
+                  <Nowrap variant="caption" width={260}>
                     {track.artistName || track.albumName}
                   </Nowrap>
                 </Stack>
