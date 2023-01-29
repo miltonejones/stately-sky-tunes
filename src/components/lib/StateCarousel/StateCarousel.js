@@ -3,7 +3,7 @@ import { Card, Typography, styled } from "@mui/material";
 import { useMachine } from "@xstate/react";
 import { carouselMachine } from "../../../machines";
 
-const StateCarousel = ({ images }) => {
+const StateCarousel = ({ images, offset }) => {
   const [state] = useMachine(carouselMachine, {
     services: {
       loadImages: async () => images,
@@ -12,8 +12,8 @@ const StateCarousel = ({ images }) => {
   const { running, first, second } = state.context;
   if (!first) return <i />;
   return (
-    <>
-      <Carousel>
+    <> 
+      <Carousel offset={offset}>
         <Slide first src={first.src} moving={running} />
         <Slide src={second.src} moving={running} />
         <Caption moving={running}>
@@ -36,18 +36,18 @@ const Text = styled(Typography)(() => ({
   lineHeight: 1.1,
 }));
 
-const Carousel = styled(Card)(({ theme }) => ({
+const Carousel = styled(Card)(({ theme, offset = 0 }) => ({
   position: "relative",
   width: "100%",
-  height: "40revengevh",
+  height: `calc(50vh - ${offset*2}px)`,
   overflow: "hidden",
-  marginTop: theme.spacing(1),
-  borderRadius: 15,
+  // marginTop: theme.spacing(1),
+  // borderRadius: 15,
   cursor: "pointer",
 }));
 
 const Slide = styled("img")(({ first, moving }) => {
-  const transition = moving ? "left 0.4s linear" : "none";
+  const transition = moving ? "left 0.24s linear" : "none";
   const firstLeft = moving ? "-100%" : 0;
   const secondLeft = moving ? 0 : "100%";
   const obj = {

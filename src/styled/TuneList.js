@@ -5,7 +5,7 @@ const TuneList = styled(Box)(({ theme }) => ({
   gap: theme.spacing(1),
   display: "grid",
   alignItems: "center",
-  gridTemplateColumns: "48px 25% 20% 30% 8% 5% 5% 1fr",
+  gridTemplateColumns: "48px 25% 20% 30% 8% 5% 40px 1fr",
 }));
 
 export default TuneList;

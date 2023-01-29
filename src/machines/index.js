@@ -3,7 +3,7 @@ import { audioMachine } from "./audioMachine";
 import { usePhoto } from "./imageMachine";
 import { usePlaylist } from "./playlistMachine";
 import { carouselMachine } from "./carouselMachine";
-import { useTrackmenuMachine } from "./trackmenuMachine";
+import { useTrackmenu } from "./trackmenuMachine";
 
 export {
   useSkytunes,
@@ -11,5 +11,5 @@ export {
   audioMachine,
   usePlaylist,
   carouselMachine,
-  useTrackmenuMachine,
+  useTrackmenu,
 };

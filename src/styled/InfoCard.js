@@ -14,10 +14,13 @@ const InfoCard = ({
   artistName,
   Genre,
   Name,
+  Caption,
   size = 160,
   ...track
 }) => {
   const pic = usePhoto(Thumbnail || albumImage || image, DEFAULT_IMAGE);
+
+  const caption = artistName || Caption;;
 
   return (
     <Card {...track} sx={{ cursor: "pointer", width: "calc(22vw - 72px)" }}>
@@ -37,14 +40,14 @@ const InfoCard = ({
             {Name || Genre || Title}
           </Nowrap>
 
-          {!!TrackCount && !artistName && (
+          {!!TrackCount && !caption && (
             <Nowrap bold variant="caption" color="text.secondary">
               {TrackCount} tracks
             </Nowrap>
           )}
-          {!!artistName && (
+          {!!caption && (
             <Nowrap bold variant="caption" color="text.secondary">
-              {artistName}
+              {caption}
             </Nowrap>
           )}
         </Stack>

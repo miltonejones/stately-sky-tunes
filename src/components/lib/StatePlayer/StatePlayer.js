@@ -17,6 +17,7 @@ import { useMachine } from "@xstate/react";
 import { audioMachine } from "../../../machines";
 import { Flex } from "../../../styled";
 import { AudioConnector, frameLooper } from "./eq";
+import { Diagnostics } from "..";
 
 const Bureau = styled(Paper)(({ open }) => ({
   position: "fixed",
@@ -28,7 +29,7 @@ const Bureau = styled(Paper)(({ open }) => ({
 
 const connector = new AudioConnector();
 
-export const useStatePlayer = () => {
+export const useStatePlayer = (onPlayStart) => {
   const services = {
     clearAudio: async (context) => {
       context.player.pause();
@@ -45,6 +46,7 @@ export const useStatePlayer = () => {
         throw new Error(e);
       }
     },
+    audioStarted: async (context) => onPlayStart && onPlayStart(context.artistFk),
     loadAudio: async (context) => {
       const audio = new Audio();
       if (context.eq) {
@@ -129,7 +131,15 @@ export const useStatePlayer = () => {
     });
   };
 
-  const handleList = () => send("LIST");
+  const handleList = () => send({
+    type: 'TOGGLE',
+    key: 'listopen'
+  });
+
+  const handleDebug = () => send({
+    type: 'TOGGLE',
+    key: 'debug'
+  });
 
   const icon = state.matches("opened.playing") ? (
     <i class="fa-regular fa-circle-pause"></i>
@@ -137,8 +147,16 @@ export const useStatePlayer = () => {
     <i class="fa-solid fa-circle-play"></i>
   );
 
-  return {
+
+  const diagnosticProps = {
+    id: audioMachine.id,
     states: audioMachine.states,
+    state,
+    send,
+  };
+
+  return {
+    diagnosticProps, 
     id: audioMachine.id,
     state,
     send,
@@ -147,6 +165,7 @@ export const useStatePlayer = () => {
     idle,
 
     // player methods
+    handleDebug,
     handleClose,
     handleSeek,
     handleSkip,
@@ -178,14 +197,17 @@ const Progress = ({ progress, handleSeek, src }) => {
 };
 
 const StatePlayer = ({
-  handleDiagnoticsClose,
+  // handleDiagnoticsClose,
+  diagnosticProps,
+  handleDebug, 
   icon,
   idle,
-  state,
-  states,
-  debug,
-  id,
+  state, 
+  debug, 
   send,
+  onMenu,
+  onList,
+  playlist_db,
 
   // player methods
   handleClose,
@@ -197,47 +219,27 @@ const StatePlayer = ({
 
   // context vars
   src,
-  FileKey,
-  Title,
   owner,
-  albumImage,
   progress,
   duration,
   scrolling,
   current_time_formatted,
   duration_formatted,
   coords,
-  artistName,
   trackList,
   eq,
   retries,
   listopen,
   ...rest
 }) => {
-  // const ref = useRef(null);
-  // console.log({ progress });
+ 
   const red =
     "linear-gradient(0deg, rgba(2,160,5,1) 0%, rgba(226,163,15,1) 18px, rgba(255,0,42,1) 30px)";
 
-  // "ID": 212,
-  // "Title": "Prologue",
-  // "FileKey": "Prologue.opus.mp3",
-  // "albumImage": "https://s3.amazonaws.com/fapbucket.com/assets/a902ebb0-8d3a-a2e9-5b36-5070ab3c50f5.jpg",
-  // "trackId": 84469,
-  // "Genre": "R&B/Soul",
-  // "genreKey": "r&bsoul",
-  // "albumFk": 94,
-  // "albumArtistFk": 73,
-  // "artistFk": 73,
-  // "discNumber": 1,
-  // "trackTime": 47627,
-  // "trackNumber": 1,
-  // "FileSize": 1084077,
-  // "explicit": null,
-  // "artistName": "Parliament",
-  // "albumName": "Gloryhallastoopid",
-  // "albumArtistName": "Parliament"
-  // if (idle) return <i />;
+  const { FileKey, Title, albumImage, artistName } = rest;
+  const isFavorite = playlist_db && playlist_db.indexOf(FileKey) > -1;
+  const favoriteIcon  = <i onClick={() => onList(rest)} className={`${isFavorite ? "red fa-solid" : "fa-regular"} fa-heart`} />;
+ 
   return (
     <>
       <Drawer anchor="left" onClose={handleList} open={listopen}>
@@ -308,6 +310,9 @@ const StatePlayer = ({
           </Stack>
 
           <Stack direction="row" sx={{ alignItems: "center" }}>
+            <IconButton>
+            {favoriteIcon}
+            </IconButton>
             {!!handleList && (
               <IconButton onClick={handleList}>
                 <i class="fa-solid fa-list-check"></i>
@@ -345,7 +350,7 @@ const StatePlayer = ({
                 <Stack
                   sx={{
                     alignItems: "flex-end",
-                    height: 40,
+                    height: 48,
                     width: 300,
                     border: "solid 1px",
                     borderColor: "divider",
@@ -377,11 +382,22 @@ const StatePlayer = ({
               </Card>
             </Box>
           )}
-          <IconButton onClick={handleClose}>
-            <i class="fa-solid fa-xmark"></i>
+            <i onClick={() => onMenu(rest)} className="fa-solid fa-ellipsis-vertical"></i>
+          <i onClick={handleClose} className="fa-solid fa-xmark"></i>
+          <Box onClick={handleDebug} sx={{ mr: 2 }}>
+            <i class="fa-solid fa-gear"></i>
+          </Box>
+          {/* <IconButton>
           </IconButton>
+          <IconButton>
+          </IconButton> */}
         </Stack>
       </Bureau>
+{/* {JSON.stringify(debug)} */}
+      <Diagnostics
+        {...diagnosticProps}
+        open={debug}
+      />
     </>
   );
 };
@@ -422,7 +438,7 @@ const Text = ({ scrolling, children }) => {
 function bg() {
   var c = document.createElement("canvas");
   c.width = 300;
-  c.height = 40;
+  c.height = 48;
   var ctx = c.getContext("2d");
   ctx.lineWidth = 0.5;
   ctx.strokeStyle = "white";

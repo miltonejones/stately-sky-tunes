@@ -1,9 +1,10 @@
 import React from "react";
-import { Drawer, Typography, TextField, Stack, Box } from "@mui/material";
+import { Drawer, LinearProgress, Typography, TextField, Stack, Box, Collapse } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
-import { Flex, LiteButton } from "../../../styled";
+import { Flex, Spacer, Nowrap, LiteButton } from "../../../styled";
+import { AutoSelect, Diagnostics } from "..";
 
-const TrackMenuDrawer = ({ track, open, state, handleGoto, send }) => {
+const TrackMenuDrawer = ({ track, open, busy, state, diagnosticProps, results, debug, handleGoto, send }) => {
   const navLinks = [
     {
       label: "View Artist",
@@ -43,62 +44,123 @@ const TrackMenuDrawer = ({ track, open, state, handleGoto, send }) => {
   ];
 
   return (
-    <Drawer anchor="left" open={open} onClose={() => send("CLOSE")}>
-      <Box sx={{ width: 400, m: 2, overflow: "hidden" }}>
-        <img
-          src={track.albumImage}
-          alt={track.Title}
-          style={{
-            width: 150,
-            aspectRatio: "1 / 1",
-            borderRadius: 5,
-          }}
-        />
-        {JSON.stringify(state.value)}
-        {!!state.matches("editing") && <EditForm send={send} {...track} />}
-        {!state.matches("editing") && (
-          <Box>
+    <>
+
+<Diagnostics
+        {...diagnosticProps}
+        open={debug}
+      />
+    <Drawer anchor="right" open={open} onClose={() => send("CLOSE")}>
+        {!!busy && <LinearProgress />}
+      <Box sx={{ width: 400, m: 2 }}>
+        {/* {JSON.stringify(state.value)} */}
+
+
+        <Flex start spacing={1}>
+          <img
+            src={track.albumImage}
+            alt={track.Title}
+            style={{
+              width: 150,
+              aspectRatio: "1 / 1",
+              borderRadius: 5,
+            }}
+          />
+          <Stack>
+            <Typography>{track.Title}</Typography>
+            <Typography variant="caption">{track.artistName}</Typography>
+          </Stack>
+          <Spacer />
+          {state.matches('opened') &&   <i onClick={() => send('DEBUG')} class="fa-solid fa-gear"></i>}
+        </Flex>
+
+        <Collapse in={state.matches("editing.itunes.loaded")}>
+        
+            <Flex sx={{p: 1}} spacing={1} onClick={() => send('CLOSE')}>
+            <i className="fa-solid fa-arrow-left"></i>
+            back
+            </Flex>
+     
+           {results?.map(result => <Flex 
+              key={result.trackId} 
+              spacing={1} 
+              sx={{ mb: 1 }}
+              onClick={() => {
+                send({
+                  type: 'CLOSE',
+                  suggestion: result
+                })
+              }}
+            >
+            <Avatar src={result.albumImage} />
+            <Stack>
+              <Nowrap variant="body2">{result.Title}</Nowrap>
+              <Nowrap variant="caption">{result.artistName}</Nowrap>
+              <Nowrap variant="caption">{result.albumName}</Nowrap>
+            </Stack>
+           </Flex>)}
+        </Collapse>
+   
+        <Collapse in={state.matches("editing.idle")}>
+          <EditForm send={send} {...track} />
+        </Collapse>
+   
+        <Collapse in={state.matches("opened.idle")}>
+           <Box sx={{mt: 4, mb: 4}}>
             {navLinks.map((nav) => (
               <Flex
+                sx={{mb: 1, cursor: 'pointer'}}
                 onClick={() => !!nav.action && nav.action()}
                 spacing={1}
                 key={nav.label}
               >
                 <Avatar size="small">{nav.icon}</Avatar>
                 <Stack>
-                  <Typography>{nav.label}</Typography>
-                  <Typography variant="caption">{nav.caption}</Typography>
+                  <Nowrap>{nav.label}</Nowrap>
+                  <Nowrap variant="caption">{nav.caption}</Nowrap>
                 </Stack>
               </Flex>
             ))}
           </Box>
-        )}
+        </Collapse>
+   
+        
+        {/* {JSON.stringify(state.value)}
+       <pre>
+       {JSON.stringify(track    ,0,2)}
+       </pre> */}
       </Box>
     </Drawer>
+    
+    </>
   );
 };
 
 function EditForm({
   Title,
+  albumFk,
   albumName,
+  albumImage,
+  artistFk,
   artistName,
   Genre,
   discNumber,
   trackNumber,
   send,
 }) {
-  const handleChange = (key) => (event) => {
+  const handleChange = (key) => (event) => { 
     send({
       type: "CHANGE",
       key,
-      value: event.target.value,
+      value: !event.target ? event : event.target.value,
     });
   };
 
   return (
-    <Stack spacing={1}>
+    <Stack spacing={1} sx={{mt: 4}}>
       <Flex>
         <TextField
+          label="Track Name"
           fullWidth
           size="small"
           autoComplete="off"
@@ -109,12 +171,14 @@ function EditForm({
 
       <Flex spacing={1}>
         <TextField
+          label="Disc Number"
           size="small"
           autoComplete="off"
           value={discNumber}
           onChange={handleChange("discNumber")}
         />
         <TextField
+          label="Track Number"
           size="small"
           autoComplete="off"
           value={trackNumber}
@@ -123,35 +187,70 @@ function EditForm({
       </Flex>
 
       <Flex>
-        <TextField
+        <AutoSelect  
+          type="album" 
+          onValueSelected={val => {
+            handleChange("albumFk")(val.ID);
+            handleChange("albumName")(val.name);
+          }}
+          value={{
+            name:  albumName,
+            image: albumImage,
+            ID: albumFk
+          }}/>
+        {/* <TextField
           fullWidth
           size="small"
           autoComplete="off"
           value={albumName}
-          onChange={handleChange("albumName")}
-        />
+          onChange={handleChange("albumName")} 
+        />*/}
       </Flex>
       <Flex>
-        <TextField
+        <AutoSelect  
+          type="artist" 
+          onValueSelected={val => {
+            handleChange("artistFk")(val.ID);
+            handleChange("artistName")(val.name);
+          }}
+          value={{
+            name:  artistName,
+            image: albumImage,
+            ID: artistFk
+          }}/>
+        {/* <TextField
           fullWidth
           size="small"
           autoComplete="off"
           value={artistName}
-          onChange={handleChange("artistName")}
-        />
+          onChange={handleChange("artistName")} */}
+        {/* /> */}
       </Flex>
       <Flex>
-        <TextField
+        <AutoSelect  
+          type="genre" 
+          onValueSelected={val => {
+            handleChange("Genre")(val.ID); 
+          }}
+          value={{
+            name:  Genre, 
+            ID: Genre
+          }}/>
+        {/* <TextField
           fullWidth
           size="small"
           autoComplete="off"
           value={Genre}
           onChange={handleChange("Genre")}
-        />
+        /> */}
       </Flex>
-      <Flex>
-        <LiteButton onClick={() => send("CLOSE")}>close</LiteButton>
+      <Flex spacing={1}>
+        <i onClick={() => send("LOOKUP")} class="fa-brands fa-apple"></i>
+        <Spacer />
+        <LiteButton size="small" onClick={() => send("CLOSE")}>cancel</LiteButton>
+        <LiteButton size="small" variant="contained" onClick={() => send("SAVE")}>save</LiteButton>
       </Flex>
+      
     </Stack>
   );
 }

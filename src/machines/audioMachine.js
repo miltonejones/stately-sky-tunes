@@ -78,14 +78,25 @@ export const audioMachine = createMachine(
         },
         states: {
           reset: {
-            after: {
-              10: {
-                target: "start",
-                actions: assign({
-                  retries: 1,
-                }),
-              },
-            },
+            invoke: {
+              src: 'audioStarted',
+              onDone: [
+                { 
+                  target: "start",
+                  actions: assign({
+                    retries: 1,
+                  }),
+                }
+              ]
+            }
+            // after: {
+            //   10: {
+            //     target: "start",
+            //     actions: assign({
+            //       retries: 1,
+            //     }),
+            //   },
+            // },
           },
           start: {
             invoke: {
@@ -162,11 +173,11 @@ export const audioMachine = createMachine(
                 target: "#audio_player.replay",
                 actions: "assignNextTrackToContext",
               },
-              LIST: {
-                actions: assign({
-                  listopen: (context) => !context.listopen,
-                }),
-              },
+              TOGGLE: {
+                actions: assign((context, event) => ({
+                  [event.key]: !context[event.key],
+                })),
+              }, 
             },
           },
           paused: {

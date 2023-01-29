@@ -1,4 +1,7 @@
+import AppleConvert from "../util/AppleConvert";
+
 const API_ENDPOINT = "https://u8m0btl997.execute-api.us-east-1.amazonaws.com";
+
 
 export const getGroupByType = async (
   type,
@@ -9,6 +12,16 @@ export const getGroupByType = async (
   const endpoint = `request/${sort}/${direction}/${page}/${type}`;
   const response = await fetch(`${API_ENDPOINT}/${endpoint}`);
   return await response.json();
+};
+
+
+export const getAppleMatches = async (title) => { 
+  const address = `${API_ENDPOINT}/apple/${title}`;
+  const response = await fetch(address);
+  const json = await response.json();
+  if (json.results?.length) {
+    return json?.results?.map((r) => AppleConvert(r));
+  } 
 };
 
 

@@ -151,7 +151,7 @@ const Diagnostics = ({ id, send, state, states, open, onClose, layer }) => {
                 onClick={onClose}
               >
                 {' '}
-                <i class="fa-solid fa-xmark"></i>
+                <i className="fa-solid fa-xmark"></i>
               </IconButton>
             )}
           </Stack>

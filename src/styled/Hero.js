@@ -1,9 +1,10 @@
 import React from "react";
-import { styled, Collapse, Typography, Box } from "@mui/material";
+import { styled, Typography, Box } from "@mui/material";
 
-const Banner = styled(Box)(() => ({
+const Banner = styled(Box)(( { on }) => ({
   width: "100vw",
-  height: "40vh",
+  height: on ? "40vh" : 0,
+  transition: 'height: 0.4s linear',
   position: "relative",
   overflow: "hidden",
   "& img": {
@@ -20,28 +21,28 @@ const TitleBox = styled(Box)(() => ({
 }));
 
 const Hero = ({ page, imageLg, Name, TrackCount }) => {
-  if (!imageLg) {
-    return <i />;
-  }
+  // if (!imageLg) {
+  //   return <i />;
+  // }
   return (
-    <Collapse in={!!imageLg}>
-      {!!imageLg && (
-        <Banner>
-          <img src={imageLg} alt={Name} />
-          <TitleBox sx={{ color: "white", mixBlendMode: "difference" }}>
-            <Typography sx={{ lineHeight: 1 }} variant="button">
-              {page}
-            </Typography>
-            <Typography sx={{ lineHeight: 0.7 }} variant="h4">
-              {Name}
-            </Typography>
-            <Typography sx={{ lineHeight: 1.2 }} variant="body2">
-              {TrackCount} tracks in your library
-            </Typography>
-          </TitleBox>
-        </Banner>
-      )}
-    </Collapse>
+    <Banner on={!!imageLg}>
+       {!!imageLg && (
+         <img src={imageLg} alt={Name} />
+       )}
+    
+      <TitleBox sx={{ color: "white", mixBlendMode: "difference" }}>
+        <Typography sx={{ lineHeight: 1 }} variant="button">
+          {page}
+        </Typography>
+        <Typography sx={{ lineHeight: 0.7 }} variant="h4">
+          {Name}
+        </Typography>
+        <Typography sx={{ lineHeight: 1.2 }} variant="body2">
+          {TrackCount} tracks in your library
+        </Typography>
+      </TitleBox>
+  </Banner>
+      
   );
 };
 

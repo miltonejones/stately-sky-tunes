@@ -1,6 +1,11 @@
 import { createMachine, assign } from "xstate";
 import { useMachine } from "@xstate/react";
 import { useNavigate } from "react-router-dom";
+import {
+  getAppleMatches,
+  getAlbumorArtistId,
+  saveTrack
+} from "../connector";
 
 export const trackmenuMachine = createMachine(
   {
@@ -27,6 +32,11 @@ export const trackmenuMachine = createMachine(
                 target: "navigate",
                 actions: "assignLocation",
               },
+              DEBUG: { 
+                actions: assign({
+                  debug: context => !context.debug
+                }),
+              },
               ADD: {
                 target: "playlist",
               },
@@ -34,10 +44,7 @@ export const trackmenuMachine = createMachine(
                 target: "#track_menu.editing",
               },
               CLOSE: {
-                target: "#track_menu.idle",
-                actions: assign({
-                  open: false,
-                }),
+                target: "closing", 
               },
             },
           },
@@ -99,6 +106,9 @@ export const trackmenuMachine = createMachine(
               SAVE: {
                 target: "saving",
               },
+              CHANGE: {
+                actions: "applyTrackChange",
+              },
             },
           },
           itunes: {
@@ -110,7 +120,9 @@ export const trackmenuMachine = createMachine(
                   onDone: [
                     {
                       target: "loaded",
-                      actions: "assignResults",
+                      actions: assign({
+                        results: (context, event) => event.data
+                      }),
                     },
                   ],
                   onError: [
@@ -122,10 +134,16 @@ export const trackmenuMachine = createMachine(
               },
               loaded: {
                 on: {
-                  CLOSE: {
-                    target: "#track_menu.editing.idle",
-                    actions: "assignSuggestion",
-                  },
+                  CLOSE: [
+                    {
+                      target: "#track_menu.editing.idle",
+                      cond: (context, event) => !event.suggestion,
+                    },
+                    {
+                      target: "#track_menu.transform",
+                      actions: "assignSuggestion",
+                    }
+                  ],
                 },
               },
               error: {
@@ -139,7 +157,7 @@ export const trackmenuMachine = createMachine(
           },
           saving: {
             invoke: {
-              src: "saveTrack",
+              src: "commitTrack",
               onDone: [
                 {
                   target: "#track_menu.opened.idle",
@@ -150,6 +168,37 @@ export const trackmenuMachine = createMachine(
           },
         },
       },
+
+ 
+      transform: {
+        initial: "artist",
+        states: { 
+          artist: {
+            invoke: {
+              src: "getTrackArtist",
+              onDone: [
+                {
+                  target: "album",
+                  actions: "assignTrackArtist",
+                },
+              ],
+            },
+          },
+          album: {
+            invoke: {
+              src: "getTrackAlbum",
+              onDone: [
+                {
+                  target: "#track_menu.editing.idle",
+                  actions: "assignTrackAlbum",
+                },
+              ],
+            },
+          },
+        },
+      },
+      
+      
     },
     context: { track: {}, open: false },
     predictableActionArguments: true,
@@ -157,15 +206,41 @@ export const trackmenuMachine = createMachine(
   },
   {
     actions: {
+      assignTrackArtist: assign((context, event) => { 
+        return {
+          track: {
+            ...context.track,
+            artistFk: event.data
+          }
+        }
+      }),
+      assignTrackAlbum: assign((context, event) => { 
+        return  {
+          track: {
+            ...context.track,
+            albumFk: event.data
+          }
+        }
+      }),
       assignProblem: assign((context, event) => {
         return {
           errorMsg: event.data.message,
           stack: event.data.stack,
         };
       }),
+      applyTrackChange: assign((context, event) => { 
+        const { track } = context;
+        return {
+          track: {
+            ...track,
+            [event.key]: event.value
+          }
+        };
+      }),
       assignTrack: assign((context, event) => {
         return {
           track: event.track,
+          changed: false,
           open: true,
         };
       }),
@@ -178,29 +253,59 @@ export const trackmenuMachine = createMachine(
         return event;
       }),
       assignSuggestion: assign((context, event) => {
-        return event;
+        const { track } = context;
+        return {
+          track: {
+            ...track,
+            ...event.suggestion
+          }
+        };
       }),
       assignResponse: assign((context, event) => {
-        return event;
+        return {
+          changed: true
+        };
       }),
     },
   }
 );
 
-export const useTrackmenuMachine = (onResponse) => {
+export const useTrackmenu = (onResponse) => {
   const navigate = useNavigate();
   const [state, send] = useMachine(trackmenuMachine, {
     services: {
       addToQueue: async (context) => {},
       setResponse: async (context) => {
-        onResponse && onResponse(context.response);
+        context.changed && onResponse && onResponse(context.response);
       },
       handleNavigation: async (context) => {
         navigate(context.href);
       },
       openPlaylist: async (context) => {},
-      iTunesSearch: async (context) => {},
-      saveTrack: async (context) => {},
+      iTunesSearch: async (context) => {
+        return await getAppleMatches(context.track.Title)
+      },
+      
+      getTrackAlbum: async (context) => {
+        const { track } = context;
+        return await getAlbumorArtistId(
+          "album",
+          track.albumName,
+          track.albumImage
+        );
+      },
+      
+      getTrackArtist: async (context) => {
+        const { track } = context;
+        return await getAlbumorArtistId(
+          "artist",
+          track.artistName,
+          track.albumImage
+        );
+      },
+      commitTrack: async (context) => {
+        return await saveTrack(context.track)
+      },
     },
   });
 
@@ -228,9 +333,15 @@ export const useTrackmenuMachine = (onResponse) => {
   return {
     state,
     send,
+    busy: ['editing.itunes.loading'].some(state.matches),
     ...state.context,
     handleOpen,
     handleGoto,
     diagnosticProps,
   };
 };
+
+
+
+
+ 

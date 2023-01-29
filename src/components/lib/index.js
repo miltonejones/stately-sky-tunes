@@ -6,9 +6,12 @@ import Diagnostics from "./Diagnostics/Diagnostics";
 import PlaylistDrawer from "./PlaylistDrawer/PlaylistDrawer";
 import StateCarousel from "./StateCarousel/StateCarousel";
 import TrackMenuDrawer from "./TrackMenuDrawer/TrackMenuDrawer";
+import AutoSelect from "./AutoSelect/AutoSelect";
+import Splash from "./Splash/Splash";
 import StatePlayer, { useStatePlayer } from "./StatePlayer/StatePlayer";
 
 export {
+  AutoSelect,
   DataGrid,
   DataList,
   StatePlayer,
@@ -18,5 +21,6 @@ export {
   useStatePlayer,
   PlaylistDrawer,
   NavLinks,
+  Splash,
   TrackMenuDrawer,
 };

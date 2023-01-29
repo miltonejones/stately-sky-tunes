@@ -12,7 +12,7 @@ const Toolbar = styled(Box)(({ theme }) => ({
   top: 0,
   gap: theme.spacing(1),
   left: 0,
-  width: `calc(100vw - ${theme.spacing(4)})`,
+  width: '100vw'//`calc(100vw - ${theme.spacing(4)})`,
 }));
 
 export default Toolbar;

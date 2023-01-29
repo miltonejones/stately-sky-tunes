@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet";
  
  
 const PageHead = ({ page, pageTitle }) => {
-  const title = [page, pageTitle].filter(f => !!f).join(" | ")
+  const title = [page || 'Home', pageTitle].filter(f => !!f).join(" | ")
  return (
   <Helmet>
   <meta charSet="utf-8" />
