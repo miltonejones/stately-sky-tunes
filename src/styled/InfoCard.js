@@ -14,6 +14,7 @@ const InfoCard = ({
   artistName,
   Genre,
   Name,
+  selected,
   Caption,
   size = 160,
   ...track
@@ -23,7 +24,8 @@ const InfoCard = ({
   const caption = artistName || Caption;;
 
   return (
-    <Card {...track} sx={{ cursor: "pointer", width: "calc(22vw - 72px)" }}>
+    <Card {...track} sx={{ cursor: "pointer", width: "calc(22vw - 72px)",
+      outline: selected ? "solid 2px blue" : "", outlineOffset: 1 }}>
       <CardMedia
         component="img"
         sx={{ borderRadius: 2, width: "100%", aspectRatio: "1 / 1" }}

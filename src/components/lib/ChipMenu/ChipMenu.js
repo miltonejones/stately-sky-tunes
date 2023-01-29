@@ -7,7 +7,8 @@ const ChipMenu = ({ options, value, onChange }) => {
   const menu = useSelector(onChange)
  return (
     <Flex spacing={1} sx={{mr: 2}}> 
-
+    {/* [{JSON.stringify(menu.state.value)}]
+[{menu.selected}] */}
       {!!menu.selected && <i onClick={menu.handleClose} className="fa-solid fa-xmark"></i>}
 
       {options
@@ -15,7 +16,7 @@ const ChipMenu = ({ options, value, onChange }) => {
         .map(option =>  (
         <Collapse 
           orientation="horizontal" 
-          in={!menu.selected || menu.selected === option.value}
+          in={!menu.selected || menu.selected === 'music' || menu.selected === option.value}
         >
           <Chip size="small"
             onClick={() => menu.handleClick(option.value)}

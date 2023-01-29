@@ -65,12 +65,16 @@ const skytunesMachine = createMachine(
               1: [
                 {
                 target: "idle", 
-                cond: context => !context.search_param
+                cond: context => !context.search_param,
+                actions: assign(({ 
+                  hero: null,  
+                  response: null
+                }))
               },
               {
                 target: "lookup", 
                 actions: assign(({
-                  search_index: 0,
+                  search_index: 0, 
                   search_type: searchTypes[0]
                 }))
               }
@@ -412,6 +416,7 @@ const skytunesMachine = createMachine(
       assignRequestParams: assign((context, event) => {
         return {
           ...event.data,
+          history: getPersistedArtists()
         };
       }),
       assignProblem: assign((context, event) => {
@@ -443,7 +448,9 @@ export const useSkytunes = (onRefresh) => {
         if (artistID) {
           const hero = await getArtistInfo(artistID);
           if (hero.row?.length) {
-            return hero.row[0];
+            const artist = hero.row[0];
+            persistArtist(artist)
+            return artist;
           }
         }
         return false;
@@ -521,6 +528,17 @@ export const useSkytunes = (onRefresh) => {
     diagnosticProps,
   };
 };
+
+const COOKIE_NAME = 'artist-memory';
+const persistArtist = artist => {
+  const memory = JSON.parse(localStorage.getItem(COOKIE_NAME) || "[]");
+  const update = memory.find(f => f.ID === artist.ID)
+    ? memory 
+    : memory.concat(artist);
+  localStorage.setItem(COOKIE_NAME, JSON.stringify(update));
+}
+
+const getPersistedArtists = () => JSON.parse(localStorage.getItem(COOKIE_NAME) || "[]")
 
 const carouselTransform = img => ({
       src: img.imageLg,

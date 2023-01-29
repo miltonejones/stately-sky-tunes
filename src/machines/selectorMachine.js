@@ -1,11 +1,27 @@
 import { createMachine, assign } from 'xstate';
 import { useMachine } from "@xstate/react";
+import { useParams } from "react-router-dom";
 
 export const selectorMachine = createMachine({
   id: "select_menu",
-  initial: "idle",
+  initial: "init",
   states: {
-    idle: {
+    init: {
+      invoke: {
+        src: "initialProp",
+        onDone: [
+          {
+            target: "ready",
+            cond: (context, event) => !event.data || event.data === 'music', 
+          },
+          {
+            target: "#select_menu.selected.idle",
+            actions: assign({ selected: (context, event) => event.data})
+          }
+        ]
+      }
+    },
+    ready: {
       on: {
         SELECT: {
           target: "selected",
@@ -39,7 +55,7 @@ export const selectorMachine = createMachine({
             src: "onSelected",
             onDone: [
               {
-                target: "#select_menu.idle",
+                target: "#select_menu.ready",
               },
             ],
           },
@@ -54,8 +70,10 @@ export const selectorMachine = createMachine({
 
 
 export const useSelector= (onChange) => {
+  const { type  } = useParams();
   const [state, send] = useMachine(selectorMachine, {
     services: {
+      initialProp: async () => type, 
       onSelected: async (context, event) => { 
         onChange(event.value);
       }, 

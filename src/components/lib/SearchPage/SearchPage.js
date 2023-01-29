@@ -1,6 +1,6 @@
 import React from 'react';
-import { styled, Box, Avatar, Typography, Stack, Chip } from '@mui/material';
-import { Flex, LiteButton, Nowrap} from "../../../styled"; 
+import { styled, Box, Avatar, Divider, Typography, Stack, Chip } from '@mui/material';
+import { Flex, LiteButton, Nowrap, TuneGrid, InfoCard} from "../../../styled"; 
  
 const Layout = styled(Box)(({ theme }) => ({
  margin: theme.spacing(4)
@@ -40,20 +40,32 @@ const ArtistList = ({ records, onClick }) => {
   </Stack>
 }
  
+ 
 
-/**
-       "ID": 1319,
-        "Name": "Kagamine Rin and Hatsune Miku",
-        "Thumbnail": "https://c-sf.smule.com/rs-s30/arr/e1/9d/775a7a65-024b-4102-a5b4-887e41f63e69.jpg",
-        "iArtistID": null,
-        "amgArtistID": null,
-        "imageLg": null,
-        "TrackCount": 1
- */
-
-
-const SearchPage = ({searches, search_param, onPlay ,navigate, FileKey, onTab, selected_search}) => {
-  if (!searches) return <i />
+const SearchPage = ({searches, search_param, onPlay , memory, history, navigate, FileKey, onTab, selected_search}) => {
+  if (!searches) return <>
+  <Divider textAlign="left" sx={{m: 1}}>Recent listens</Divider>
+  {!!memory && <TuneGrid sx={{m:  3}}>
+    {memory.map(rec => <InfoCard 
+      selected={FileKey === rec.FileKey}
+      onClick={() => onPlay(rec, [rec])}
+      key={rec.ID}
+      {...rec}
+      Name={rec.Title}
+      />)}
+  </TuneGrid>}
+  <Divider textAlign="left" sx={{m: 1}}>Jump back in</Divider>
+  {!!history && <TuneGrid sx={{m:  3}}>
+    {history.map(rec => <InfoCard 
+      onClick={() => navigate(`/list/artist/${rec.ID}`)}
+      key={rec.ID}
+      {...rec} 
+      />)}
+  </TuneGrid>}
+    <pre>
+      {JSON.stringify({memory, history}, 0, 2)}
+    </pre>
+  </>
   const icons = {
     music: <i class="fa-solid fa-music"></i>,
     artist: <i class="fa-solid fa-person"></i>,
@@ -71,6 +83,8 @@ const SearchPage = ({searches, search_param, onPlay ,navigate, FileKey, onTab, s
           {found}
         </LiteButton>)}
     </Flex>
+
+
 
     {!!searches.music?.records && 
       selected_search === 0 && 

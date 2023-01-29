@@ -169,7 +169,7 @@ function Application() {
 
         <LiteButton
           onClick={() => navigate("/grid/music/1")}
-          variant={mediaType === 'music' ? "contained" : "text"}
+          variant={['list.loaded', 'grid.loaded', 'list'].some(stateSkyTunes.state.matches) ? "contained" : "text"}
         >
           library
         </LiteButton>
