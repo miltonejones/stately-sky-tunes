@@ -478,7 +478,7 @@ export const useSkytunes = (onRefresh) => {
           return await getDashboard()
         }
         if (!!id) {
-          return await getGroupById(type, id, page, sort, direction);
+          return await getGroupById(type, encodeURIComponent(id), page, sort, direction);
         }
         return await getGroupByType(type, page, sort, direction);
       },
