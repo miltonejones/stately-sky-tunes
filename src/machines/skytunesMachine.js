@@ -486,6 +486,7 @@ export const useSkytunes = (onRefresh) => {
         return location.pathname;
       },
       loadRequestParams: async (context) => { 
+        const props = !!id ? requestProps[type] : listProps[type];
         return {
           type,
           page,
@@ -494,7 +495,7 @@ export const useSkytunes = (onRefresh) => {
           id,
           search_param: param,
           carouselImages: null,
-       //   ...requestProps[type],
+          ...props,
         };
       },
     },
@@ -546,21 +547,45 @@ const carouselTransform = img => ({
       caption: img.Caption || `${img.TrackCount} tracks in your library`,
     });
 
-// const requestProps = {
-//   album: {
-//     sort: "Name",
-//     direction: "ASC",
-//   },
-//   artist: {
-//     sort: "Name",
-//     direction: "ASC",
-//   },
-//   playlist: {
-//     sort: "Title",
-//     direction: "DESC",
-//   },
-//   genre: {
-//     sort: "Genre",
-//     direction: "DESC",
-//   },
-// };
+
+const listProps = {
+  playlist: {
+    sort: "Title",
+    direction: "DESC",
+  },
+  artist: {
+    sort: "Name",
+    direction: "ASC",
+  },
+  album: {
+    sort: "Name",
+    direction: "ASC",
+  },
+  genre: {
+    sort: "Genre",
+    direction: "ASC",
+  },
+}
+
+const requestProps = {
+  album: {
+    sort: "discNumber,trackNumber",
+    direction: "ASC",
+  },
+  playlist: {
+    sort: "trackNumber",
+    direction: "DESC",
+  },
+  artist: {
+    sort: "albumFk,discNumber,trackNumber",
+    direction: "ASC",
+  },
+  // playlist: {
+  //   sort: "Title",
+  //   direction: "DESC",
+  // },
+  // genre: {
+  //   sort: "Genre",
+  //   direction: "DESC",
+  // },
+};

@@ -39,7 +39,7 @@ const Text = styled(Typography)(() => ({
 const Carousel = styled(Card)(({ theme, offset = 0 }) => ({
   position: "relative",
   width: "100%",
-  height: `calc(50vh - ${offset*2}px)`,
+  height: `calc(40vh - ${offset*2}px)`,
   overflow: "hidden",
   // marginTop: theme.spacing(1),
   // borderRadius: 15,

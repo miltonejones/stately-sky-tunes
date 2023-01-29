@@ -16,7 +16,7 @@ import {
 import Marquee from "react-fast-marquee";
 import { useMachine } from "@xstate/react";
 import { audioMachine, useMenu } from "../../../machines"; 
-import { Flex } from "../../../styled";
+import { Flex, Nowrap } from "../../../styled";
 import { AudioConnector, frameLooper } from "./eq";
 import { Diagnostics } from "..";
 
@@ -183,7 +183,7 @@ const Progress = ({ progress, handleSeek, src }) => {
     return (
       <>
         <LinearProgress />
-        <Typography variant="caption">Loading {src?.substr(0, 50)}...</Typography>
+        <Nowrap variant="caption">Loading {src?.substr(0, 50)}...</Nowrap>
       </>
     );
   return (
@@ -276,15 +276,15 @@ const StatePlayer = ({
               >
                 <Avatar src={track.albumImage} />
                 <Stack>
-                  <Typography variant="body2">
+                  <Nowrap variant="body2">
                     {FileKey === track.FileKey && (
                       <i class="fa-solid fa-volume-high"></i>
                     )}{" "}
                     {track.Title}
-                  </Typography>
-                  <Typography variant="caption">
+                  </Nowrap>
+                  <Nowrap variant="caption">
                     {track.artistName || track.albumName}
-                  </Typography>
+                  </Nowrap>
                 </Stack>
               </Flex>
             ))}{" "}
@@ -324,11 +324,11 @@ const StatePlayer = ({
           )}
 
           <Stack sx={{ width: 300 }}>
-            <Typography>{artistName}</Typography>
+            <Nowrap>{artistName}</Nowrap>
             <Text scrolling={scrolling}>
-              <Typography sx={{ whiteSpace: "nowrap " }} variant="body2">
+              <Nowrap sx={{ whiteSpace: "nowrap " }} variant="body2">
                 {Title}
-              </Typography>
+              </Nowrap>
             </Text>
           </Stack>
 
