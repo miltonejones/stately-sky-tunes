@@ -16,7 +16,7 @@ import {
 import Marquee from "react-fast-marquee";
 import { useMachine } from "@xstate/react";
 import { audioMachine, useMenu } from "../../../machines"; 
-import { Flex, Nowrap } from "../../../styled";
+import { Flex, Spacer, Nowrap } from "../../../styled";
 import { AudioConnector, frameLooper } from "./eq";
 import { Diagnostics } from "..";
 
@@ -207,7 +207,7 @@ const VolumeMenu = ({ volume, onChange }) => {
      <i onClick={menu.handleClick} class={className}></i>
      {/* {JSON.stringify(menu.state.value)}
      {JSON.stringify(!!anchorEl)} */}
-     <Popover anchorEl={anchorEl} open={!!anchorEl} onClose={menu.handleClose()}>
+     <Popover anchorEl={anchorEl} open={!!anchorEl} onClose={() => menu.handleClose(volume)()}>
       <Flex spacing={2} sx={{ p: 2, width: 200}}>
       <i onClick={() => menu.handleClose (0)()} className={className}></i>
         <Slider value={volume} min={0} max={1} step={0.1} onChange={(e, num) => {
@@ -266,7 +266,7 @@ const StatePlayer = ({
   return (
     <>
       <Drawer anchor="left" onClose={handleList} open={listopen}>
-        <Box sx={{ p: 2 }}>
+        <Box sx={{ p: 2, width: 400 }}>
           {!!trackList &&
             trackList.map((track) => (
               <Flex
@@ -286,6 +286,10 @@ const StatePlayer = ({
                     {track.artistName || track.albumName}
                   </Nowrap>
                 </Stack>
+                <Spacer />
+                <i onClick={() => onList(track)} 
+                  className={`${playlist_db && playlist_db.indexOf(track.FileKey) > -1 ? "red fa-solid" : "fa-regular"} fa-heart`} 
+                    />
               </Flex>
             ))}{" "}
         </Box>
