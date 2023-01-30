@@ -173,6 +173,9 @@ export const audioMachine = createMachine(
                 target: "#audio_player.replay",
                 actions: "assignNextTrackToContext",
               },
+              QUEUE: {
+                actions: "addToQueue",
+              },
               TOGGLE: {
                 actions: assign((context, event) => ({
                   [event.key]: !context[event.key],
@@ -182,7 +185,7 @@ export const audioMachine = createMachine(
                 actions: "assignVolume",
               }, 
             },
-          },
+          }, 
           paused: {
             on: {
               PAUSE: {
@@ -206,6 +209,20 @@ export const audioMachine = createMachine(
   },
   {
     actions: {
+      
+      addToQueue: assign((context, event) => { 
+        const index = context.trackList
+          .map(t => t.ID)
+          .indexOf(context.ID) + 1; 
+        const trackList = context.trackList
+          .slice(0, index)
+          .concat([{ ...event.track, inserted: !0 }])
+          .concat(context.trackList.slice(index));
+
+        return {
+          trackList 
+        };
+      }),
       clearPlayer: assign((context, event) => {
         context.player.pause();
         return {

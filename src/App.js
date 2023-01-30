@@ -350,7 +350,12 @@ function Application() {
 
       <PlaylistDrawer {...stateList} />
 
-      <TrackMenuDrawer {...stateMenu} onList={stateList.handleOpen} />
+      <TrackMenuDrawer {...stateMenu} onList={stateList.handleOpen} onQueue={track => {
+        statePlayer.send({
+          type: 'QUEUE',
+          track
+        })
+      }}/>
 
       {/* debugger window */}
       <Diagnostics
