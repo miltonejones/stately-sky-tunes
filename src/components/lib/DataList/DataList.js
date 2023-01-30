@@ -125,7 +125,7 @@ const DataList = ({
             ) : (
               <>
                 {!!field.play && FileKey === record.FileKey && (
-                  <i class="fa-solid fa-volume-high"></i>
+                  <i class="fa-solid fa-volume-high">{" "}</i>
                 )} 
                 {trueProp(record, field)}
               </>

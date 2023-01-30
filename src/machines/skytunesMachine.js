@@ -266,9 +266,9 @@ const skytunesMachine = createMachine(
                 }),
               },
               CHANGE: {
-                actions: assign({
-                  search_param: (context, event) => event.value,
-                }),
+                actions: assign((context, event) => ({
+                  [event.key || 'search_param']: event.value
+                })),
               },
             },
           },
@@ -340,6 +340,7 @@ const skytunesMachine = createMachine(
       // page: 1,
       // sort: "ID",
       // direction: "DESC",
+      bannerOpen: true,
       logo: "https://www.sky-tunes.com/assets/icon-72x72.png",
     },
     predictableActionArguments: true,
@@ -526,6 +527,8 @@ export const useSkytunes = (onRefresh) => {
     handleAuto,
     state,
     send,
+    appTitle: window.location.href.indexOf('localhost') > 0
+      ? 'Skytunes.localhost' : 'Skytunes',
     busy: ['grid.loading','list.loading'].some(state.matches),
     diagnosticProps,
   };

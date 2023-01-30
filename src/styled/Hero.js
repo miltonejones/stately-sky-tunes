@@ -4,7 +4,7 @@ import { styled, Typography, Box } from "@mui/material";
 const Banner = styled(Box)(( { on }) => ({
   width: "100vw",
   height: on ? "calc(100vw * .25)" : 0,
-  transition: 'height: 0.4s linear',
+  transition: 'height 0.4s linear',
   position: "relative",
   overflow: "hidden",
   "& img": {
@@ -20,12 +20,12 @@ const TitleBox = styled(Box)(() => ({
   left: 40,
 }));
 
-const Hero = ({ page, imageLg, Name, TrackCount }) => {
+const Hero = ({ page, imageLg, Name, open, TrackCount, ...rest }) => {
   // if (!imageLg) {
   //   return <i />;
   // }
   return (
-    <Banner on={!!imageLg}>
+    <Banner on={!!imageLg && open} {...rest}>
        {!!imageLg && (
          <img src={imageLg} alt={Name} />
        )}

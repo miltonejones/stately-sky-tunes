@@ -8,6 +8,7 @@ import {
   Spacer,
   Toolbar,
   Hero,
+  Nowrap
 } from "./styled";
 import { Avatar, Box, Collapse, Pagination, Stack, Typography, LinearProgress } from "@mui/material";
 
@@ -113,13 +114,7 @@ function Application() {
     playlist: "Playlists",
   };
 
-  const typeKey =
-    mediaType === "music" ? "grid" : types[listKey];
-
-  // const prefix =
-  //   typeKey === "list"
-  //     ? `/${typeKey}/${mediaType}/${mediaID}/`
-  //     : `/${typeKey}/${mediaType}/`;
+  const typeKey = mediaType === "music" ? "grid" : types[listKey]; 
 
   const handlePlay = (file, records) => {
     statePlayer.handlePlay(file.FileKey, records || response.records, file);
@@ -167,23 +162,25 @@ function Application() {
   }
 
   const openPage = num => {
-    sortPage(num, sortKey, direction) 
+    sortPage(num, sortKey, direction);
   }
  
 
   return (
     <Box sx={{width: '100vw', height: '100vh', overflowY: 'auto', overflowX: 'hidden'}}>
+
       {/* page header */}
-      <PageHead page={selectedPage} pageTitle={pageTitle} />
+      <PageHead page={selectedPage} pageTitle={pageTitle}  />
 
       {/* toolbar */}
       <Toolbar>
  
         {/* logo  */}
-        <Avatar src={logo} alt="sky-tunes" />
-        <Typography variant="h6" sx={{ mr: 6, ml: 1 }}>
-          Skytunes
-        </Typography>
+        <Avatar onClick={() => navigate("/")} src={logo} alt="sky-tunes" />
+
+        <Nowrap width="fit-content" hover onClick={() => navigate("/")} variant="h6" sx={{ mr: 6, ml: 1 }}>
+          {stateSkyTunes.appTitle}
+        </Nowrap>
 
         <LiteButton
           onClick={() => navigate("/")}
@@ -204,18 +201,7 @@ function Application() {
           onClick={() => navigate(`/find`)}
         >
           search
-        </LiteButton>
-
-        {/* navigation buttons */}
-        {/* {Object.keys(pages).map((pageType) => (
-          <LiteButton
-            onClick={() => navigate("/grid/" + pageType + "/1")}
-            variant={pageType === mediaType ? "contained" : "text"}
-            key={pageType}
-          >
-            {pages[pageType]}
-          </LiteButton>
-        ))} */}
+        </LiteButton> 
 
         <Spacer /> 
         {/* search box */}
@@ -250,86 +236,115 @@ function Application() {
           search
         </LiteButton>
 
-      {/* debugger toggle button */}
-      <Box onClick={() => stateSkyTunes.send("DEBUG")} sx={{ mr: 2 }}>
-        <i class="fa-solid fa-gear"></i>
-      </Box>
+        {/* debugger toggle button */}
+        <Box onClick={() => stateSkyTunes.send("DEBUG")} sx={{ mr: 2 }}>
+          <i class="fa-solid fa-gear"></i>
+        </Box>
+
       </Toolbar>
+
       {/* main workspace */}
       <Stack sx={{ mt: 9, mb: 20 }}>
+
         {/* breadcrumbs  */}
-            <Flex between> 
-        { !['splash', 'find'].some(stateSkyTunes.state.matches) &&  
-            !!selectedKey && !!selectedKey && (
-              <NavLinks
-                navigate={navigate}
-                page={selectedPage}
-                href={`/grid/${selectedKey}/1`}
-                pageTitle={pageTitle}
-              />
-            )
-             }
+        <Flex between> 
+        {['grid', 'list']
+          .some(stateSkyTunes.state.matches) &&  
+            !!selectedKey && (
+              <>
  
- <Spacer />
-         {!['splash', 'find'].some(stateSkyTunes.state.matches) &&  isLoaded && <ChipMenu value={mediaType} 
+            <Collapse in={!!hero?.imageLg && !stateSkyTunes.state.context.bannerOpen} orientation="horizontal">
+              <Avatar sx={{ml: 2}} src={hero?.imageLg} 
+                onClick={() => stateSkyTunes.send({
+                  type: 'CHANGE',
+                  key: 'bannerOpen',
+                  value: !stateSkyTunes.state.context.bannerOpen
+                }) } />
+            </Collapse>
+            <NavLinks
+              navigate={navigate}
+              page={selectedPage}
+              href={`/grid/${selectedKey}/1`}
+              pageTitle={pageTitle}
+            /></>
+          ) }
+
+        <Spacer />
+
+        {/* navigation window  */}
+        {!['splash', 'find'].some(stateSkyTunes.state.matches) &&  
+          isLoaded && (
+          <ChipMenu value={mediaType} 
             onChange={(val) => navigate(!val ? "/grid/music/1" : `/grid/${val}/1`)}
             options={Object.keys(pages).map(value => ({
             value,
             label: pages[value],
             icon: typeIcons[value]
-          }))}/>}
+          }))}/>
+        )}
 
-            {isGrid && <> 
-              <Box sx={{pr: 2}}>
-              <i className="fa-solid fa-arrow-up-a-z"
-              onClick={() => {
-                stateSkyTunes.send({
-                  type: "CHANGE",
-                  key: 'showSort',
-                  value: !showSort,
-                });
-              }}
-              ></i>
-              </Box>
-              <Collapse orientation="horizontal" in={showSort}>
-                 <Flex sx={{mr: 3}}>
-                 
-                  {[mediaType === 'genre' ? 'Genre' : (
-                    mediaType === 'playlist' ? 'Title' : 'Name'
-                  ), 'TrackCount'].map(key => (
-                    <LiteButton
-                    size="small"
-                      rounded onClick={() => sortPage(currentPage, key, direction === 'ASC' ? 'DESC' : 'ASC')}
-                      variant={sortKey === key ? "contained" : "text"}
-                      key={key}
-                    >
-                      {key}
-                    </LiteButton>
-                  ))}
-                </Flex>                
-              </Collapse>
-          </>}
-          { !!headerSort && isLoaded && <LiteButton
+        {/* sort menu  */}
+        {isGrid && <> 
+          <Box sx={{pr: 2}}>
+            <i className="fa-solid fa-arrow-up-a-z"
+            onClick={() => {
+              stateSkyTunes.send({
+                type: "CHANGE",
+                key: 'showSort',
+                value: !showSort,
+              });
+            }}
+            ></i>
+          </Box>
+
+          <Collapse orientation="horizontal" in={showSort}>
+            <Flex sx={{mr: 3}}> 
+              {[mediaType === 'genre' ? 'Genre' : (
+                mediaType === 'playlist' ? 'Title' : 'Name'
+              ), 'TrackCount']
+              .map(key => (
+                <LiteButton
+                  size="small"
+                  rounded onClick={() => sortPage(currentPage, key, direction === 'ASC' ? 'DESC' : 'ASC')}
+                  variant={sortKey === key ? "contained" : "text"}
+                  key={key}
+                >
+                  {key}
+                </LiteButton>
+              ))}
+            </Flex>                
+          </Collapse>
+        </>}
+
+        {/* sort reset button */}
+        { !!headerSort && isLoaded && (
+          <LiteButton
             sx={{mr: 2}}
             size="small"
             onClick={() => navigate('/' + [typeKey,mediaType,mediaID, currentPage]
-                .filter(e => !!e)
-                .join('/'))}
-            startIcon={<i className="fa-solid fa-arrow-up-a-z"/>}>
-              reset sort
-            </LiteButton>}
+              .filter(e => !!e)
+              .join('/'))}
+            startIcon={<i className="fa-solid fa-arrow-up-a-z"/>} 
+          >
+            reset sort
+          </LiteButton>)}
 
-          </Flex>
+        
+        </Flex>
  
         {stateSkyTunes.busy &&  <LinearProgress variant="indeterminate" sx={{width: '100vw'}} color="primary"/> }
-   
- 
  
         {/* carousel  */}
         {!!carouselImages && <StateCarousel images={carouselImages} />}
 
         {/* hero image banner */}
-        <Hero {...hero} page={pages[mediaType]} />
+        <Hero {...hero} page={pages[mediaType]} 
+          onClick={() => stateSkyTunes.send({
+            type: 'CHANGE',
+            key: 'bannerOpen',
+            value: !stateSkyTunes.state.context.bannerOpen
+          }) }
+        open={stateSkyTunes.state.context.bannerOpen}/>
  
         {/* pagination */}
         <Flex sx={{ml: 1, mr: 4, mt: 2}} spacing={2}>
@@ -339,15 +354,9 @@ function Application() {
               page={Number(currentPage)}
               onChange={(a, b) => openPage(b)}
             />
-          )}
-          
-          <Spacer />
-
-          {/* </>}`/${typeKey}/${mediaType}/1` */}
-
-
-
+          )}  
         </Flex>
+
         {/* records returned from the state machine  */}
         {!!Form &&  <Form {...interfaceProps}/> }
       </Stack>
