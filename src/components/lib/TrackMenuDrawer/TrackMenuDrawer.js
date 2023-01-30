@@ -4,7 +4,7 @@ import Avatar from "@mui/material/Avatar";
 import { Flex, Spacer, Nowrap, LiteButton } from "../../../styled";
 import { AutoSelect, Diagnostics } from "..";
 
-const TrackMenuDrawer = ({ track, open, busy, state, diagnosticProps, results, debug, handleGoto, send }) => {
+const TrackMenuDrawer = ({ track, open, busy, state, onList, diagnosticProps, results, debug, handleGoto, send }) => {
   
 
 
@@ -41,6 +41,10 @@ const TrackMenuDrawer = ({ track, open, busy, state, diagnosticProps, results, d
     },
     {
       label: "Add to playlist",
+      action: () => {
+        onList(track);
+        send("CLOSE");
+      },
       caption: "Save this song to play later",
       icon: <i class="fa-solid fa-list-ol"></i>,
     },

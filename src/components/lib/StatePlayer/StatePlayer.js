@@ -13,21 +13,13 @@ import {
   Drawer,
   styled,
 } from "@mui/material";
-import Marquee from "react-fast-marquee";
+// import Marquee from "react-fast-marquee";
 import { useMachine } from "@xstate/react";
 import { audioMachine, useMenu } from "../../../machines"; 
-import { Flex, Spacer, Nowrap } from "../../../styled";
+import { Flex, Spacer, Bureau, ScrollingText, Nowrap } from "../../../styled";
 import { AudioConnector, frameLooper } from "./eq";
-import { Diagnostics } from "..";
-
-const Bureau = styled(Paper)(({ open }) => ({
-  position: "fixed",
-  bottom: open ? 0 : "-134vh",
-  transition: "bottom 0.2s linear",
-  left: 0,
-  width: "100vw",
-}));
-
+import { Diagnostics } from ".."; 
+ 
 const connector = new AudioConnector();
 
 export const useStatePlayer = (onPlayStart) => {
@@ -327,13 +319,13 @@ const StatePlayer = ({
             />
           )}
 
-          <Stack sx={{ width: 300 }}>
+          <Stack sx={{ width: 240 }}>
             <Nowrap>{artistName}</Nowrap>
-            <Text scrolling={scrolling}>
+            <ScrollingText scrolling={scrolling}>
               <Nowrap sx={{ whiteSpace: "nowrap " }} variant="body2">
                 {Title}
               </Nowrap>
-            </Text>
+            </ScrollingText>
           </Stack>
 
           <Stack direction="row" sx={{ alignItems: "center" }}>
@@ -342,11 +334,11 @@ const StatePlayer = ({
                 <i class="fa-solid fa-list-check"></i>
               </IconButton>
             )}
-            <ThirtyButton direction="left" onClick={() => handleSkip(-30)} />
+            {/* <ThirtyButton direction="left" onClick={() => handleSkip(-30)} /> */}
             <IconButton size="large" onClick={() => handlePlay()}>
               {icon}
             </IconButton>
-            <ThirtyButton direction="right" onClick={() => handleSkip(30)} />
+            {/* <ThirtyButton direction="right" onClick={() => handleSkip(30)} /> */}
             <IconButton onClick={() => send('END')}>
               <i class="fa-solid fa-forward"></i>
             </IconButton>
@@ -419,11 +411,12 @@ const StatePlayer = ({
               value: val
             })
           }}/>
-            <i onClick={() => onMenu(rest)} className="fa-solid fa-ellipsis-vertical"></i>
-          <i onClick={handleClose} className="fa-solid fa-xmark"></i>
+          
+          <i onClick={() => onMenu(rest)} className="fa-solid fa-ellipsis-vertical"></i>
           <Box onClick={handleDebug} sx={{ mr: 2 }}>
             <i class="fa-solid fa-gear"></i>
           </Box>
+          <i onClick={handleClose} className="fa-solid fa-xmark"></i>
           {/* <IconButton>
           </IconButton>
           <IconButton>
@@ -439,33 +432,33 @@ const StatePlayer = ({
   );
 };
 
-const ThirtyButton = ({ direction, onClick }) => {
-  return (
-    <IconButton
-      onClick={onClick}
-      sx={{ position: "relative", width: 40, height: 40 }}
-    >
-      <i className={`fa-solid fa-arrow-rotate-${direction}`}></i>
-      <Typography
-        variant="caption"
-        sx={{ fontSize: "0.5rem", fontWeight: 700, position: "absolute" }}
-      >
-        30
-      </Typography>
-    </IconButton>
-  );
-};
+// const ThirtyButton = ({ direction, onClick }) => {
+//   return (
+//     <IconButton
+//       onClick={onClick}
+//       sx={{ position: "relative", width: 40, height: 40 }}
+//     >
+//       <i className={`fa-solid fa-arrow-rotate-${direction}`}></i>
+//       <Typography
+//         variant="caption"
+//         sx={{ fontSize: "0.5rem", fontWeight: 700, position: "absolute" }}
+//       >
+//         30
+//       </Typography>
+//     </IconButton>
+//   );
+// };
 
-const Text = ({ scrolling, children }) => {
-  if (scrolling) {
-    return (
-      <Marquee play gradientColor="#222">
-        {children}
-      </Marquee>
-    );
-  }
-  return children;
-};
+// const Text = ({ scrolling, children }) => {
+//   if (scrolling) {
+//     return (
+//       <Marquee play gradientColor="#222">
+//         {children}
+//       </Marquee>
+//     );
+//   }
+//   return children;
+// };
 
 // const rbg = () => {
 //   const hu = () => Math.ceil(Math.random() * 255);

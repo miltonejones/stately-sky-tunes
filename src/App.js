@@ -116,10 +116,10 @@ function Application() {
   const typeKey =
     mediaType === "music" ? "grid" : types[listKey];
 
-  const prefix =
-    typeKey === "list"
-      ? `/${typeKey}/${mediaType}/${mediaID}/`
-      : `/${typeKey}/${mediaType}/`;
+  // const prefix =
+  //   typeKey === "list"
+  //     ? `/${typeKey}/${mediaType}/${mediaID}/`
+  //     : `/${typeKey}/${mediaType}/`;
 
   const handlePlay = (file, records) => {
     statePlayer.handlePlay(file.FileKey, records || response.records, file);
@@ -350,7 +350,7 @@ function Application() {
 
       <PlaylistDrawer {...stateList} />
 
-      <TrackMenuDrawer {...stateMenu} />
+      <TrackMenuDrawer {...stateMenu} onList={stateList.handleOpen} />
 
       {/* debugger window */}
       <Diagnostics

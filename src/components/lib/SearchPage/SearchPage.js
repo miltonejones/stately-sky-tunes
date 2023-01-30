@@ -1,5 +1,5 @@
 import React from 'react';
-import { styled, Box, Avatar, Divider, Typography, Stack, Chip } from '@mui/material';
+import { styled, Box, Avatar, Divider, Typography, Stack } from '@mui/material';
 import { Flex, LiteButton, Nowrap, TuneGrid, InfoCard} from "../../../styled"; 
  
 const Layout = styled(Box)(({ theme }) => ({

@@ -1,3 +1,5 @@
+import Bureau from './Bureau';
+import ScrollingText from './ScrollingText';
 import Toolbar from './Toolbar';
 import Spacer from './Spacer';
 import IconTextField from './IconTextField';
@@ -17,6 +19,8 @@ export const typeIcons = {
 }
 
 export {
+  Bureau,
+  ScrollingText,
   Toolbar,
   Spacer,
   IconTextField,
