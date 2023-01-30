@@ -566,6 +566,10 @@ const listProps = {
     sort: "Genre",
     direction: "ASC",
   },
+  music: {
+    sort: "ID",
+    direction: "DESC",
+  },
 }
 
 const requestProps = {
@@ -580,6 +584,10 @@ const requestProps = {
   artist: {
     sort: "albumFk,discNumber,trackNumber",
     direction: "ASC",
+  },
+  music: {
+    sort: "ID",
+    direction: "DESC",
   },
   // playlist: {
   //   sort: "Title",
