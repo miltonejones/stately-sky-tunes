@@ -20,7 +20,7 @@ const DataList = ({
   if (!records?.length) {
     return <>No records to display</>;
   }
-  // 'albumImage','Title','artistName','albumName','Genre','trackTime'
+  
   const fields = [
     {
       key: "albumImage",
@@ -92,19 +92,20 @@ const DataList = ({
   const sortIcon = <i className={`fa-solid fa-caret-${dir === 'ASC' ? 'up' : 'down'}`}></i>
 
   return (
-<>
-{/* [{type}][{page}][{id}][{direction}]---[{prefix}][{sortKey}] */}
-<TuneList sx={{ m: 2 }}>
-      {fields.map(field =>  <Nowrap hover bold={sortKey === field.key} onClick={() => navigate(`/${prefix}/${field.key}/${dir}`)} variant="subtitle2"
-        >{!!field.key ? field.label : <>&nbsp;</>}{" "}{sortKey === field.key && <>{sortIcon}</>}</Nowrap>)}
-      {/* <Box>&nbsp;</Box>
-      <Nowrap variant="subtitle2">Title</Nowrap>
-      <Nowrap variant="subtitle2">Artist</Nowrap>
-      <Nowrap variant="subtitle2">Album</Nowrap>
-      <Nowrap variant="subtitle2">Genre</Nowrap>
-      <Nowrap variant="subtitle2">Time</Nowrap>
-      <Box>&nbsp;</Box>
-      <Box>&nbsp;</Box> */}
+  <>
+
+  <TuneList sx={{ m: 2 }}>
+    {fields.map(field =>  (
+      <Nowrap 
+        hover 
+        bold={sortKey === field.key} 
+        onClick={() => !!field.key && navigate(`/${prefix}/${field.key}/${dir}`)} 
+        variant="subtitle2"
+      >
+        {!!field.key ? field.label : <>&nbsp;</>}{" "}{sortKey === field.key && <>{sortIcon}</>}
+      </Nowrap>))}
+
+
       {records.map((record) =>
         fields.map((field) => (
           <Nowrap
@@ -125,16 +126,15 @@ const DataList = ({
               <>
                 {!!field.play && FileKey === record.FileKey && (
                   <i class="fa-solid fa-volume-high"></i>
-                )}
-                {/* <i class="fa-solid fa-volume"></i> */}{" "}
+                )} 
                 {trueProp(record, field)}
               </>
             )}
           </Nowrap>
         ))
       )}
-    </TuneList>
-</>
+  </TuneList>
+  </>
   );
 };
 DataList.defaultProps = {};

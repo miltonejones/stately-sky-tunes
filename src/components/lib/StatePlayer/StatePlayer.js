@@ -3,7 +3,7 @@ import {
   Avatar,
   Card,
   IconButton,
-  Paper,
+  // Paper,
   Stack,
   Slider,
   Box,
@@ -11,7 +11,7 @@ import {
   Popover,
   Typography,
   Drawer,
-  styled,
+  // styled,
 } from "@mui/material";
 // import Marquee from "react-fast-marquee";
 import { useMachine } from "@xstate/react";
@@ -290,22 +290,7 @@ const StatePlayer = ({
 
       <Bureau
         elevation={4}
-        open={!idle}
-        ModalProps={{
-          slots: { backdrop: "div" },
-          slotProps: {
-            root: {
-              //override the fixed position + the size of backdrop
-              style: {
-                position: "absolute",
-                top: "unset",
-                bottom: "unset",
-                left: "unset",
-                right: "unset",
-              },
-            },
-          },
-        }}
+        open={!idle} 
       >
         {/* <pre>{JSON.stringify(rest, 0, 2)}</pre> */}
         <Stack spacing={2} sx={{ p: 2, alignItems: "center" }} direction="row">
