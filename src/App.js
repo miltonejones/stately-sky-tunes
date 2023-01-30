@@ -258,7 +258,7 @@ function Application() {
       {/* main workspace */}
       <Stack sx={{ mt: 9, mb: 20 }}>
         {/* breadcrumbs  */}
-            <Flex between>
+            <Flex between> 
         { !['splash', 'find'].some(stateSkyTunes.state.matches) &&  
             !!selectedKey && !!selectedKey && (
               <NavLinks
@@ -270,6 +270,7 @@ function Application() {
             )
              }
  
+ <Spacer />
          {!['splash', 'find'].some(stateSkyTunes.state.matches) &&  isLoaded && <ChipMenu value={mediaType} 
             onChange={(val) => navigate(!val ? "/grid/music/1" : `/grid/${val}/1`)}
             options={Object.keys(pages).map(value => ({
@@ -277,6 +278,47 @@ function Application() {
             label: pages[value],
             icon: typeIcons[value]
           }))}/>}
+
+            {isGrid && <> 
+              <Box sx={{pr: 2}}>
+              <i className="fa-solid fa-arrow-up-a-z"
+              onClick={() => {
+                stateSkyTunes.send({
+                  type: "CHANGE",
+                  key: 'showSort',
+                  value: !showSort,
+                });
+              }}
+              ></i>
+              </Box>
+              <Collapse orientation="horizontal" in={showSort}>
+                 <Flex sx={{mr: 3}}>
+                 
+                  {[mediaType === 'genre' ? 'Genre' : (
+                    mediaType === 'playlist' ? 'Title' : 'Name'
+                  ), 'TrackCount'].map(key => (
+                    <LiteButton
+                    size="small"
+                      rounded onClick={() => sortPage(currentPage, key, direction === 'ASC' ? 'DESC' : 'ASC')}
+                      variant={sortKey === key ? "contained" : "text"}
+                      key={key}
+                    >
+                      {key}
+                    </LiteButton>
+                  ))}
+                </Flex>                
+              </Collapse>
+          </>}
+          { !!headerSort && isLoaded && <LiteButton
+            sx={{mr: 2}}
+            size="small"
+            onClick={() => navigate('/' + [typeKey,mediaType,mediaID, currentPage]
+                .filter(e => !!e)
+                .join('/'))}
+            startIcon={<i className="fa-solid fa-arrow-up-a-z"/>}>
+              reset sort
+            </LiteButton>}
+
           </Flex>
  
         {stateSkyTunes.busy &&  <LinearProgress variant="indeterminate" sx={{width: '100vw'}} color="primary"/> }
@@ -301,44 +343,9 @@ function Application() {
           
           <Spacer />
 
-          {isGrid && <> 
-            <i className="fa-solid fa-arrow-up-a-z"
-              onClick={() => {
-                stateSkyTunes.send({
-                  type: "CHANGE",
-                  key: 'showSort',
-                  value: !showSort,
-                });
-              }}
-              ></i>
-              <Collapse orientation="horizontal" in={showSort}>
-                 <Flex>
-                 
-                  {[mediaType === 'genre' ? 'Genre' : (
-                    mediaType === 'playlist' ? 'Title' : 'Name'
-                  ), 'TrackCount'].map(key => (
-                    <LiteButton
-                    size="small"
-                      rounded onClick={() => sortPage(currentPage, key, direction === 'ASC' ? 'DESC' : 'ASC')}
-                      variant={sortKey === key ? "contained" : "text"}
-                      key={key}
-                    >
-                      {key}
-                    </LiteButton>
-                  ))}
-                </Flex>                
-              </Collapse>
-          </>}
           {/* </>}`/${typeKey}/${mediaType}/1` */}
 
-          { !!headerSort && isLoaded && <LiteButton
-            size="small"
-            onClick={() => navigate('/' + [typeKey,mediaType,mediaID, currentPage]
-                .filter(e => !!e)
-                .join('/'))}
-            startIcon={<i className="fa-solid fa-arrow-up-a-z"/>}>
-              reset sort
-            </LiteButton>}
+
 
         </Flex>
         {/* records returned from the state machine  */}

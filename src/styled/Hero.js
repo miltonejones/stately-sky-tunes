@@ -3,7 +3,7 @@ import { styled, Typography, Box } from "@mui/material";
 
 const Banner = styled(Box)(( { on }) => ({
   width: "100vw",
-  height: on ? "40vh" : 0,
+  height: on ? "calc(100vw * .25)" : 0,
   transition: 'height: 0.4s linear',
   position: "relative",
   overflow: "hidden",
@@ -16,7 +16,7 @@ const Banner = styled(Box)(( { on }) => ({
 
 const TitleBox = styled(Box)(() => ({
   position: "absolute",
-  top: 200,
+  bottom: 60,
   left: 40,
 }));
 

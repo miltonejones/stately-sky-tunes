@@ -3,6 +3,7 @@ import { Drawer, LinearProgress, Typography, TextField, Stack, Box, Collapse } f
 import Avatar from "@mui/material/Avatar";
 import { Flex, Spacer, Nowrap, LiteButton } from "../../../styled";
 import { AutoSelect, Diagnostics } from "..";
+ import { searchGroupByType } from '../../../connector';
 
 const TrackMenuDrawer = ({ track, open, busy, state, onList, diagnosticProps, onQueue, results, debug, handleGoto, send }) => {
   
@@ -167,6 +168,19 @@ function EditForm({
     });
   };
 
+  const valueChanger = (mediaType) => async (context, event) => {
+    const value = context.change;
+    if (!value?.length) return;
+    const opts =  await searchGroupByType(mediaType, value, 1);
+    if (opts.records?.length) {
+     return opts.records.map(rec => ({
+       name: rec.Name || rec.Genre,
+       image: rec.Thumbname,
+       ID: rec.ID
+     }));
+    } 
+  }
+
   return (
     <Stack spacing={1} sx={{mt: 4}}>
       <Flex>
@@ -200,10 +214,11 @@ function EditForm({
       <Flex>
         <AutoSelect  
           type="album" 
-          onValueSelected={val => {
+          onValueSelected={async (val) => {
             handleChange("albumFk")(val.ID);
             handleChange("albumName")(val.name);
           }}
+          valueChanged={valueChanger("album")}
           value={{
             name:  albumName,
             image: albumImage,
@@ -224,6 +239,7 @@ function EditForm({
             handleChange("artistFk")(val.ID);
             handleChange("artistName")(val.name);
           }}
+          valueChanged={valueChanger("album")}
           value={{
             name:  artistName,
             image: albumImage,
@@ -243,6 +259,7 @@ function EditForm({
           onValueSelected={val => {
             handleChange("Genre")(val.ID); 
           }}
+          valueChanged={valueChanger("genre")}
           value={{
             name:  Genre, 
             ID: Genre

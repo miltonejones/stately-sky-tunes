@@ -486,7 +486,7 @@ export const useSkytunes = (onRefresh) => {
         return location.pathname;
       },
       loadRequestParams: async (context) => { 
-        const innerProps = !!id ? requestProps[type] : listProps[type];
+        const innerProps = !!id ? listProps[type] : gridProps[type];
         const sortProps = !!sort ? { sort, direction } : innerProps; 
         return {
           type,
@@ -549,7 +549,7 @@ const carouselTransform = img => ({
     });
 
 
-const listProps = {
+const gridProps = {
   playlist: {
     sort: "Title",
     direction: "DESC",
@@ -572,7 +572,7 @@ const listProps = {
   },
 }
 
-const requestProps = {
+const listProps = {
   album: {
     sort: "discNumber,trackNumber",
     direction: "ASC",
@@ -588,13 +588,9 @@ const requestProps = {
   music: {
     sort: "ID",
     direction: "DESC",
+  }, 
+  genre: {
+    sort: "artistName",
+    direction: "ASC",
   },
-  // playlist: {
-  //   sort: "Title",
-  //   direction: "DESC",
-  // },
-  // genre: {
-  //   sort: "Genre",
-  //   direction: "DESC",
-  // },
 };

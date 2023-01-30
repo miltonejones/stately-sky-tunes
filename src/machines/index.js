@@ -6,6 +6,7 @@ import { carouselMachine } from "./carouselMachine";
 import { useTrackmenu } from "./trackmenuMachine";
 import { useMenu } from "./menuMachine";
 import { useSelector } from "./selectorMachine";
+import { useAutoselect } from "./autoselectMachine";
 
 export {
   useSkytunes,
@@ -16,4 +17,5 @@ export {
   carouselMachine,
   useSelector,
   useTrackmenu,
+  useAutoselect
 };
