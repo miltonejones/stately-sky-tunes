@@ -41,6 +41,10 @@ export const audioMachine = createMachine(
                 target: "#audio_player.opened",
                 actions: "assignSourceToContext",
               },
+              QUEUE: {
+                target: "#audio_player.opened",
+                actions: "initQueue",
+              },
               CHANGE: {
                 target: "#audio_player.idle.loaded",
                 actions: "assignSourceToContext",
@@ -88,15 +92,7 @@ export const audioMachine = createMachine(
                   }),
                 }
               ]
-            }
-            // after: {
-            //   10: {
-            //     target: "start",
-            //     actions: assign({
-            //       retries: 1,
-            //     }),
-            //   },
-            // },
+            } 
           },
           start: {
             invoke: {
@@ -211,7 +207,17 @@ export const audioMachine = createMachine(
     },
   },
   {
-    actions: {
+    actions: { 
+      initQueue: assign((context, event) => { 
+        const { track } = event ;
+        persistTrack(track); 
+        return {
+          ...track, 
+          trackList: [track],
+          src: playerUrl(track.FileKey),
+          scrolling: track.Title?.length > 35,
+        }; 
+      }),
       
       addToQueue: assign((context, event) => { 
         const index = context.trackList
