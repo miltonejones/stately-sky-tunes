@@ -432,7 +432,7 @@ const skytunesMachine = createMachine(
 export const useSkytunes = (onRefresh) => {
   const {
     type,// = "music",
-    page,// = 1,
+    page = 1,
     sort,// = "ID",
     direction,// = "DESC",
     id,
