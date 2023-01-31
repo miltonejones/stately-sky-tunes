@@ -2,10 +2,10 @@
 import { styled, Box } from "@mui/material";
 
 const TuneList = styled(Box)(({ theme }) => ({
-  gap: theme.spacing(1),
+  gap: 0, // theme.spacing(1),
   display: "grid",
   alignItems: "center",
-  gridTemplateColumns: "48px 25% 20% 30% 8% 5% 40px 1fr",
+  gridTemplateColumns: "40px 25% 20% 22% 10% 5% 40px 1fr",
 }));
 
 export default TuneList;

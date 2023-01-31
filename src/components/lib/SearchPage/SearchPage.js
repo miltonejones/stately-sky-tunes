@@ -76,12 +76,15 @@ const SearchPage = ({searches, search_param, onPlay , memory, history, navigate,
    <Layout data-testid="test-for-SearchPage">
     <Typography variant="h6" sx={{mb: 2}}>Search results for "{search_param}"</Typography>
     <Flex spacing={2} >
-      {Object.keys(searches).map((found, f) => <LiteButton rounded key={found} label={found} 
+      {Object.keys(searches)
+        .filter(f => !!searches[f] && searches[f].records && searches[f].records.length)
+        .map((found, f) => <LiteButton rounded key={found} label={found} 
         startIcon={icons[found]}
         onClick={() => onTab(f)}
         color="primary"
+        size="small"
         variant={selected_search === f ? "contained" : "text"} >
-          {found}
+          {found} ({searches[found].records.length})
         </LiteButton>)}
     </Flex>
 

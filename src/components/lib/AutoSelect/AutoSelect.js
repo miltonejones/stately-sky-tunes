@@ -1,7 +1,6 @@
 import React from 'react';
 import { styled, Autocomplete, Avatar, TextField, Box } from '@mui/material';
-import throttle from 'lodash/throttle';
-import { searchGroupByType } from '../../../connector';
+import throttle from 'lodash/throttle'; 
 import { useAutoselect } from '../../../machines';
  
  
@@ -17,8 +16,7 @@ const AutoSelect = (props) => {
       valueSelected: onValueSelected
     } 
   );
-
-  const [value] = React.useState('');
+ 
   const [inputValue, setInputValue] = React.useState(''); 
   const { options = [] } =  auto;
 
@@ -36,7 +34,7 @@ const AutoSelect = (props) => {
           ...request
         }) 
       }, 1000),
-    [],
+    [auto],
   );
  
   React.useEffect(() => { 

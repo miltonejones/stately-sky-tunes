@@ -9,6 +9,9 @@ const autoselectMachine = createMachine({
       on: {
         SELECT: {
           target: "selecting",
+          actions: assign((context, event) => ({
+            value: event.value
+          })),
         },
         CHANGE: {
           target: "changing",
@@ -23,10 +26,7 @@ const autoselectMachine = createMachine({
         src: "valueSelected",
         onDone: [
           {
-            target: "idle",
-            actions: assign((context, event) => ({
-              value: event.data
-            })),
+            target: "idle", 
           },
         ],
         onError: [
@@ -37,6 +37,11 @@ const autoselectMachine = createMachine({
       },
     },
     changing: {
+      after: {
+        1999: {
+          target: 'idle'
+        }
+      },
       invoke: {
         src: "valueChanged",
         onDone: [

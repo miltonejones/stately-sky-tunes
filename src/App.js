@@ -10,7 +10,7 @@ import {
   Hero,
   Nowrap
 } from "./styled";
-import { Avatar, Box, Collapse, Pagination, Stack, Typography, LinearProgress } from "@mui/material";
+import { Avatar, Box, Collapse, Pagination, Stack, LinearProgress } from "@mui/material";
 
 import { BrowserRouter, Routes, Route, useNavigate, useParams } from "react-router-dom";
 import {
@@ -79,6 +79,7 @@ function Application() {
     page: currentPage,
     type: mediaType,
     id: mediaID,
+    bannerOpen
   } = stateSkyTunes.state.context;
 
   const { playlist_db } = stateList.state.context;
@@ -253,12 +254,12 @@ function Application() {
             !!selectedKey && (
               <>
  
-            <Collapse in={!!hero?.imageLg && !stateSkyTunes.state.context.bannerOpen} orientation="horizontal">
+            <Collapse in={!!hero?.imageLg && !bannerOpen} orientation="horizontal">
               <Avatar sx={{ml: 2}} src={hero?.imageLg} 
                 onClick={() => stateSkyTunes.send({
                   type: 'CHANGE',
                   key: 'bannerOpen',
-                  value: !stateSkyTunes.state.context.bannerOpen
+                  value: !bannerOpen
                 }) } />
             </Collapse>
             <NavLinks
@@ -342,12 +343,13 @@ function Application() {
           onClick={() => stateSkyTunes.send({
             type: 'CHANGE',
             key: 'bannerOpen',
-            value: !stateSkyTunes.state.context.bannerOpen
+            value: !bannerOpen
           }) }
-        open={stateSkyTunes.state.context.bannerOpen}/>
+          sx={{mb: bannerOpen ? 1 : 0}}
+          open={bannerOpen}/>
  
         {/* pagination */}
-        <Flex sx={{ml: 1, mr: 4, mt: 2}} spacing={2}>
+        <Flex sx={{ml: 1, mr: 4}} spacing={2}>
           {counter.pageCount > 1 && (
             <Pagination
               count={Number(counter.pageCount)}

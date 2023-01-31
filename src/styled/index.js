@@ -1,3 +1,4 @@
+import Circle from './Circle';
 import Bureau from './Bureau';
 import ScrollingText from './ScrollingText';
 import Toolbar from './Toolbar';
@@ -19,6 +20,7 @@ export const typeIcons = {
 }
 
 export {
+  Circle,
   Bureau,
   ScrollingText,
   Toolbar,

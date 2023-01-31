@@ -1,6 +1,6 @@
 import React from "react";
 import { Avatar, Box } from "@mui/material";
-import { TuneList, Nowrap } from "../../../styled";
+import { TuneList, Nowrap, Circle } from "../../../styled";
 import moment from "moment";
 
 const DataList = ({
@@ -96,7 +96,7 @@ const DataList = ({
 
   <TuneList sx={{ m: 2 }}>
     {fields.map(field =>  (
-      <Nowrap 
+      <Nowrap  
         hover 
         bold={sortKey === field.key} 
         onClick={() => !!field.key && navigate(`/${prefix}/${field.key}/${dir}`)} 
@@ -106,9 +106,11 @@ const DataList = ({
       </Nowrap>))}
 
 
-      {records.map((record) =>
+      {records.map((record, o) =>
         fields.map((field) => (
           <Nowrap
+            odd={o % 2 !== 0}
+            sx={{ p: t => t.spacing(1, 0)}}
             variant="body2"
             bold={FileKey === record.FileKey}
             hover={!!field.href || !!field.play}
@@ -121,7 +123,7 @@ const DataList = ({
             key={field.key}
           >
             {field.key === "albumImage" ? (
-              <Avatar src={record[field.key]} alt={field.key} />
+              <Circle sx={{ ml: 1 }} size="small" src={record[field.key]} alt={field.key} />
             ) : (
               <>
                 {!!field.play && FileKey === record.FileKey && (

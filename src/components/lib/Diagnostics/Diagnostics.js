@@ -10,6 +10,8 @@ import {
   Typography 
 } from '@mui/material'; 
 
+import { Flex, Nowrap } from "../../../styled";
+
 const IceCream = styled(Box)(({ open }) => ({ 
   position: 'fixed',
   left: 20,
@@ -126,6 +128,7 @@ const StateName = ({ state }) => {
 };
 
 const Diagnostics = ({ id, send, state, states, open, onClose, layer }) => {
+  const [showContext, setShowContext] = React.useState(false);
   const { previous } = state.context;
   const event = getEvent(states, state);
 
@@ -143,7 +146,7 @@ const Diagnostics = ({ id, send, state, states, open, onClose, layer }) => {
         <Layout data-testid="test-for-Diagnostics">
           <Stack direction="row" sx={{ alignItems: 'center' }}>
             <Typography variant="body2">
-              Machine ID: <em>"{id}"</em>  
+              Machine ID: <em>"{id}"</em>  <u onClick={() =>setShowContext(!showContext)}>{showContext ? "hide" : "show"} context</u>
             </Typography>
             <Box sx={{ flexGrow: 1 }} />
             {!!onClose && (
@@ -156,6 +159,18 @@ const Diagnostics = ({ id, send, state, states, open, onClose, layer }) => {
             )}
           </Stack>
           <Divider sx={{ m: (t) => t.spacing(0.5, 0) }} />
+
+          
+          {!!showContext && Object.keys(state.context).map(key => (
+            <Flex key={key} between>
+              <Nowrap variant="body2" bold>{key}</Nowrap>
+              <Nowrap variant="caption" width={300}>
+                {JSON.stringify(state.context[key])}
+              </Nowrap>
+            </Flex>
+          ))}
+          
+
           <Typography variant="body2">
             Current state:{' '}
             <b>

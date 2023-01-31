@@ -1,7 +1,7 @@
 import React from "react";
 import { Drawer, Typography, Box } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
-import { Flex, Spacer, ScrollingText } from "../../../styled";
+import { Flex, Spacer, ScrollingText , Circle} from "../../../styled";
 
 const PlaylistDrawer = ({ state, send, handleEdit, createKey }) => {
   const { open, playlists, track } = state.context;
@@ -28,7 +28,7 @@ const PlaylistDrawer = ({ state, send, handleEdit, createKey }) => {
               sx={{ mb: 1, width: 380 }}
               spacing={1}
             >
-              <Avatar src={playlist.image} />
+              <Circle size="small" src={playlist.image} />
               <Typography variant="body2">{playlist.Title}</Typography>
               <Spacer />
               <i

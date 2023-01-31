@@ -168,6 +168,13 @@ function EditForm({
     });
   };
 
+  const valueSelector = (fk, key)  => async (context, event) => {
+    const { value } = context;
+    alert (JSON.stringify(value))
+    handleChange(fk)(value.ID);
+    handleChange(key)(value.name);
+  }
+
   const valueChanger = (mediaType) => async (context, event) => {
     const value = context.change;
     if (!value?.length) return;
@@ -218,6 +225,7 @@ function EditForm({
             handleChange("albumFk")(val.ID);
             handleChange("albumName")(val.name);
           }}
+          valueSelected={valueSelector("albumFk", "albumName")}
           valueChanged={valueChanger("album")}
           value={{
             name:  albumName,

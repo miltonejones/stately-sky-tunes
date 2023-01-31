@@ -301,6 +301,7 @@ const StatePlayer = ({
               alt={Title}
               width={72}
               height={72}
+              onClick={() => onMenu(rest)}
             />
           )}
 
