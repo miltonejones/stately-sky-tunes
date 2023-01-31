@@ -1,15 +1,14 @@
-import { createMachine, assign } from 'xstate';
+import { createMachine, assign } from "xstate";
 import { useMachine } from "@xstate/react";
 
-
 export const menuMachine = createMachine({
-  id: 'settings_menu',
-  initial: 'closed',
+  id: "settings_menu",
+  initial: "closed",
   states: {
     closed: {
       on: {
         open: {
-          target: 'opening',
+          target: "opening",
           actions: assign({
             anchorEl: (context, event) => event.anchorEl,
           }),
@@ -17,15 +16,14 @@ export const menuMachine = createMachine({
       },
     },
     opening: {
-      initial: 'opened',
+      initial: "opened",
       states: {
-
         closing: {
           invoke: {
-            src: 'menuClicked',
+            src: "menuClicked",
             onDone: [
               {
-                target: '#settings_menu.closed',
+                target: "#settings_menu.closed",
               },
             ],
           },
@@ -33,7 +31,7 @@ export const menuMachine = createMachine({
         opened: {
           on: {
             close: {
-              target: 'closing',
+              target: "closing",
               actions: assign({
                 anchorEl: null,
                 value: (context, event) => event.value,
@@ -41,40 +39,38 @@ export const menuMachine = createMachine({
             },
           },
         },
-    
-      } 
-    }, 
+      },
+    },
   },
 });
-
 
 export const useMenu = (onChange) => {
   const [state, send] = useMachine(menuMachine, {
     services: {
-      menuClicked: async (context, event) => { 
+      menuClicked: async (context, event) => {
         onChange && onChange(event.value);
-      }, 
+      },
     },
   });
   const { anchorEl } = state.context;
   const handleClose = (value) => () =>
     send({
-      type: 'close',
+      type: "close",
       value,
     });
-  const handleClick = (event) =>  { 
-  send({
-    type: 'open',
-    anchorEl: event.currentTarget,
-  });
-  }
+  const handleClick = (event) => {
+    send({
+      type: "open",
+      anchorEl: event.currentTarget,
+    });
+  };
 
   const diagnosticProps = {
     id: menuMachine.id,
     states: menuMachine.states,
     state,
     send,
-  }; 
+  };
 
   return {
     state,
@@ -82,6 +78,6 @@ export const useMenu = (onChange) => {
     anchorEl,
     handleClick,
     handleClose,
-    diagnosticProps, 
+    diagnosticProps,
   };
 };

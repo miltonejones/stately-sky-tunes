@@ -15,11 +15,11 @@ import {
 } from "@mui/material";
 // import Marquee from "react-fast-marquee";
 import { useMachine } from "@xstate/react";
-import { audioMachine, useMenu } from "../../../machines"; 
+import { audioMachine, useMenu } from "../../../machines";
 import { Flex, Spacer, Bureau, ScrollingText, Nowrap } from "../../../styled";
 import { AudioConnector, frameLooper } from "./eq";
-import { Diagnostics } from ".."; 
- 
+import { Diagnostics } from "..";
+
 const connector = new AudioConnector();
 
 export const useStatePlayer = (onPlayStart) => {
@@ -39,7 +39,8 @@ export const useStatePlayer = (onPlayStart) => {
         throw new Error(e);
       }
     },
-    audioStarted: async (context) => onPlayStart && onPlayStart(context.artistFk),
+    audioStarted: async (context) =>
+      onPlayStart && onPlayStart(context.artistFk),
     loadAudio: async (context) => {
       const audio = new Audio();
       if (context.eq) {
@@ -124,22 +125,23 @@ export const useStatePlayer = (onPlayStart) => {
     });
   };
 
-  const handleList = () => send({
-    type: 'TOGGLE',
-    key: 'listopen'
-  });
+  const handleList = () =>
+    send({
+      type: "TOGGLE",
+      key: "listopen",
+    });
 
-  const handleDebug = () => send({
-    type: 'TOGGLE',
-    key: 'debug'
-  });
+  const handleDebug = () =>
+    send({
+      type: "TOGGLE",
+      key: "debug",
+    });
 
   const icon = state.matches("opened.playing") ? (
     <i class="fa-regular fa-circle-pause"></i>
   ) : (
     <i class="fa-solid fa-circle-play"></i>
   );
-
 
   const diagnosticProps = {
     id: audioMachine.id,
@@ -149,7 +151,7 @@ export const useStatePlayer = (onPlayStart) => {
   };
 
   return {
-    diagnosticProps, 
+    diagnosticProps,
     id: audioMachine.id,
     state,
     send,
@@ -190,34 +192,45 @@ const Progress = ({ progress, handleSeek, src }) => {
 };
 
 const VolumeMenu = ({ volume, onChange }) => {
-  const menu = useMenu(onChange)
+  const menu = useMenu(onChange);
   const { anchorEl } = menu.state.context;
-  const className = volume > 0 
-    ? "fa-solid fa-volume-high"
-    : "fa-solid fa-volume-xmark"
-  return <>
-     <i onClick={menu.handleClick} class={className}></i>
-     {/* {JSON.stringify(menu.state.value)}
+  const className =
+    volume > 0 ? "fa-solid fa-volume-high" : "fa-solid fa-volume-xmark";
+  return (
+    <>
+      <i onClick={menu.handleClick} class={className}></i>
+      {/* {JSON.stringify(menu.state.value)}
      {JSON.stringify(!!anchorEl)} */}
-     <Popover anchorEl={anchorEl} open={!!anchorEl} onClose={() => menu.handleClose(volume)()}>
-      <Flex spacing={2} sx={{ p: 2, width: 200}}>
-      <i onClick={() => menu.handleClose (0)()} className={className}></i>
-        <Slider value={volume} min={0} max={1} step={0.1} onChange={(e, num) => {
-          menu.handleClose (num)()
-        }} /> 
-      </Flex>
-   </Popover>
-  </>
-}
+      <Popover
+        anchorEl={anchorEl}
+        open={!!anchorEl}
+        onClose={() => menu.handleClose(volume)()}
+      >
+        <Flex spacing={2} sx={{ p: 2, width: 200 }}>
+          <i onClick={() => menu.handleClose(0)()} className={className}></i>
+          <Slider
+            value={volume}
+            min={0}
+            max={1}
+            step={0.1}
+            onChange={(e, num) => {
+              menu.handleClose(num)();
+            }}
+          />
+        </Flex>
+      </Popover>
+    </>
+  );
+};
 
 const StatePlayer = ({
   // handleDiagnoticsClose,
   diagnosticProps,
-  handleDebug, 
+  handleDebug,
   icon,
   idle,
-  state, 
-  debug, 
+  state,
+  debug,
   send,
   onMenu,
   onList,
@@ -229,7 +242,7 @@ const StatePlayer = ({
   handlePlay,
   handleSkip,
   handleList,
-  handleEq, 
+  handleEq,
 
   // context vars
   src,
@@ -247,14 +260,18 @@ const StatePlayer = ({
   listopen,
   ...rest
 }) => {
- 
   const red =
     "linear-gradient(0deg, rgba(2,160,5,1) 0%, rgba(226,163,15,1) 18px, rgba(255,0,42,1) 30px)";
 
   const { FileKey, Title, albumImage, artistName } = rest;
   const isFavorite = playlist_db && playlist_db.indexOf(FileKey) > -1;
-  const favoriteIcon  = <i onClick={() => onList(rest)} className={`${isFavorite ? "red fa-solid" : "fa-regular"} fa-heart`} />;
- 
+  const favoriteIcon = (
+    <i
+      onClick={() => onList(rest)}
+      className={`${isFavorite ? "red fa-solid" : "fa-regular"} fa-heart`}
+    />
+  );
+
   return (
     <>
       <Drawer anchor="left" onClose={handleList} open={listopen}>
@@ -279,19 +296,21 @@ const StatePlayer = ({
                   </Nowrap>
                 </Stack>
                 <Spacer />
-                <i onClick={() => onList(track)} 
-                  className={`${playlist_db && playlist_db.indexOf(track.FileKey) > -1 ? "red fa-solid" : "fa-regular"} fa-heart`} 
-                    />
+                <i
+                  onClick={() => onList(track)}
+                  className={`${
+                    playlist_db && playlist_db.indexOf(track.FileKey) > -1
+                      ? "red fa-solid"
+                      : "fa-regular"
+                  } fa-heart`}
+                />
               </Flex>
             ))}{" "}
         </Box>
         {/* <pre>{JSON.stringify(trackList, 0, 2)}</pre> */}
       </Drawer>
 
-      <Bureau
-        elevation={4}
-        open={!idle} 
-      >
+      <Bureau elevation={4} open={!idle}>
         {/* <pre>{JSON.stringify(rest, 0, 2)}</pre> */}
         <Stack spacing={2} sx={{ p: 2, alignItems: "center" }} direction="row">
           {!!albumImage && (
@@ -325,7 +344,7 @@ const StatePlayer = ({
               {icon}
             </IconButton>
             {/* <ThirtyButton direction="right" onClick={() => handleSkip(30)} /> */}
-            <IconButton onClick={() => send('END')}>
+            <IconButton onClick={() => send("END")}>
               <i class="fa-solid fa-forward"></i>
             </IconButton>
             {/* [{volume}] */}
@@ -348,9 +367,7 @@ const StatePlayer = ({
             )}
           </Box>
 
-            <IconButton>
-            {favoriteIcon}
-            </IconButton>
+          <IconButton>{favoriteIcon}</IconButton>
           <Typography variant="caption">{duration_formatted}</Typography>
 
           {!!coords && eq && (
@@ -391,17 +408,23 @@ const StatePlayer = ({
               </Card>
             </Box>
           )}
-          <VolumeMenu volume={volume} onChange={val => {
-            send({
-              type: 'SOUND',
-              value: val
-            })
-          }}/>
-          
-          <i onClick={() => onMenu(rest)} className="fa-solid fa-ellipsis-vertical"></i>
-          <Box onClick={handleDebug} sx={{ mr: 2 }}>
+          <VolumeMenu
+            volume={volume}
+            onChange={(val) => {
+              send({
+                type: "SOUND",
+                value: val,
+              });
+            }}
+          />
+
+          <i
+            onClick={() => onMenu(rest)}
+            className="fa-solid fa-ellipsis-vertical"
+          ></i>
+          {/* <Box onClick={handleDebug} sx={{ mr: 2 }}>
             <i class="fa-solid fa-gear"></i>
-          </Box>
+          </Box> */}
           <i onClick={handleClose} className="fa-solid fa-xmark"></i>
           {/* <IconButton>
           </IconButton>
@@ -409,11 +432,8 @@ const StatePlayer = ({
           </IconButton> */}
         </Stack>
       </Bureau>
-{/* {JSON.stringify(debug)} */}
-      <Diagnostics
-        {...diagnosticProps}
-        open={debug}
-      />
+      {/* {JSON.stringify(debug)} */}
+      <Diagnostics {...diagnosticProps} open={debug} />
     </>
   );
 };

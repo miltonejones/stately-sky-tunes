@@ -10,6 +10,7 @@ import AutoSelect from "./AutoSelect/AutoSelect";
 import Splash from "./Splash/Splash";
 import SearchPage from "./SearchPage/SearchPage";
 import ChipMenu from "./ChipMenu/ChipMenu";
+import SettingsMenu from "./SettingsMenu/SettingsMenu";
 import StatePlayer, { useStatePlayer } from "./StatePlayer/StatePlayer";
 
 export {
@@ -19,6 +20,7 @@ export {
   StatePlayer,
   PageHead,
   StateCarousel,
+  SettingsMenu,
   Diagnostics,
   useStatePlayer,
   PlaylistDrawer,
