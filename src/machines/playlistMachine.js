@@ -1,12 +1,13 @@
 import { createMachine, assign } from "xstate";
 import { useMachine } from "@xstate/react";
 import { getGroupByType, savePlaylist } from "../connector";
+import { arraymove } from "../util/arraymove";
 
 export const createKey = (name) => name.replace(/[\s&-]/g, "").toLowerCase();
 
 export const playlistMachine = createMachine(
   {
-    id: "playliat",
+    id: "playlist",
     initial: "init",
     states: {
       init: {
@@ -38,7 +39,7 @@ export const playlistMachine = createMachine(
                 }),
               },
               CLOSE: {
-                target: "#playliat.idle",
+                target: "#playlist.idle",
                 actions: assign({
                   open: false,
                 }),
@@ -51,6 +52,10 @@ export const playlistMachine = createMachine(
               onDone: [
                 {
                   target: "refresh",
+                  cond: context => context.open
+                },
+                {
+                  target: "#playlist.moving.refresh", 
                 },
               ],
               onError: [
@@ -96,8 +101,57 @@ export const playlistMachine = createMachine(
               open: true,
             }),
           },
+          EDIT: {
+            target: "#playlist.opened.adding",
+            actions: assign((context, event) => ({
+              listname: event.listname,
+              track: event.track,
+            })),
+          },
+          MOVE: {
+            target: 'moving',
+            actions: assign((context, event) => ({
+              list: event.listKey, 
+              file: event.FileKey,
+              offset: event.offset
+            }))
+          }
         },
       },
+      moving: {
+        initial: "execute",
+        states: {
+          refresh: {
+            invoke: {
+              src: "listRefreshed",
+              onDone: [
+                {
+                  target: "#playlist.idle",
+                  actions: "assignPlaylists",
+                },
+              ], 
+            },
+
+          },
+          
+          execute: {
+            invoke: {
+              src: "executeMove",
+              onDone: [
+                {
+                  target: "refresh"
+                }
+              ],
+              onError: [
+                {
+                  target: "#playlist.error"
+                }
+              ]
+            }
+          }
+        }
+      } ,
+
       error: {
         on: {
           RECOVER: {
@@ -146,6 +200,9 @@ export const playlistMachine = createMachine(
 export const usePlaylist = (onRefresh) => {
   const [state, send] = useMachine(playlistMachine, {
     services: {
+
+      listRefreshed: async() => onRefresh && onRefresh(),
+      
       editList: async (context) => {
         const { track, listname, playlists } = context;
         const playlist = playlists.records.find(
@@ -167,6 +224,26 @@ export const usePlaylist = (onRefresh) => {
       loadPlaylists: async (context) => {
         return await getGroupByType("playlist", 1, "ID", "DESC");
       },
+      executeMove: async (context) => {
+        const { list, file, offset, playlists } = context;
+        const playlist = playlists.records.find(
+          (f) => createKey(f.Title) === list
+        );
+     
+        if (playlist) {
+          const { related: old } = playlist;
+          const fromIndex = old.indexOf(file);
+          const toIndex = fromIndex + offset;
+          const related = arraymove (old, fromIndex, toIndex); 
+          const updated = {
+            ...playlist,
+            related  
+          };
+          return await savePlaylist(updated); 
+        }
+ 
+        return  []
+      },
     },
   });
 
@@ -184,18 +261,29 @@ export const usePlaylist = (onRefresh) => {
     });
   };
 
-  const handleEdit = (listname) => {
+  const handleEdit = (listname, track) => {
     send({
       type: "EDIT",
       listname,
+      track
     });
   };
+
+  const handleMove = (listKey, FileKey, offset) => { 
+    send({
+      type: "MOVE",
+      listKey,
+      FileKey,
+      offset,
+    });
+  }
 
   return {
     state,
     send,
     handleOpen,
     handleEdit,
+    handleMove,
     diagnosticProps,
     createKey,
   };

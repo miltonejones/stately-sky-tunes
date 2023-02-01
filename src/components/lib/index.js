@@ -10,11 +10,13 @@ import AutoSelect from "./AutoSelect/AutoSelect";
 import Splash from "./Splash/Splash";
 import SearchPage from "./SearchPage/SearchPage";
 import ChipMenu from "./ChipMenu/ChipMenu";
+import ConfirmPopover from "./ConfirmPopover/ConfirmPopover";
 import SettingsMenu from "./SettingsMenu/SettingsMenu";
 import StatePlayer, { useStatePlayer } from "./StatePlayer/StatePlayer";
 
 export {
   AutoSelect,
+  ConfirmPopover,
   DataGrid,
   DataList,
   StatePlayer,

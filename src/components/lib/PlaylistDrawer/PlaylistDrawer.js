@@ -1,14 +1,15 @@
 import React from "react";
-import { Drawer, Typography, Box } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
+import { Drawer, Typography, Box } from "@mui/material"; 
 import { Flex, Spacer, ScrollingText , Circle} from "../../../styled";
+import { Diagnostics } from "..";
 
-const PlaylistDrawer = ({ state, send, handleEdit, createKey }) => {
+const PlaylistDrawer = ({ state, send, handleEdit,  diagnosticProps, createKey }) => {
   const { open, playlists, track } = state.context;
 
-  if (!(!!playlists?.records && !!track)) return <></>;
+  if (!(!!playlists?.records && !!track)) return  <Diagnostics {...diagnosticProps} />;
   return (
     <>
+          <Diagnostics {...diagnosticProps} />
       <Drawer anchor="left" open={open} onClose={() => send("CLOSE")}> 
         <Box sx={{ width: 400, m: 2 }}>
 

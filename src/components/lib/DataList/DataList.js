@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Box } from "@mui/material";
+import { Box } from "@mui/material";
 import { TuneList, Nowrap, Circle } from "../../../styled";
 import moment from "moment";
 

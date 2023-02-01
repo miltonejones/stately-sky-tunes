@@ -10,6 +10,7 @@ const SettingsMenu = ({ value, onChange }) => {
     skytunes: "Application",
     audio_player: "Audio Player",
     track_menu: "Track Menu",
+    playlist: "Playlist drawer",
     settings_menu: "This Menu",
   };
 

@@ -65,7 +65,7 @@ export const trackmenuMachine = createMachine(
               onDone: [
                 {
                   target: "#track_menu.idle",
-                  actions: assign({ open: false }),
+                  actions: assign({ open: false, listkind: null }),
                 },
               ],
             },
@@ -240,6 +240,7 @@ export const trackmenuMachine = createMachine(
       assignTrack: assign((context, event) => {
         return {
           track: event.track,
+          listkind: event.listkind,
           changed: false,
           open: true,
         };
@@ -323,10 +324,11 @@ export const useTrackmenu = (onResponse) => {
     });
   };
 
-  const handleOpen = (track) => {
+  const handleOpen = (track, listkind) => {
     send({
       type: "OPEN",
       track,
+      listkind
     });
   };
 

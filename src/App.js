@@ -74,7 +74,7 @@ function App() {
 
 function Application() {
   const { sort: headerSort } = useParams();
-  const stateList = usePlaylist();
+  const stateList = usePlaylist(() => stateSkyTunes.send("OPEN"));
   const stateSkyTunes = useSkytunes((files) =>
     statePlayer.handlePlay(files[0].FileKey, files, files[0])
   );
@@ -123,7 +123,7 @@ function Application() {
   });
 
   const listKey = Object.keys(forms).find(stateSkyTunes.state.matches);
-  const isLoaded = ["list", "grid"].find(stateSkyTunes.state.matches);
+  const isLoaded = ["list", "grid", "load"].find(stateSkyTunes.state.matches);
   const isGrid = stateSkyTunes.state.matches("grid.loaded");
   const Form = forms[listKey];
   const pages = {
@@ -160,7 +160,7 @@ function Application() {
   const interfaceProps = {
     onPlay: handlePlay,
     onList: stateList.handleOpen,
-    onMenu: stateMenu.handleOpen,
+    onMenu: prop => stateMenu.handleOpen(prop, mediaType),
     onAuto: stateSkyTunes.handleAuto,
     onTab: (value) => stateSkyTunes.send({ type: "TAB", value }),
     FileKey: statePlayer.state.context.FileKey,
@@ -444,7 +444,7 @@ function Application() {
               />
             )}
           </Flex>
-
+ 
           {/* records returned from the state machine  */}
           {!!Form && <Form {...interfaceProps} />}
         </Stack>
@@ -461,6 +461,8 @@ function Application() {
 
         <TrackMenuDrawer
           {...stateMenu}
+          onMove={(file, offset) => stateList.handleMove(mediaID, file, offset)}
+          onListEdit={(track) => stateList.handleEdit(mediaID, track)}
           onList={stateList.handleOpen}
           onQueue={(track) => {
             statePlayer.send({

@@ -10,8 +10,8 @@ import {
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import { Flex, Spacer, Nowrap, LiteButton } from "../../../styled";
-import { AutoSelect, Diagnostics } from "..";
-import { searchGroupByType } from "../../../connector";
+import { AutoSelect, Diagnostics, ConfirmPopover } from "..";
+import { searchGroupByType } from "../../../connector"; 
 
 const TrackMenuDrawer = ({
   track,
@@ -20,19 +20,50 @@ const TrackMenuDrawer = ({
   state,
   onList,
   diagnosticProps,
+  onListEdit,
+  onMove,
   onQueue,
   results,
   debug,
   handleGoto,
+  listkind,
   send,
 }) => {
+
+
+  const moveLinks = [
+    {
+      label: "Remove from playlist",
+      caption: "Remove track from this playlist",
+      icon: <i class="fa-solid fa-trash-can"></i>,
+      action: () => {
+        onListEdit(track);
+        send("CLOSE");
+      }, 
+      confirm: `Remove "${track.Title}" from playlist?`
+    },
+    {
+      label: "Move track up",
+      caption: "Move track up in the playlist",
+      icon: <i class="fa-solid fa-chevron-up"></i>,
+      action: () => onMove(track.FileKey, -1)
+    },
+    {
+      label: "Move track down",
+      caption: "Move track down in the playlist",
+      icon: <i class="fa-solid fa-chevron-down"></i>, 
+      action: () => onMove(track.FileKey, 1)
+    },
+  ]
+
+  
   const navLinks = [
     {
       label: "View Artist",
       action: () => handleGoto("/list/artist/" + track.artistFk),
       caption: track.artistName,
       icon: <i class="fa-solid fa-person"></i>,
-      when: !!track.artistFk,
+      hide: !track.artistFk,
     },
     {
       label: "View Album",
@@ -67,16 +98,46 @@ const TrackMenuDrawer = ({
         onList(track);
         send("CLOSE");
       },
-      caption: "Save this song to play later",
+      caption: listkind === 'playlist' ? "Save this song to another playlist" : "Save this song to play later",
       icon: <i class="fa-solid fa-list-ol"></i>,
     },
-  ];
 
+
+    {
+      label: "Remove from playlist",
+      caption: "Remove track from this playlist",
+      icon: <i class="fa-solid fa-trash-can"></i>,
+      action: () => {
+        onListEdit(track);
+        send("CLOSE");
+      }, 
+      confirm: `Remove "${track.Title}" from playlist?`,
+      hide: listkind !== 'playlist' 
+    },
+    {
+      label: "Move track up",
+      caption: "Move track up in the playlist",
+      icon: <i class="fa-solid fa-chevron-up"></i>,
+      action: () => onMove(track.FileKey, -1),
+      hide: listkind !== 'playlist' 
+    },
+    {
+      label: "Move track down",
+      caption: "Move track down in the playlist",
+      icon: <i class="fa-solid fa-chevron-down"></i>, 
+      action: () => onMove(track.FileKey, 1),
+      hide: listkind !== 'playlist' 
+    },
+
+  ]
+  
+ 
   return (
     <>
       <Diagnostics {...diagnosticProps} open={debug} />
       <Drawer anchor="right" open={open} onClose={() => send("CLOSE")}>
         {!!busy && <LinearProgress />}
+  
         <Box sx={{ width: 400, m: 2 }}>
           {/* {JSON.stringify(state.value)} */}
 
@@ -134,10 +195,13 @@ const TrackMenuDrawer = ({
 
           <Collapse in={state.matches("opened.idle")}>
             <Box sx={{ mt: 4, mb: 4 }}>
-              {navLinks.map((nav) => (
-                <Flex
+              {navLinks
+                .filter(nav => !nav.hide)
+                .map((nav) => (
+                <ConfirmBox confirm={nav.confirm} 
+                  onChange={ok => !!ok && nav.action && nav.action()}><Flex
                   sx={{ mb: 1, cursor: "pointer" }}
-                  onClick={() => !!nav.action && nav.action()}
+                  onClick={() => !!nav.action && !nav.confirm && nav.action()}
                   spacing={1}
                   key={nav.label}
                 >
@@ -146,7 +210,7 @@ const TrackMenuDrawer = ({
                     <Nowrap>{nav.label}</Nowrap>
                     <Nowrap variant="caption">{nav.caption}</Nowrap>
                   </Stack>
-                </Flex>
+                </Flex></ConfirmBox>
               ))}
             </Box>
           </Collapse>
@@ -161,6 +225,13 @@ const TrackMenuDrawer = ({
   );
 };
 
+const ConfirmBox = ({ confirm, children, onChange }) => {
+  if (!confirm) return children;
+  return <ConfirmPopover message={confirm} onChange={onChange}>
+    {children}
+  </ConfirmPopover> 
+}
+
 function EditForm({
   Title,
   albumFk,
@@ -169,6 +240,7 @@ function EditForm({
   artistFk,
   artistName,
   Genre,
+  listkind,
   discNumber,
   trackNumber,
   send,

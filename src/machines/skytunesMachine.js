@@ -32,7 +32,7 @@ const skytunesMachine = createMachine(
                   cond: (context, event) => event.data.indexOf("find") > -1
                 },
                 {
-                  target: "#skytunes.grid"
+                  target: "#skytunes.load"
                 }
               ]
             }
@@ -132,9 +132,7 @@ const skytunesMachine = createMachine(
                 }),
               },
               CHANGE: {
-                actions: assign({
-                  search_param: (context, event) => event.value,
-                }),
+                actions: "assignChange",
               },
               TAB: {
                 actions: assign({
@@ -146,7 +144,7 @@ const skytunesMachine = createMachine(
         }
       },
       splash:{
-        initial: 'init',
+        initial: 'load',
         states: {
           start: {
             invoke: {
@@ -169,12 +167,21 @@ const skytunesMachine = createMachine(
               }
             }
           },
+          load: {
+            invoke: {
+              src: "loadPlaylists",
+              onDone: [
+                {
+                  target: "init",
+                  actions: "assignPlaylistsToContext",
+                },
+              ],
+            }
+          },
           init: {
             on: {
               CHANGE: {
-                actions: assign({
-                  search_param: (context, event) => event.value,
-                }),
+                actions: "assignChange",
               },
               AUTO: { 
                 target: 'play',
@@ -256,7 +263,7 @@ const skytunesMachine = createMachine(
                 cond: (context, event) => event.artistFk !== context.artistFk && 
                   event.artistFk !== context.hero?.ID,
                 actions: assign({
-                  artistFk: (context, event) => event.artistFk ,
+                  artistFk: (context, event) => event.artistFk,
                   hero: null
                 })
               },
@@ -266,13 +273,43 @@ const skytunesMachine = createMachine(
                 }),
               },
               CHANGE: {
-                actions: assign((context, event) => ({
-                  [event.key || 'search_param']: event.value
-                })),
+                actions: "assignChange",
               },
             },
           },
         },
+      },
+      load: {
+        initial: "loading",
+        states:{
+          error: {},
+          loading: {
+            invoke: {
+              src: "loadRequest",
+              onDone: [
+                {
+                  target: "#skytunes.splash",
+                  cond: (context) => !(context.type || context.search_param),
+                  actions: "assignDashboard",
+                },
+                {
+                  target: "#skytunes.list",
+                  cond: (context) => context.type === "music" || !!context.id  || !!context.search_param,
+                  actions: "assignResponse",
+                },
+                {
+                  target: "#skytunes.grid.loaded",
+                  actions: "assignResponse",
+                },
+              ],
+              onError: [
+                {
+                  target: "error",
+                },
+              ],
+            },
+          },
+        }
       },
       grid: {
         initial: "loading",
@@ -312,9 +349,7 @@ const skytunesMachine = createMachine(
                 }),
               },
               CHANGE: {
-                actions: assign((context, event) => ({
-                  [event.key || 'search_param']: event.value
-                })), 
+                actions: "assignChange",
               },
             },
           },
@@ -349,6 +384,13 @@ const skytunesMachine = createMachine(
 
   {
     actions: {
+
+      assignChange: assign((context, event) => {
+        return {
+          [event.key || 'search_param']: event.value
+        }
+      }),
+
       assignDashboard: assign((context, event) => {
         const response = event.data;  
         const carouselImages = !response
@@ -529,7 +571,7 @@ export const useSkytunes = (onRefresh) => {
     send,
     appTitle: window.location.href.indexOf('localhost') > 0
       ? 'Skytunes.localhost' : 'Skytunes',
-    busy: ['grid.loading','list.loading'].some(state.matches),
+    busy: ['load.loading','list.loading'].some(state.matches),
     diagnosticProps,
   };
 };
