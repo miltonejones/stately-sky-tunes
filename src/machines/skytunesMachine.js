@@ -173,7 +173,19 @@ const skytunesMachine = createMachine(
               onDone: [
                 {
                   target: "init",
-                  actions: "assignPlaylistsToContext",
+                  actions: assign((context, event) => {
+                    const { records } = event.data;
+
+                    const items = !records ? null : shuffle(records)
+                      .filter(rec => !!rec.image)
+                      .slice(0,10);
+
+                    // alert (JSON.stringify(items))
+
+                    return {
+                      playlists: items
+                    }
+                  }),
                 },
               ],
             }

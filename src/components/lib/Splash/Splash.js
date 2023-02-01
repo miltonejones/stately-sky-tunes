@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled, Box, Divider, Typography, Stack } from '@mui/material';
-import { TuneGrid, InfoCard, Flex } from "../../../styled"; 
+import { TuneGrid, InfoCard, Nowrap, Flex } from "../../../styled"; 
 import { shuffle } from "../../../util/shuffle"; 
 import { usePhoto } from "../../../machines";
  
@@ -24,12 +24,8 @@ const Splash = ({ albums, artists, playlists, navigate, onAuto, logo }) => {
 
   if (!albums) return <>loading...</> 
 
-  const items = !playlists?.records ? null : shuffle(playlists.records)
-    .filter(rec => !!rec.image)
-    .slice(0,5)
-console.log ({
-  items
-})
+ 
+    
 
  return (
    <Layout data-testid="test-for-Splash">
@@ -38,7 +34,7 @@ console.log ({
  
     <Divider textAlign="left" sx={{mt: 1}}>Playlists</Divider>
     <Grid sx={{mt: 1}}>
-    {!!items && items.map(item => (
+    {!!playlists && playlists.map(item => (
       <Flex sx={{
         border: 1,
           borderRadius: 2,
@@ -47,16 +43,16 @@ console.log ({
       onClick={() => navigate(`/list/playlist/${item.listKey}`)}
       spacing={1}>
         <Image style={{
-          width: 40,
-          height: 40
+          width: 48,
+          height: 48
         }} 
         backup={logo}
         src={item.image}
         alt={item.Title}
         />
         <Stack>
-          <Typography>{item.Title}</Typography>
-          <Typography variant="caption">{item.related.length} tracks</Typography>
+          <Nowrap hover variant="body2" width="calc(20vw - 72px)">{item.Title}</Nowrap>
+          <Nowrap muted variant="caption">{item.related.length} tracks</Nowrap>
         </Stack>
         
       </Flex>
