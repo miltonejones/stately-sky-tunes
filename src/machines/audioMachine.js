@@ -430,4 +430,4 @@ const persistTrack = track => {
   localStorage.setItem(COOKIE_NAME, JSON.stringify(update));
 }
 
-const getPersistedTracks = () => JSON.parse(localStorage.getItem(COOKIE_NAME) || "[]")
+const getPersistedTracks = () => JSON.parse(localStorage.getItem(COOKIE_NAME) || "[]");
