@@ -104,7 +104,7 @@ const weatherText = (weather) => {
   if (!weather) return '';
   const { current, location }  = weather;
   const { humidity, condition, temp_f } = current;
-  return `Condition "${condition.text}". Temperature: ${temp_f}. humidity: ${temp_f}. listener location: ${location.name}`
+  return `Condition "${condition.text}". Temperature: ${temp_f}. humidity: ${humidity}. listener location: ${location.name}`
 }
 
 const getWeather = async () => {
