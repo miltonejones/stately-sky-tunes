@@ -128,7 +128,7 @@ const StateName = ({ state }) => {
   );
 };
 
-const Diagnostics = ({ id, send, state, states, open, onClose, layer }) => {
+const Diagnostics = ({ id, state, states, onClose }) => {
   const [showContext, setShowContext] = React.useState(false);
   const { previous } = state.context;
   const event = getEvent(states, state);
@@ -141,7 +141,7 @@ const Diagnostics = ({ id, send, state, states, open, onClose, layer }) => {
     typeof state.value === "string" ? state.value : Object.keys(state.value)[0];
   const is = context.active_machine === id;
   return (
-    <IceCream key={id} open={is || !!open ? 1 : 0}>
+    <IceCream key={id} open={is ? 1 : 0}>
       <Card sx={{ mt: 2, width: "fit-content", minWidth: 400 }}>
         <Layout data-testid="test-for-Diagnostics">
           <Stack direction="row" sx={{ alignItems: "center" }}>

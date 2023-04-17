@@ -19,6 +19,33 @@ import { audioMachine, useMenu } from "../../../machines";
 import { Flex, Spacer, Bureau, ScrollingText, Nowrap } from "../../../styled";
 import { AudioConnector, frameLooper } from "./eq";
 import { Diagnostics } from "..";
+import { getIntro} from "../../../util/getIntro";  
+import { speakText} from "../../../util/speakText";  
+
+
+
+const loadIntro = async (context) => {
+  const {intros,  Title, artistName, upcoming = [] } = context;
+ 
+  if (intros[Title]) {
+    return intros[Title];
+  }
+  
+  const { Introduction } = await getIntro(
+    Title, 
+    artistName, 
+    upcoming, 
+    "Milton", 
+    31, 
+
+    false, 
+    true 
+
+  );    
+  return Introduction;
+}
+
+
 
 const connector = new AudioConnector();
 
@@ -30,10 +57,30 @@ export const useStatePlayer = (onPlayStart) => {
       await new Promise((go) => setTimeout(go, 999));
     },
 
+    
+    loadNext: async(context) => {
+      const { Title, artistName } = context.nextProps;
+      return await loadIntro({
+        ...context,
+        ...context.nextProps
+      }); 
+    },
+
+    loadNarration: async (context) => {
+      return await loadIntro(context)
+    },
+
     startAudio: async (context) => {
       try {
         context.player.src = context.src;
         context.player.play();
+
+
+        setTimeout(() => {
+          !!context.intro && speakText (context.intro)
+        }, 499);
+
+
         return context.player;
       } catch (e) {
         throw new Error(e);

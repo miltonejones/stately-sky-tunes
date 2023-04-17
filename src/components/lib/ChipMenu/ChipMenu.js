@@ -6,7 +6,7 @@ import { Flex, LiteButton, typeIcons } from '../../../styled';
 const ChipMenu = ({ options, value, onChange }) => {
   const menu = useSelector(onChange)
  return (
-    <Flex spacing={1} sx={{mr: 2}}> 
+    <Flex spacing={1} sx={{m: 2}}> 
  
       {!!(menu.selected || value) && value !== 'music' && <i onClick={menu.handleClose} className="fa-solid fa-xmark"></i>}
  

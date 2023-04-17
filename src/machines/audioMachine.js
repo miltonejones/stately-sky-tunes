@@ -13,6 +13,7 @@ export const audioMachine = createMachine(
     id: "audio_player",
     initial: "begin",
     context: {
+      intros: {},
       image:
         "https://is5-ssl.mzstatic.com/image/thumb/Podcasts116/v4/e4/a3/c6/e4a3c61d-7195-9431-f6a9-cf192f9c803e/mza_4615863570753709983.jpg/100x100bb.jpg",
       title: "This is the selected podcast title",
@@ -72,7 +73,7 @@ export const audioMachine = createMachine(
       },
 
       opened: {
-        initial: "reset",
+        initial: "dj",
 
         on: {
           CLOSE: {
@@ -81,6 +82,44 @@ export const audioMachine = createMachine(
           },
         },
         states: {
+
+
+          dj: {
+            initial: "idle",
+            states: {
+              idle: {
+                always: [
+                  {
+                    target: "narrate",
+                    cond: "hasTrackInfo",
+                  },
+                  {
+                    target: "#audio_player.opened.reset",
+                    actions: "clearIntro",
+                  },
+                ],
+              },
+              narrate: {
+                invoke: {
+                  src: "loadNarration",
+                  onDone: [
+                    {
+                      target: "#audio_player.opened.reset",
+                      actions: "assignIntro",
+                    },
+                  ],
+                  onError: [
+                    {
+                      target: "#audio_player.opened.reset",
+                      actions: "clearIntro",
+                    },
+                  ],
+                },
+              }, 
+            },
+          },
+
+
           reset: {
             invoke: {
               src: 'audioStarted',
@@ -94,12 +133,12 @@ export const audioMachine = createMachine(
               ]
             } 
           },
-          start: {
+          start: { 
             invoke: {
               src: "startAudio",
               onDone: [
                 {
-                  target: "playing",
+                  target: "preview",
                 },
               ],
               onError: [
@@ -137,6 +176,18 @@ export const audioMachine = createMachine(
                   },
                 },
               },
+            },
+          },
+          preview: {
+            entry: "assignNext",
+            invoke: {
+              src: "loadNext",
+              onDone: [
+                {
+                  target: "playing",
+                  actions: "assignIntros",
+                },
+              ],
             },
           },
           playing: {
@@ -207,7 +258,42 @@ export const audioMachine = createMachine(
     },
   },
   {
+
+    guards: {
+      hasTrackInfo: context => !!context.artistName
+    },
+
     actions: { 
+
+      assignNext: assign((context, event) => {
+        const { upcoming } = context;
+        if (!upcoming?.length) {
+          return 
+        }
+        const { Title, artistName } = upcoming.shift();
+        return {
+         upcoming,
+         nextProps: {
+          Title, artistName , 
+         }
+        }
+      }),
+      assignIntro: assign((_, event) => ({
+        intro: event.data, 
+      })),
+      assignIntros: assign((context, event) => ({ 
+        intros: {
+          ...context.intros,
+          [context.Title]: event.data
+        }
+      })),
+      assignExisting: assign((context, event) => ({ 
+        intro: context.intros[context.Title]
+      })),
+
+      clearIntro: assign({
+        intro: null 
+      }),
       initQueue: assign((context, event) => { 
         const { track } = event ;
         persistTrack(track); 
@@ -302,12 +388,13 @@ export const audioMachine = createMachine(
         };
       }),
       assignNextTrackToContext: assign((context, event) => {
-        const index =
-          context.trackList.map((f) => f.FileKey).indexOf(context.FileKey) + 1;
+        const index = context.trackList.map((f) => f.FileKey).indexOf(context.FileKey) + 1;
         const track = context.trackList[index];
+        const upcoming = context.trackList?.slice(index + 1);
         persistTrack(track);
         return {
           ...track,
+          upcoming,
           FileKey: track.FileKey,
           src: playerUrl(track.FileKey),
           scrolling: track.Title?.length > 35,
@@ -315,9 +402,13 @@ export const audioMachine = createMachine(
       }),
       assignSourceToContext: assign((context, event) => {
         const { value, options, trackList, type, ...rest} = event;
+        const index = trackList.map((f) => f.FileKey).indexOf(event.value) + 1;
+        const upcoming = trackList?.slice(index);
+
         persistTrack(rest); 
         return {
           ...event,
+          upcoming,
           FileKey: event.value,
           trackList: event.trackList,
           src: playerUrl(event.value),
