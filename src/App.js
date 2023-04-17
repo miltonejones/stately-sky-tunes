@@ -280,6 +280,7 @@ function Application() {
           <Box sx={{ mr: 2 }}>
             {/* <i onClick={() => stateSkyTunes.send("DEBUG")} class="fa-solid fa-gear"></i> */}
             <SettingsMenu
+              handler={statePlayer}
               value={stateSkyTunes.state.context.active_machine}
               onChange={(value) =>
                 stateSkyTunes.send({

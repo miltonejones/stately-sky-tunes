@@ -20,6 +20,7 @@ export const speakText = (message, useRandomVoice = true, lang = 'en-US', onText
   const randomVoiceIndex = Math.floor(Math.random() * availableVoices?.length);
   const randomVoice = !availableVoices?.length ? null : availableVoices[randomVoiceIndex];
  
+  utterance.volume = 1;
   utterance.lang = lang;
   utterance.text = message;
   utterance.rate = 1.1;

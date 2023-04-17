@@ -21,11 +21,13 @@ import { AudioConnector, frameLooper } from "./eq";
 import { Diagnostics } from "..";
 import { getIntro} from "../../../util/getIntro";  
 import { speakText} from "../../../util/speakText";  
+import { DJ_OPTIONS }  from '../../../util/djOptions';
+import { getRandomBoolean } from '../../../util/getRandomBoolean';
 
 
 
 const loadIntro = async (context) => {
-  const {intros, Title, artistName, upcoming = [] } = context;
+  const {intros, Title, artistName, options, upcoming = [] } = context;
  
   if (intros[Title]) { 
     return intros[Title];
@@ -36,7 +38,7 @@ const loadIntro = async (context) => {
     artistName, 
     upcoming, 
     "Milton", 
-    31, 
+    options, 
 
     false, 
     true 
@@ -78,16 +80,19 @@ export const useStatePlayer = (onPlayStart) => {
 
 
         setTimeout(() => {
-          !!context.intro && speakText (context.intro, true, 'en-US', (value) => {
-            if (context.player) {
-              context.player.volume = !!value ? .5 : 1
-            }
-            send({
-              type: 'CHANGE',
-              key: 'vocab',
-              value
-            })
-          })
+          const randomVoice = context.options & DJ_OPTIONS.RANDOM;  
+          !!context.intro && 
+            getRandomBoolean(context.cadence) &&
+                speakText (context.intro, randomVoice, 'en-US', (value) => {
+                if (context.player) {
+                  context.player.volume = !!value ? .5 : 1
+                }
+                send({
+                  type: 'PROP',
+                  key: 'vocab',
+                  value
+                })
+              })
         }, 499);
 
 

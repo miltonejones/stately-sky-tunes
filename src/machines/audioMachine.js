@@ -8,12 +8,33 @@ function playerUrl(FileKey) {
   return audioURL;
 }
 
+const getLocalSettings = () => {
+  return JSON.parse(localStorage.getItem('sky-settings') || "{}")
+}
+
+const getLocalSetting = key => {
+  const settings = getLocalSettings();
+  return settings[key];
+}
+
+const setLocalSettings = (key, value) => {
+  const settings = getLocalSettings();
+  localStorage.setItem('sky-settings', JSON.stringify({
+    ...settings,
+    [key]: value
+  }))
+}
+
+
 export const audioMachine = createMachine(
   {
     id: "audio_player",
     initial: "begin",
     context: {
       intros: {},
+      options: 15,
+      cadence: .9,
+      language: 'en-US',
       nextProps: {},
       image:
         "https://is5-ssl.mzstatic.com/image/thumb/Podcasts116/v4/e4/a3/c6/e4a3c61d-7195-9431-f6a9-cf192f9c803e/mza_4615863570753709983.jpg/100x100bb.jpg",
@@ -24,6 +45,7 @@ export const audioMachine = createMachine(
     },
     states: {
       begin: {
+        entry: 'assignStoredProps',
         invoke: {
           src: "loadAudio",
           onDone: [
@@ -258,10 +280,8 @@ export const audioMachine = createMachine(
       },
     },
     on: {
-      CHANGE: {
-        actions: assign((_, event) => ({
-          [event.key]: event.value
-        }))
+      PROP: {
+        actions: "applyChanges"
       }
     }
   },
@@ -273,6 +293,14 @@ export const audioMachine = createMachine(
 
     actions: { 
 
+      applyChanges: assign((_, event) => {
+        setLocalSettings(event.key, event.value);
+        return {
+          [event.key]: event.value,
+        }
+      }),
+
+      
       assignNext: assign((context, event) => {
         const { upcoming } = context;
         if (!upcoming?.length) {
@@ -388,6 +416,12 @@ export const audioMachine = createMachine(
           player: null,
         };
       }),
+
+      assignStoredProps: assign(context => ({
+        options: getLocalSetting('options') || context.options,
+        cadence: getLocalSetting('cadence') || context.cadence
+      })),
+
       assignResultsToContext: assign((context, event) => {
         return {
           player: event.data,

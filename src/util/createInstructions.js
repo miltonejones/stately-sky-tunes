@@ -64,14 +64,17 @@ export const createInstructions = (title, artist, upcoming = [], firstName, opti
   }, {}))
 
   const instructions = `Write an introduction to the song "${dotless(title)}" by "${dotless(artist)}" that a SpeechSynthesisUtterance object could read before the vocals start.
+
+
       ${isNew ? 'Remind user to add this song to favorites by clicking the pin icon.' : ''}
       ${when.poem && `Format the introduction as a ${when.poem}.`}
-      ${when.boom && 'The introduction must mention Sky-tunes Radio in the introduction.'}
-      ${when.time && `The introduction should be topical to the time of day which is ${moment().format('hh:mm a')}.`}
-      ${when.next && `The introduction must mention the upcoming tracks: ${nextUpcoming}.`}
-      ${when.name && `The introduction must mention a listener named ${firstName}.`}
+      ${when.boom && 'If there is time the introduction should mention Sky-tunes Radio in the introduction.'}
+      ${when.time && `If there is time the introduction should be topical to the time of day which is ${moment().format('hh:mm a')}.`}
+      ${when.next && `If there is time the introduction should mention the upcoming tracks: ${nextUpcoming}.`}
+      ${when.name && `If there is time the introduction should mention a listener named ${firstName}.`}
       
       The listeners locale setting is "${lang}"
+
       
       Return the answer as an Intro in this format:
       
@@ -81,6 +84,7 @@ export const createInstructions = (title, artist, upcoming = [], firstName, opti
 
       Do not declare a variable.
       Do not return the interface.
+      It is important that the introduction should not take longer than it takes for the vocals to start, even if that means omitting information.
 
 
       Your response is intended to be parsed as JSON.`;
