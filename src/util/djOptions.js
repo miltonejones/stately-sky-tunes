@@ -4,6 +4,6 @@ export const DJ_OPTIONS = {
   TIME: 4,
   UPNEXT: 8,
   RANDOM: 16,
-  OFF: 32,
+  WEATHER: 32,
   SHOW: 64
 }

@@ -32,7 +32,7 @@ export const audioMachine = createMachine(
     initial: "begin",
     context: {
       intros: {},
-      options: 15,
+      options: 47,
       cadence: .9,
       language: 'en-US',
       nextProps: {},
@@ -460,7 +460,6 @@ export const audioMachine = createMachine(
     },
   }
 );
-
 
 
 const COOKIE_NAME = 'track-memory';

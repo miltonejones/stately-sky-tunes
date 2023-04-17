@@ -21,7 +21,7 @@ const demoLanguages = {
 };
 
 const djProps = {
-  // [DJ_OPTIONS.OFF]: 'Turn off the DJ',
+   [DJ_OPTIONS.WEATHER]: 'Current weather (requires location permission)',
   [DJ_OPTIONS.USERNAME]: 'Say the logged in users name',
   [DJ_OPTIONS.TIME]: 'Mention the time',
   [DJ_OPTIONS.UPNEXT]: 'Talk about upcoming tracks',
@@ -115,7 +115,7 @@ const SettingsMenu = ({ handler, value, onChange }) => {
             onClick={() => handleDJ(key)}
             key={key}>
           <Switch 
-            disabled={ key === DJ_OPTIONS.BOOMBOT || (key !== DJ_OPTIONS.OFF && !!(handler.options & DJ_OPTIONS.OFF))}
+            disabled={ key === DJ_OPTIONS.BOOMBOT }
             checked={!!(handler.options & key)} />
           <Nowrap small muted={key === DJ_OPTIONS.BOOMBOT}>
             {djProps[key]}
