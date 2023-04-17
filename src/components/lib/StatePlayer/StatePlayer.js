@@ -80,7 +80,7 @@ export const useStatePlayer = (onPlayStart) => {
         setTimeout(() => {
           !!context.intro && speakText (context.intro, true, 'en-US', (value) => {
             if (context.player) {
-              context.player.volume = !!value ? .25 : 1
+              context.player.volume = !!value ? .75 : 1
             }
             send({
               type: 'CHANGE',
