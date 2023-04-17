@@ -14,6 +14,7 @@ export const audioMachine = createMachine(
     initial: "begin",
     context: {
       intros: {},
+      nextProps: {},
       image:
         "https://is5-ssl.mzstatic.com/image/thumb/Podcasts116/v4/e4/a3/c6/e4a3c61d-7195-9431-f6a9-cf192f9c803e/mza_4615863570753709983.jpg/100x100bb.jpg",
       title: "This is the selected podcast title",
@@ -256,6 +257,13 @@ export const audioMachine = createMachine(
         },
       },
     },
+    on: {
+      CHANGE: {
+        actions: assign((_, event) => ({
+          [event.key]: event.value
+        }))
+      }
+    }
   },
   {
 
@@ -284,7 +292,7 @@ export const audioMachine = createMachine(
       assignIntros: assign((context, event) => ({ 
         intros: {
           ...context.intros,
-          [context.Title]: event.data
+          [context.nextProps.Title]: event.data
         }
       })),
       assignExisting: assign((context, event) => ({ 

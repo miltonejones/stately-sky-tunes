@@ -25,12 +25,12 @@ import { speakText} from "../../../util/speakText";
 
 
 const loadIntro = async (context) => {
-  const {intros,  Title, artistName, upcoming = [] } = context;
+  const {intros, Title, artistName, upcoming = [] } = context;
  
-  if (intros[Title]) {
+  if (intros[Title]) { 
     return intros[Title];
   }
-  
+
   const { Introduction } = await getIntro(
     Title, 
     artistName, 
@@ -58,8 +58,9 @@ export const useStatePlayer = (onPlayStart) => {
     },
 
     
-    loadNext: async(context) => {
-      const { Title, artistName } = context.nextProps;
+    loadNext: async(context) => { 
+        
+
       return await loadIntro({
         ...context,
         ...context.nextProps
@@ -77,7 +78,16 @@ export const useStatePlayer = (onPlayStart) => {
 
 
         setTimeout(() => {
-          !!context.intro && speakText (context.intro)
+          !!context.intro && speakText (context.intro, true, 'en-US', (value) => {
+            if (context.player) {
+              context.player.volume = !!value ? .25 : 1
+            }
+            send({
+              type: 'CHANGE',
+              key: 'vocab',
+              value
+            })
+          })
         }, 499);
 
 
@@ -135,9 +145,7 @@ export const useStatePlayer = (onPlayStart) => {
     });
   };
 
-  const handleSkip = (secs) => {
-    // alert(currentTime);
-    // const percent = newValue / 100;
+  const handleSkip = (secs) => { 
     send({
       type: "SEEK",
       value: currentTime + Number(secs),
@@ -218,8 +226,26 @@ export const useStatePlayer = (onPlayStart) => {
   };
 };
 
-const Progress = ({ progress, handleSeek, src }) => {
+const Progress = ({ progress, vocab, handleSeek, src }) => {
   const open = Boolean(progress);
+  if (vocab) {
+    return <Drawer open anchor="bottom"><Box
+      sx={{
+        p: 2,
+        fontSize: '0.85rem',
+        color: 'text.secondary',
+        position: 'relative',
+        '&:before': {
+          content: '"😃"',
+          position: 'absolute',
+          width: 48,
+          height: 48,
+          top: 10,
+          left: 10
+        }
+      }}
+      >{vocab}</Box></Drawer>
+  }
   if (!open)
     return (
       <>
@@ -399,14 +425,14 @@ const StatePlayer = ({
 
           <Typography variant="caption">{current_time_formatted}</Typography>
 
-          <Box sx={{ ml: 1, mr: 1, width: "calc(100vw - 500px)" }}>
-            {/* {state.matches('opened.error.fatal') && <>fatal error</>} */}
+          <Box sx={{ ml: 1, mr: 1, width: "calc(100vw - 500px)" }}>  
             {state.matches("opened.error.fatal") ? (
               <Typography onClick={() => send("RECOVER")}>
                 Could not load audio "{src}". Please try again later.
               </Typography>
             ) : (
               <Progress
+                vocab={rest.vocab}
                 progress={progress}
                 handleSeek={handleSeek}
                 src={FileKey}

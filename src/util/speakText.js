@@ -28,6 +28,12 @@ export const speakText = (message, useRandomVoice = true, lang = 'en-US', onText
   console.log({
     message
   })
+ 
+  
+  // utterance.onboundary = (event) => {
+  //   onTextChange && onTextChange(message.substr(0, event.charIndex));
+  // }; 
+
 
   utterance.onstart = () => {
     onTextChange && onTextChange(message);
