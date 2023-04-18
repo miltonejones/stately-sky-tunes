@@ -122,7 +122,7 @@ export const useStatePlayer = (onPlayStart) => {
       });
 
       audio.addEventListener("error", () => {
-        alert ('There was an error. Check the log');
+        // alert ('There was an error. Check the log');
         send("ERROR");
       });
 

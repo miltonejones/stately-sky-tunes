@@ -178,6 +178,27 @@ function Application() {
     sortPage(num, sortKey, direction);
   };
 
+  const homeButtons = [
+    {
+      target: '/',
+      states: ['splash'],
+      label:  'home',
+      icon: <i className="fa-solid fa-house"></i>
+    },
+    {
+      target: '/grid/music/1',
+      states: ["list.loaded", "grid.loaded", "list"],
+      label:  'library',
+      icon: <i className="fa-solid fa-book"></i>
+    },
+    {
+      target: 'find',
+      states: ['find'],
+      label:  'search',
+      icon: <i className="fa-solid fa-magnifying-glass"></i>
+    },
+  ]
+
   return (
     <AppContext.Provider
       value={{
@@ -215,6 +236,8 @@ function Application() {
               {stateSkyTunes.appTitle}
             </Nowrap>
 
+        
+
             <LiteButton
               onClick={() => navigate("/")}
               variant={
@@ -243,6 +266,7 @@ function Application() {
             >
               search
             </LiteButton>
+            
           </Reponsive>
           <Spacer />
         
@@ -357,13 +381,7 @@ function Application() {
                 />
               )}
 
-              <BottomNav 
-                options={Object.keys(pages).map((value) => ({
-                  value,
-                  label: pages[value],
-                  icon: typeIcons[value],
-                }))}
-              />
+              <BottomNav options={homeButtons} onClick={(value) => navigate(value)}   />
 
               {/* sort menu  */}
               {isGrid && (

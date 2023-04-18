@@ -1,10 +1,9 @@
 import React from 'react';
-import { BottomNavigation, BottomNavigationAction, Paper } from '@mui/material';
-import { typeIcons } from '../../../styled';
+import { BottomNavigation, BottomNavigationAction, Paper } from '@mui/material'; 
 
  
 
-const BottomNav = ({ options }) => {
+const BottomNav = ({ options, onClick }) => {
   const [value, setValue] = React.useState(0);
  return (
   <Paper sx={{ position: 'fixed', 
@@ -24,7 +23,7 @@ const BottomNav = ({ options }) => {
         .filter(option => option.value !== 'music')
         .map(option =>  (
 
-      <BottomNavigationAction label={option.label} icon={typeIcons[option.value]} />
+      <BottomNavigationAction onClick={() => onClick(option.target)} label={option.label} icon={option.icon} />
       
         // <Collapse 
         //   orientation="horizontal" 
