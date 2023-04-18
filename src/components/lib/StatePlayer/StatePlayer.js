@@ -122,17 +122,15 @@ export const useStatePlayer = (onPlayStart) => {
       });
 
       audio.addEventListener("error", () => {
+        alert ('There was an error. Check the log');
         send("ERROR");
       });
 
-      audio.addEventListener("timeupdate", () => {
-        // const coords = frameLooper(analyser);
-        // console.log ({ coords })
+      audio.addEventListener("timeupdate", () => { 
         send({
           type: "PROGRESS",
           currentTime: audio.currentTime,
-          duration: audio.duration,
-          // coords: frameLooper(analyser)
+          duration: audio.duration, 
         });
       });
       return audio;
