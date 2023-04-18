@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled, Card, Avatar, IconButton, Stack, LinearProgress, Box } from '@mui/material';
-import { Flex, Spacer, Nowrap, Columns, VocabDrawer, } from "../../../styled";
+import { Flex, Spacer, Nowrap, Columns, VocabDrawer } from "../../../styled";
  
 const Layout = styled(Box)(({ theme }) => ({
  margin: theme.spacing(1)
@@ -27,7 +27,7 @@ export const Player = styled(({ open, small, theme, ...props }) => <Card {...pro
 
 
 const SmallPlayer = ({ handler }) => { 
-  const isPaused = handler.state.matches('opened.paused');
+  // const isPaused = handler.state.matches('opened.paused');
   const maxWidth = 'calc(100vw - 142px)';
  return (
 
@@ -36,10 +36,17 @@ const SmallPlayer = ({ handler }) => {
      <Columns columns="56px 1fr">
           <Avatar onClick={() => handler.manualPlay()} variant="rounded" sx={{ width: 56, height: 56 }} src={handler.albumImage} alt={handler.Title} />
           <Stack>
-            <Columns sx={{ m: theme => theme.spacing(0, 1) }} columns="32px 1fr 32px 24px">
+            <Columns spacing={1} sx={{ m: theme => theme.spacing(0, 1) }} columns="32px 1fr 32px 24px">
               <Nowrap wrap small>{handler.current_time_formatted}</Nowrap>
               <LinearProgress value={handler.progress} variant={!handler.progress ? "indeterminate" : "determinate"} />
-              <Nowrap wrap small muted>{handler.duration_formatted}</Nowrap>
+              <Nowrap wrap small muted>{handler.duration_formatted}</Nowrap> 
+              <i
+                onClick={() => {
+                  handler.send('CLOSE')
+                }}
+                className="fa-solid fa-xmark"
+              />
+
               {/* <TinyButton icon="Close" onClick={() => handler.send('CLOSE')} /> */}
             </Columns>
             <Flex sx={{ m: theme => theme.spacing(0, 1) }}>

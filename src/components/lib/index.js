@@ -12,10 +12,12 @@ import SearchPage from "./SearchPage/SearchPage";
 import ChipMenu from "./ChipMenu/ChipMenu";
 import ConfirmPopover from "./ConfirmPopover/ConfirmPopover";
 import SettingsMenu from "./SettingsMenu/SettingsMenu";
+import BottomNav from "./BottomNav/BottomNav";
 import StatePlayer, { useStatePlayer } from "./StatePlayer/StatePlayer";
 
 export {
   AutoSelect,
+  BottomNav,
   ConfirmPopover,
   DataGrid,
   DataList,

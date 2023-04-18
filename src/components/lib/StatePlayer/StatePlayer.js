@@ -49,16 +49,7 @@ const loadIntro = async (context) => {
   return Introduction;
 }
 
-function playAudio(audio) {
-  // Request permission to play audio
-  document.requestAudio().then(function() {
-    // Permission granted, play the audio 
-    audio.play();
-  }).catch(function() {
-    // Permission denied
-    alert("Permission to play audio was denied.");
-  });
-}
+ 
 
 const connector = new AudioConnector();
 

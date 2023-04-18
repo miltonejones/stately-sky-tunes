@@ -55,7 +55,7 @@ const Nowrap = styled(Typography)(
         : null,
       '&:hover': {
         textDecoration: hover ? 'underline' : 'none',
-      },
+      }, 
     };
     // If wrap is false, add styles to truncate the text
     if (!wrap) {

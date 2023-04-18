@@ -1,6 +1,7 @@
 import React from "react";
 import { Box } from "@mui/material";
 import { TuneList, Nowrap, Circle } from "../../../styled";
+// import { useMediaQuery, useTheme  } from '@mui/material';
 import moment from "moment";
 
 const DataList = ({
@@ -17,6 +18,9 @@ const DataList = ({
   direction ,
   sort: sortKey
 }) => {
+  // const theme = useTheme();
+  // const isMobile = useMediaQuery(theme.breakpoints.down('md')); 
+  
   if (!records?.length) {
     return <>No records to display</>;
   }
@@ -94,55 +98,54 @@ const DataList = ({
   return (
   <>
 
-  <TuneList header sx={{ m: 2 }}>
-    {fields.map(field =>  (
-      <Nowrap  
-        hover 
-        bold={sortKey === field.key} 
-        onClick={() => !!field.key && navigate(`/${prefix}/${field.key}/${dir}`)} 
-        variant="subtitle2"
-      >
-        {!!field.key ? field.label : <>&nbsp;</>}{" "}{sortKey === field.key && <>{sortIcon}</>}
-      </Nowrap>))}
-  </TuneList>
+    <TuneList header sx={{ m: 2, pt: 2 }}>
+      {fields.map(field =>  (
+        <Nowrap  
+          hover 
+          bold={sortKey === field.key} 
+          onClick={() => !!field.key && navigate(`/${prefix}/${field.key}/${dir}`)} 
+          variant="subtitle2"
+        >
+          {!!field.key ? field.label : <>&nbsp;</>}{" "}{sortKey === field.key && <>{sortIcon}</>}
+        </Nowrap>))}
+    </TuneList>
 
 
-      {records.map((record, o) => (
-        <TuneList>
-          {  fields.map((field) => (
-          <Nowrap
-            odd={o % 2 !== 0}
-            sx={{ p: t => t.spacing(1, 0)}}
-            variant="body2"
-            bold={FileKey === record.FileKey}
-            hover={!!field.href || !!field.play}
-            onClick={() => {
-              !!field.favorite && onList && onList(record);
-              !!field.href &&
-                navigate(`/list/${field.href}/${record[field.id]}`);
-              !!field.play && onPlay && onPlay(record);
-            }}
-            className={field.key}
-            key={field.key}
-          >
-            {field.key === "albumImage" ? (
-              <Circle sx={{ ml: 1 }} size="small" src={record[field.key]} alt={field.key} />
-            ) : (
-              <>
-                {!!field.play && FileKey === record.FileKey && (
-                  <i class="fa-solid fa-volume-high">{" "}</i>
-                )} 
-                {trueProp(record, field)}
-              </>
-            )}
-          </Nowrap>  
-        ))}
-          
-        </TuneList>
+    {records.map((record, o) => (
+      <TuneList>
+        {  fields.map((field) => (
+        <Nowrap
+          odd={o % 2 !== 0}
+          sx={{ p: t => t.spacing(1, 0)}}
+          variant="body2"
+          bold={FileKey === record.FileKey}
+          hover={!!field.href || !!field.play} 
 
-      )
-      
-      )}
+          onClick={() => {
+            !!field.favorite && onList && onList(record);
+            !!field.href &&
+              navigate(`/list/${field.href}/${record[field.id]}`);
+            !!field.play && onPlay && onPlay(record);
+          }}
+
+          className={field.key}
+          key={field.key}
+        >
+          {field.key === "albumImage" ? (
+            <Circle sx={{ ml: 1 }} size="small" src={record[field.key]} alt={field.key} />
+          ) : (
+            <>
+              {!!field.play && FileKey === record.FileKey && (
+                <i class="fa-solid fa-volume-high">{" "}</i>
+              )} 
+              {trueProp(record, field)}
+            </>
+          )}
+        </Nowrap>  
+      ))}
+        
+      </TuneList> ) 
+    )}
   </>
   );
 };

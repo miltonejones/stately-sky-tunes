@@ -16,8 +16,7 @@ import {
   Box,
   Collapse,
   Pagination,
-  Stack,
-  IconButton,
+  Stack, 
   LinearProgress,
 } from "@mui/material";
 
@@ -39,6 +38,7 @@ import {
   Splash,
   SearchPage,
   SettingsMenu,
+  BottomNav
 } from "./components/lib";
 import { DataGrid, Diagnostics } from "./components/lib";
 import { getPagination } from "./util/getPagination";
@@ -353,8 +353,17 @@ function Application() {
                     label: pages[value],
                     icon: typeIcons[value],
                   }))}
+
                 />
               )}
+
+              <BottomNav 
+                options={Object.keys(pages).map((value) => ({
+                  value,
+                  label: pages[value],
+                  icon: typeIcons[value],
+                }))}
+              />
 
               {/* sort menu  */}
               {isGrid && (

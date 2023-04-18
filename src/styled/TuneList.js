@@ -14,8 +14,8 @@ const TuneList = styled(Box)(({ theme, header }) => ({
     gridTemplateColumns: "40px 25% 20% 22% 10% 40px 5% 1fr",
     gridTemplateAreas: `
       "icon title title title title heart menu menu" 
-      "artist artist artist artist genre genre time time"
       "album album album album album album album album"
+      "artist artist artist artist genre genre time time"
       `,
     gridTemplateRows: '24px 18px 18px',
     '& .albumImage': {
@@ -27,14 +27,14 @@ const TuneList = styled(Box)(({ theme, header }) => ({
     '& .artistName': {
       gridArea: 'artist',
       paddingLeft: theme.spacing(1),
-      fontSize: '0.9rem',
-      color: theme.palette.text.secondary
+      color: theme.palette.text.secondary,
+      fontSize: '0.75rem',
     },
     '& .albumName': {
       gridArea: 'album',
       paddingLeft: theme.spacing(1),
-      fontSize: '0.9rem',
-      color: theme.palette.text.secondary
+      color: theme.palette.text.secondary,
+      fontSize: '0.75rem',
     },
     '& .Genre': {
       gridArea: 'genre',
