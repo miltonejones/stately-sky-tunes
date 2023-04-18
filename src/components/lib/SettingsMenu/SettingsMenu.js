@@ -1,11 +1,13 @@
 import React from "react";
-import { Drawer, Box, Switch,
+import { Drawer, Box, Switch, TextField,
+  MenuItem,
   Tabs, Stack, Slider, Divider,
   Tab, Typography } from "@mui/material";
 import { Diagnostics } from "..";
 import { useMenu } from "../../../machines";
 import { Flex, Nowrap } from "../../../styled";
 import { DJ_OPTIONS }  from '../../../util/djOptions';
+import { getDefinition }  from '../../../util/getDefinition';
 
 
 const demoLanguages = { 
@@ -33,6 +35,7 @@ const djProps = {
 
 const SettingsMenu = ({ handler, value, onChange }) => {
   const [tab, setValue] = React.useState(0);
+  const [definition, setDefinition] = React.useState('');
   const menu = useMenu(onChange);
   const machines = {
     skytunes: "Application",
@@ -41,6 +44,9 @@ const SettingsMenu = ({ handler, value, onChange }) => {
     playlist: "Playlist drawer",
     settings_menu: "This Menu",
   };
+
+const synth = window.speechSynthesis;
+const voices = synth.getVoices();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -55,6 +61,38 @@ const SettingsMenu = ({ handler, value, onChange }) => {
         : handler.options + Number(key)
     })
   }
+
+  const handleProp = (e) => {
+    handler.send({
+      type: 'PROP',
+      key: e.target.name,
+      value: e.target.value  
+    })
+    define(e.target.value)
+  }
+
+  const define = async (value) => {
+    setDefinition('Loading definition...')
+    const def = await getDefinition(value);
+    setDefinition(def)
+  }
+
+  const selectedVoice = handler.voice;
+
+  React.useEffect(() => {
+    if (!!definition) return;
+    if (!selectedVoice) return;
+    define(selectedVoice);
+
+  }, [definition, selectedVoice])
+
+  const availableVoices = voices?.filter(voice => !!voice.localService && voice.lang.indexOf('en') > -1);
+
+  // console.log ({
+  //   availableVoices
+  // })
+
+  const DEFAULT_VOICE = !availableVoices?.length ? '' : availableVoices[0].name;
 
   return (
     <>
@@ -106,6 +144,26 @@ const SettingsMenu = ({ handler, value, onChange }) => {
          </Nowrap>
 
          </Flex>
+
+
+        <Flex sx={{ mt: 2 }}>
+          <TextField select
+            label="Choose DJ Voice"
+            value={handler.voice || DJ_OPTIONS.BOOMBOT}
+            name="voice"
+            sx={{ minWidth: 400 }}
+            disabled={handler.options & DJ_OPTIONS.RANDOM}
+            helperText={definition}
+            onChange={handleProp}
+            size="small">
+              <MenuItem>None selected</MenuItem>
+              {availableVoices.map(f => <MenuItem value={f.name} key={f.name}>
+                {f.name}
+              </MenuItem>)}
+            </TextField>
+        
+        </Flex>
+
             <Divider sx={{ m: theme => theme.spacing(2, 0) }} />
 
          <Nowrap small bold cap>

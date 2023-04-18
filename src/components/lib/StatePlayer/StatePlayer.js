@@ -83,7 +83,7 @@ export const useStatePlayer = (onPlayStart) => {
           const randomVoice = context.options & DJ_OPTIONS.RANDOM;  
           !!context.intro && 
             getRandomBoolean(context.cadence) &&
-                speakText (context.intro, randomVoice, 'en-US', (value) => {
+                speakText (context.intro, randomVoice, 'en-US', context.voice, (value) => {
                 if (context.player) {
                   context.player.volume = !!value ? .5 : 1
                 }

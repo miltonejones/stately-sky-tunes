@@ -420,7 +420,8 @@ export const audioMachine = createMachine(
 
       assignStoredProps: assign(context => ({
         options: getLocalSetting('options') || context.options,
-        cadence: getLocalSetting('cadence') || context.cadence
+        cadence: getLocalSetting('cadence') || context.cadence,
+        voice: getLocalSetting('voice') || context.voice,
       })),
 
       assignResultsToContext: assign((context, event) => {

@@ -9,7 +9,7 @@ const synth = window.speechSynthesis;
 const utterance = new SpeechSynthesisUtterance();
 
 
-export const speakText = (message, useRandomVoice = true, lang = 'en-US', onTextChange = null) => {
+export const speakText = (message, useRandomVoice = true, lang = 'en-US', voice, onTextChange = null) => {
   const voices = synth.getVoices();
   const [ language ] = lang.split('-');
  
@@ -19,6 +19,7 @@ export const speakText = (message, useRandomVoice = true, lang = 'en-US', onText
   // Generate random voice if useRandomVoice = true
   const randomVoiceIndex = Math.floor(Math.random() * availableVoices?.length);
   const randomVoice = !availableVoices?.length ? null : availableVoices[randomVoiceIndex];
+  const selectedVoice = !voice ? null : availableVoices?.find(f => f.name === voice);
  
   utterance.volume = 1;
   utterance.lang = lang;
@@ -27,7 +28,7 @@ export const speakText = (message, useRandomVoice = true, lang = 'en-US', onText
 
 
   console.log({
-    message
+    selectedVoice, message
   })
  
   
@@ -47,7 +48,9 @@ export const speakText = (message, useRandomVoice = true, lang = 'en-US', onText
   // Set voice to random voice if available and useRandomVoice is true
   if (randomVoice && useRandomVoice) {
     utterance.voice = randomVoice;
-  }
+  } else if (selectedVoice) {
+    utterance.voice = selectedVoice;
+  }  
 
   // Speak the message using the browser's speech synthesis API
   synth.speak(utterance); 
