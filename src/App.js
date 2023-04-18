@@ -220,9 +220,9 @@ function Application() {
         {/* toolbar */}
         <Toolbar>
           {/* logo  */}
-          <Reponsive show>
+          {/* <Reponsive show>
           <i className="fa-solid fa-bars"></i>
-          </Reponsive>
+          </Reponsive> */}
           <Avatar onClick={() => navigate("/")} src={logo} alt="sky-tunes" />
           
           <Reponsive>
