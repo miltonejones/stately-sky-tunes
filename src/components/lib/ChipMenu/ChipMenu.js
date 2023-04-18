@@ -1,10 +1,26 @@
 import React from 'react';
-import { Collapse } from '@mui/material';
+import { Collapse, IconButton, useMediaQuery, useTheme  } from '@mui/material';
 import { useSelector } from "../../../machines";
 import { Flex, LiteButton, typeIcons } from '../../../styled';
+
+
+const ChipButton = ({ children, ...props}) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md')); 
+
+  if (isMobile) {
+    return <IconButton {...props}>
+        {props.startIcon}
+    </IconButton>
+  }
+  return <LiteButton {...props}>{children}</LiteButton>
+}
   
-const ChipMenu = ({ options, value, onChange }) => {
-  const menu = useSelector(onChange)
+const ChipMenu = ({ options, value, onChange }) => { 
+  
+  const menu = useSelector(onChange);
+
+
  return (
     <Flex spacing={1} sx={{m: 2}}> 
  
@@ -17,14 +33,18 @@ const ChipMenu = ({ options, value, onChange }) => {
           orientation="horizontal" 
           in={!value || value === 'music' || value === option.value}
         >
-        <LiteButton 
+
+        <ChipButton 
+            onClick={() => menu.handleClick(option.value)} 
+            variant={option.value === value ? "contained" : "outlined"} 
+            startIcon={typeIcons[option.value]}
+
             rounded 
             size="small"
-            startIcon={typeIcons[option.value]}
-            onClick={() => menu.handleClick(option.value)} 
             color="primary" 
-            variant={option.value === value ? "contained" : "outlined"} 
-          >{option.label}  </LiteButton>
+          >{option.label}</ChipButton>
+
+
         </Collapse>))}
     </Flex>
  );

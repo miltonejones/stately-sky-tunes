@@ -94,7 +94,7 @@ const DataList = ({
   return (
   <>
 
-  <TuneList sx={{ m: 2 }}>
+  <TuneList header sx={{ m: 2 }}>
     {fields.map(field =>  (
       <Nowrap  
         hover 
@@ -104,10 +104,12 @@ const DataList = ({
       >
         {!!field.key ? field.label : <>&nbsp;</>}{" "}{sortKey === field.key && <>{sortIcon}</>}
       </Nowrap>))}
+  </TuneList>
 
 
-      {records.map((record, o) =>
-        fields.map((field) => (
+      {records.map((record, o) => (
+        <TuneList>
+          {  fields.map((field) => (
           <Nowrap
             odd={o % 2 !== 0}
             sx={{ p: t => t.spacing(1, 0)}}
@@ -120,6 +122,7 @@ const DataList = ({
                 navigate(`/list/${field.href}/${record[field.id]}`);
               !!field.play && onPlay && onPlay(record);
             }}
+            className={field.key}
             key={field.key}
           >
             {field.key === "albumImage" ? (
@@ -132,10 +135,14 @@ const DataList = ({
                 {trueProp(record, field)}
               </>
             )}
-          </Nowrap>
-        ))
+          </Nowrap>  
+        ))}
+          
+        </TuneList>
+
+      )
+      
       )}
-  </TuneList>
   </>
   );
 };

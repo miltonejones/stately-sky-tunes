@@ -5,6 +5,9 @@ i, u {
 body {
   margin: 0;
   overflow-x: hidden;
+
+  --bottom-bar-offset: 0px;
+  --top-bar-offset: 72px;
 }
 
 * {

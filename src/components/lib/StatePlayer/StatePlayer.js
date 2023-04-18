@@ -14,15 +14,17 @@ import {
   // styled,
 } from "@mui/material";
 // import Marquee from "react-fast-marquee";
+import { useMediaQuery, useTheme  } from '@mui/material';
 import { useMachine } from "@xstate/react";
 import { audioMachine, useMenu } from "../../../machines";
-import { Flex, Spacer, Bureau, ScrollingText, Nowrap } from "../../../styled";
+import { Flex, Spacer, Bureau, ScrollingText, Nowrap, VocabDrawer } from "../../../styled";
 import { AudioConnector, frameLooper } from "./eq";
 import { Diagnostics } from "..";
 import { getIntro} from "../../../util/getIntro";  
 import { speakText} from "../../../util/speakText";  
 import { DJ_OPTIONS }  from '../../../util/djOptions';
 import { getRandomBoolean } from '../../../util/getRandomBoolean';
+import SmallPlayer from '../SmallPlayer/SmallPlayer';
 
 
 
@@ -234,22 +236,7 @@ export const useStatePlayer = (onPlayStart) => {
 const Progress = ({ progress, vocab, handleSeek, src }) => {
   const open = Boolean(progress);
   if (vocab) {
-    return <Drawer open anchor="bottom"><Box
-      sx={{
-        p: 2,
-        fontSize: '0.85rem',
-        color: 'text.secondary',
-        position: 'relative',
-        '&:before': {
-          content: '"😃"',
-          position: 'absolute',
-          width: 48,
-          height: 48,
-          top: 10,
-          left: 10
-        }
-      }}
-      >{vocab}</Box></Drawer>
+    return <VocabDrawer>{vocab}</VocabDrawer>
   }
   if (!open)
     return (
@@ -301,46 +288,51 @@ const VolumeMenu = ({ volume, onChange }) => {
   );
 };
 
-const StatePlayer = ({
-  // handleDiagnoticsClose,
-  diagnosticProps,
-  handleDebug,
-  icon,
-  idle,
-  state,
-  debug,
-  send,
-  onMenu,
-  onList,
-  playlist_db,
+const StatePlayer = (props) => {
+  const {
+    // handleDiagnoticsClose,
+    diagnosticProps,
+    handleDebug,
+    icon,
+    idle,
+    state,
+    debug,
+    send,
+    onMenu,
+    onList,
+    playlist_db,
+  
+    // player methods
+    handleClose,
+    handleSeek,
+    handlePlay,
+    handleSkip,
+    handleList,
+    handleEq,
+  
+    // context vars
+    src,
+    owner,
+    volume,
+    progress,
+    duration,
+    scrolling,
+    current_time_formatted,
+    duration_formatted,
+    coords,
+    trackList,
+    eq,
+    retries,
+    listopen,
+    ...rest
+  } = props;
 
-  // player methods
-  handleClose,
-  handleSeek,
-  handlePlay,
-  handleSkip,
-  handleList,
-  handleEq,
-
-  // context vars
-  src,
-  owner,
-  volume,
-  progress,
-  duration,
-  scrolling,
-  current_time_formatted,
-  duration_formatted,
-  coords,
-  trackList,
-  eq,
-  retries,
-  listopen,
-  ...rest
-}) => {
   const red =
     "linear-gradient(0deg, rgba(2,160,5,1) 0%, rgba(226,163,15,1) 18px, rgba(255,0,42,1) 30px)";
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md')); 
+  
   const { FileKey, Title, albumImage, artistName } = rest;
   const isFavorite = playlist_db && playlist_db.indexOf(FileKey) > -1;
   const favoriteIcon = (
@@ -350,6 +342,9 @@ const StatePlayer = ({
     />
   );
 
+  if (isMobile) {
+    return <SmallPlayer handler={props} />
+  }
   return (
     <>
       <Drawer anchor="left" onClose={handleList} open={listopen}>
@@ -384,8 +379,7 @@ const StatePlayer = ({
                 />
               </Flex>
             ))}{" "}
-        </Box>
-        {/* <pre>{JSON.stringify(trackList, 0, 2)}</pre> */}
+        </Box> 
       </Drawer>
 
       <Bureau elevation={4} open={!idle}>

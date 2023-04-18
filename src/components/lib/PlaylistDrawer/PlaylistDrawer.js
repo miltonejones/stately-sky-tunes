@@ -11,7 +11,7 @@ const PlaylistDrawer = ({ state, send, handleEdit,  diagnosticProps, createKey }
     <>
           <Diagnostics {...diagnosticProps} />
       <Drawer anchor="left" open={open} onClose={() => send("CLOSE")}> 
-        <Box sx={{ width: 400, m: 2 }}>
+        <Box sx={{ width: 400, maxWidth: '75vw', m: 2 }}>
 
         <ScrollingText scrolling={track.Title.length > 35}>
           <Typography sx={{ m: 1 }} variant="body2">
@@ -26,7 +26,7 @@ const PlaylistDrawer = ({ state, send, handleEdit,  diagnosticProps, createKey }
               onClick={() =>
                 handleEdit(playlist.listKey || createKey(playlist.Title))
               }
-              sx={{ mb: 1, width: 380 }}
+              sx={{ mb: 1, width: 380, maxWidth: '75vw' }}
               spacing={1}
             >
               <Circle size="small" src={playlist.image} />

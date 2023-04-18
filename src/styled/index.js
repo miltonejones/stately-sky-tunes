@@ -1,3 +1,6 @@
+import VocabDrawer from './VocabDrawer';
+import Columns from './Columns';
+import Reponsive from './Reponsive';
 import Circle from './Circle';
 import Bureau from './Bureau';
 import ScrollingText from './ScrollingText';
@@ -20,6 +23,9 @@ export const typeIcons = {
 }
 
 export {
+  VocabDrawer,
+  Columns,
+  Reponsive,
   Circle,
   Bureau,
   ScrollingText,

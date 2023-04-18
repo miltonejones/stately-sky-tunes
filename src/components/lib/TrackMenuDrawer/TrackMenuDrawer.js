@@ -138,7 +138,7 @@ const TrackMenuDrawer = ({
       <Drawer anchor="right" open={open} onClose={() => send("CLOSE")}>
         {!!busy && <LinearProgress />}
   
-        <Box sx={{ width: 400, m: 2 }}>
+        <Box sx={{ width: 400, maxWidth: '75vw', m: 2 }}>
           {/* {JSON.stringify(state.value)} */}
 
           <Flex start spacing={1}>

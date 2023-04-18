@@ -9,6 +9,7 @@ import {
   Toolbar,
   Hero,
   Nowrap,
+  Reponsive
 } from "./styled";
 import {
   Avatar,
@@ -16,6 +17,7 @@ import {
   Collapse,
   Pagination,
   Stack,
+  IconButton,
   LinearProgress,
 } from "@mui/material";
 
@@ -197,47 +199,51 @@ function Application() {
         {/* toolbar */}
         <Toolbar>
           {/* logo  */}
+          <Reponsive show>
+          <i className="fa-solid fa-bars"></i>
+          </Reponsive>
           <Avatar onClick={() => navigate("/")} src={logo} alt="sky-tunes" />
+          
+          <Reponsive>
+            <Nowrap
+              width="fit-content"
+              hover
+              onClick={() => navigate("/")}
+              variant="h6"
+              sx={{ mr: 6, ml: 1 }}
+            >
+              {stateSkyTunes.appTitle}
+            </Nowrap>
 
-          <Nowrap
-            width="fit-content"
-            hover
-            onClick={() => navigate("/")}
-            variant="h6"
-            sx={{ mr: 6, ml: 1 }}
-          >
-            {stateSkyTunes.appTitle}
-          </Nowrap>
+            <LiteButton
+              onClick={() => navigate("/")}
+              variant={
+                stateSkyTunes.state.matches("splash") ? "contained" : "text"
+              }
+            >
+              home
+            </LiteButton>
 
-          <LiteButton
-            onClick={() => navigate("/")}
-            variant={
-              stateSkyTunes.state.matches("splash") ? "contained" : "text"
-            }
-          >
-            home
-          </LiteButton>
-
-          <LiteButton
-            onClick={() => navigate("/grid/music/1")}
-            variant={
-              ["list.loaded", "grid.loaded", "list"].some(
-                stateSkyTunes.state.matches
-              )
-                ? "contained"
-                : "text"
-            }
-          >
-            library
-          </LiteButton>
-
-          <LiteButton
-            variant={stateSkyTunes.state.matches("find") ? "contained" : "text"}
-            onClick={() => navigate(`/find`)}
-          >
-            search
-          </LiteButton>
-
+            <LiteButton
+              onClick={() => navigate("/grid/music/1")}
+              variant={
+                ["list.loaded", "grid.loaded", "list"].some(
+                  stateSkyTunes.state.matches
+                )
+                  ? "contained"
+                  : "text"
+              }
+            >
+              library
+            </LiteButton>
+        
+            <LiteButton
+              variant={stateSkyTunes.state.matches("find") ? "contained" : "text"}
+              onClick={() => navigate(`/find`)}
+            >
+              search
+            </LiteButton>
+          </Reponsive>
           <Spacer />
         
           {/* search box */}
@@ -270,13 +276,15 @@ function Application() {
             }}
           />
 
-          <LiteButton
-            variant="contained"
-            color={isWakeLockActive() ? "primary" : "error"}
-            onClick={() => navigate(`/search/${search_param}/1`)}
-          >
-            search
-          </LiteButton>
+          <Reponsive>
+            <LiteButton
+              variant="contained"
+              color={isWakeLockActive() ? "primary" : "error"}
+              onClick={() => navigate(`/search/${search_param}/1`)}
+            >
+              search
+            </LiteButton>
+          </Reponsive>
 
           {/* debugger toggle button */}
           <Box sx={{ mr: 2 }}>
@@ -298,119 +306,122 @@ function Application() {
         {/* main workspace */}
         <Stack sx={{ mt: 9, mb: 20 }}>
           {/* breadcrumbs  */}
-          <Flex between>
-            {["grid", "list"].some(stateSkyTunes.state.matches) &&
-              !!selectedKey && (
+            <Flex between>
+
+              {/* <Reponsive>
+              </Reponsive> */}
+                {["grid", "list"].some(stateSkyTunes.state.matches) &&
+                !!selectedKey && (
+                  <>
+                    <Collapse
+                      in={!!hero?.imageLg && !bannerOpen}
+                      orientation="horizontal"
+                    >
+                      <Avatar
+                        sx={{ ml: 2 }}
+                        src={hero?.imageLg}
+                        onClick={() =>
+                          stateSkyTunes.send({
+                            type: "CHANGE",
+                            key: "bannerOpen",
+                            value: !bannerOpen,
+                          })
+                        }
+                      />
+                    </Collapse>
+                    <NavLinks
+                      navigate={navigate}
+                      page={selectedPage}
+                      href={`/grid/${selectedKey}/1`}
+                      pageTitle={pageTitle}
+                    />
+                  </>
+                )}
+
+
+              <Spacer />
+
+              {/* navigation window  */}
+              {!["splash", "find"].some(stateSkyTunes.state.matches) && isLoaded && (
+                <ChipMenu
+                  value={mediaType}
+                  onChange={(val) =>
+                    navigate(!val ? "/grid/music/1" : `/grid/${val}/1`)
+                  }
+                  options={Object.keys(pages).map((value) => ({
+                    value,
+                    label: pages[value],
+                    icon: typeIcons[value],
+                  }))}
+                />
+              )}
+
+              {/* sort menu  */}
+              {isGrid && (
                 <>
-                  <Collapse
-                    in={!!hero?.imageLg && !bannerOpen}
-                    orientation="horizontal"
-                  >
-                    <Avatar
-                      sx={{ ml: 2 }}
-                      src={hero?.imageLg}
-                      onClick={() =>
+                  <Box sx={{ pr: 2 }}>
+                    <i
+                      className="fa-solid fa-arrow-up-a-z"
+                      onClick={() => {
                         stateSkyTunes.send({
                           type: "CHANGE",
-                          key: "bannerOpen",
-                          value: !bannerOpen,
-                        })
-                      }
-                    />
+                          key: "showSort",
+                          value: !showSort,
+                        });
+                      }}
+                    ></i>
+                  </Box>
+
+                  <Collapse orientation="horizontal" in={showSort}>
+                    <Flex sx={{ mr: 3 }}>
+                      {[
+                        mediaType === "genre"
+                          ? "Genre"
+                          : mediaType === "playlist"
+                          ? "Title"
+                          : "Name",
+                        "TrackCount",
+                      ].map((key) => (
+                        <LiteButton
+                          size="small"
+                          rounded
+                          onClick={() =>
+                            sortPage(
+                              currentPage,
+                              key,
+                              direction === "ASC" ? "DESC" : "ASC"
+                            )
+                          }
+                          variant={sortKey === key ? "contained" : "text"}
+                          key={key}
+                        >
+                          {key}
+                        </LiteButton>
+                      ))}
+                    </Flex>
                   </Collapse>
-                  <NavLinks
-                    navigate={navigate}
-                    page={selectedPage}
-                    href={`/grid/${selectedKey}/1`}
-                    pageTitle={pageTitle}
-                  />
                 </>
               )}
 
-            <Spacer />
-
-            {/* navigation window  */}
-            {!["splash", "find"].some(stateSkyTunes.state.matches) && isLoaded && (
-              <ChipMenu
-                value={mediaType}
-                onChange={(val) =>
-                  navigate(!val ? "/grid/music/1" : `/grid/${val}/1`)
-                }
-                options={Object.keys(pages).map((value) => ({
-                  value,
-                  label: pages[value],
-                  icon: typeIcons[value],
-                }))}
-              />
-            )}
-
-            {/* sort menu  */}
-            {isGrid && (
-              <>
-                <Box sx={{ pr: 2 }}>
-                  <i
-                    className="fa-solid fa-arrow-up-a-z"
-                    onClick={() => {
-                      stateSkyTunes.send({
-                        type: "CHANGE",
-                        key: "showSort",
-                        value: !showSort,
-                      });
-                    }}
-                  ></i>
-                </Box>
-
-                <Collapse orientation="horizontal" in={showSort}>
-                  <Flex sx={{ mr: 3 }}>
-                    {[
-                      mediaType === "genre"
-                        ? "Genre"
-                        : mediaType === "playlist"
-                        ? "Title"
-                        : "Name",
-                      "TrackCount",
-                    ].map((key) => (
-                      <LiteButton
-                        size="small"
-                        rounded
-                        onClick={() =>
-                          sortPage(
-                            currentPage,
-                            key,
-                            direction === "ASC" ? "DESC" : "ASC"
-                          )
-                        }
-                        variant={sortKey === key ? "contained" : "text"}
-                        key={key}
-                      >
-                        {key}
-                      </LiteButton>
-                    ))}
-                  </Flex>
-                </Collapse>
-              </>
-            )}
-
-            {/* sort reset button */}
-            {!!headerSort && isLoaded && (
-              <LiteButton
-                sx={{ mr: 2 }}
-                size="small"
-                onClick={() =>
-                  navigate(
-                    "/" +
-                      [typeKey, mediaType, mediaID, currentPage]
-                        .filter((e) => !!e)
-                        .join("/")
-                  )
-                }
-                startIcon={<i className="fa-solid fa-arrow-up-a-z" />}
-              >
-                reset sort
-              </LiteButton>
-            )}
-          </Flex>
-
+              {/* sort reset button */}
+              {!!headerSort && isLoaded && (
+                <LiteButton
+                  sx={{ mr: 2 }}
+                  size="small"
+                  onClick={() =>
+                    navigate(
+                      "/" +
+                        [typeKey, mediaType, mediaID, currentPage]
+                          .filter((e) => !!e)
+                          .join("/")
+                    )
+                  }
+                  startIcon={<i className="fa-solid fa-arrow-up-a-z" />}
+                >
+                  reset sort
+                </LiteButton>
+              )}
+            </Flex>
           {stateSkyTunes.busy && (
             <LinearProgress
               variant="indeterminate"

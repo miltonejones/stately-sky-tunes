@@ -1,7 +1,7 @@
 import React from "react";
 import { styled, Typography, Box } from "@mui/material";
 
-const Banner = styled(Box)(( { on }) => ({
+const Banner = styled(Box)(( { theme, on }) => ({
   width: "100vw",
   height: on ? "calc(100vw * .25)" : 0,
   transition: 'height 0.4s linear',
@@ -12,6 +12,9 @@ const Banner = styled(Box)(( { on }) => ({
     position: "absolute",
     top: "-50%",
   },
+  [theme.breakpoints.down('md')]: { 
+    display: 'none'
+  }
 }));
 
 const TitleBox = styled(Box)(() => ({

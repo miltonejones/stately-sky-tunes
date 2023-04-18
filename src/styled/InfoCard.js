@@ -1,10 +1,21 @@
 import React from "react";
-import { Card, CardMedia, CardContent, Stack } from "@mui/material";
+import { Card, CardMedia, CardContent, Stack, styled } from "@mui/material";
 
 import { Nowrap } from ".";
 import { usePhoto } from "../machines";
 const DEFAULT_IMAGE =
   "https://www.sky-tunes.com/assets/default_album_cover.jpg";
+
+const Plaq = styled(Card)(({ theme, selected}) => ({
+  cursor: "pointer", 
+  width: "calc(22vw - 72px)",
+  outline: selected ? "solid 2px blue" : "", 
+  outlineOffset: 1,
+  [theme.breakpoints.down('md')]: {  
+    width: "calc(48vw - 8px)",
+  }
+}))
+
 const InfoCard = ({
   Thumbnail,
   image,
@@ -24,8 +35,7 @@ const InfoCard = ({
   const caption = artistName || Caption;;
 
   return (
-    <Card {...track} sx={{ cursor: "pointer", width: "calc(22vw - 72px)",
-      outline: selected ? "solid 2px blue" : "", outlineOffset: 1 }}>
+    <Plaq {...track} selected={selected}>
       <CardMedia
         component="img"
         sx={{ borderRadius: 2, width: "100%", aspectRatio: "1 / 1" }}
@@ -54,7 +64,7 @@ const InfoCard = ({
           )}
         </Stack>
       </CardContent>
-    </Card>
+    </Plaq>
   );
 };
 

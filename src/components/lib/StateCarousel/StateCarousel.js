@@ -44,6 +44,9 @@ const Carousel = styled(Card)(({ theme, offset = 0 }) => ({
   // marginTop: theme.spacing(1),
   // borderRadius: 15,
   cursor: "pointer",
+  [theme.breakpoints.down('md')]: {  
+   display: 'none'
+  }
 }));
 
 const Slide = styled("img")(({ first, moving }) => {
