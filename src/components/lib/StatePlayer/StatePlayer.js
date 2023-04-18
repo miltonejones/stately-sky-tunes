@@ -49,7 +49,16 @@ const loadIntro = async (context) => {
   return Introduction;
 }
 
-
+function playAudio(audio) {
+  // Request permission to play audio
+  document.requestAudio().then(function() {
+    // Permission granted, play the audio 
+    audio.play();
+  }).catch(function() {
+    // Permission denied
+    alert("Permission to play audio was denied.");
+  });
+}
 
 const connector = new AudioConnector();
 
@@ -210,9 +219,15 @@ export const useStatePlayer = (onPlayStart) => {
     send,
   };
 
+  const manualPlay = () => {
+    alert (JSON.stringify(state.value));
+    state.context.player.play();
+  }
+
   return {
     diagnosticProps,
     id: audioMachine.id,
+    manualPlay,
     state,
     send,
 

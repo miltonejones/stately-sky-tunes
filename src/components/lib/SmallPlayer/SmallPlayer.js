@@ -34,7 +34,7 @@ const SmallPlayer = ({ handler }) => {
   <Player small elevation={4} anchor="bottom" open={['opened', 'replay'].some(handler.state.matches)}>
    <Layout data-testid="test-for-SmallPlayer">
      <Columns columns="56px 1fr">
-          <Avatar variant="rounded" sx={{ width: 56, height: 56 }} src={handler.albumImage} alt={handler.Title} />
+          <Avatar onClick={() => handler.manualPlay()} variant="rounded" sx={{ width: 56, height: 56 }} src={handler.albumImage} alt={handler.Title} />
           <Stack>
             <Columns sx={{ m: theme => theme.spacing(0, 1) }} columns="32px 1fr 32px 24px">
               <Nowrap wrap small>{handler.current_time_formatted}</Nowrap>
