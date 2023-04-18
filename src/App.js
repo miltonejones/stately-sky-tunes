@@ -41,9 +41,9 @@ import {
 import { DataGrid, Diagnostics } from "./components/lib";
 import { getPagination } from "./util/getPagination";
 import { StatePlayer, useStatePlayer } from "./components/lib";
-import { typeIcons } from "./styled";
-
+import { typeIcons } from "./styled"; 
 import { AppContext } from "./context";
+import { isWakeLockActive } from "./util/isWakeLockActive";
 
 function App() {
   return (
@@ -239,6 +239,7 @@ function Application() {
           </LiteButton>
 
           <Spacer />
+        
           {/* search box */}
           <IconTextField
             label="Search"
@@ -271,6 +272,7 @@ function Application() {
 
           <LiteButton
             variant="contained"
+            color={isWakeLockActive() ? "primary" : "error"}
             onClick={() => navigate(`/search/${search_param}/1`)}
           >
             search

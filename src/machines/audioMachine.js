@@ -279,11 +279,13 @@ export const audioMachine = createMachine(
         },
       },
     },
+
     on: {
       PROP: {
         actions: "applyChanges"
       }
     }
+
   },
   {
 
@@ -298,8 +300,7 @@ export const audioMachine = createMachine(
         return {
           [event.key]: event.value,
         }
-      }),
-
+      }), 
       
       assignNext: assign((context, event) => {
         const { upcoming } = context;

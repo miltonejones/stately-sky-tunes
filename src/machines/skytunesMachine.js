@@ -12,6 +12,7 @@ import {
   getDashboard,
 } from "../connector";
 import { useParams, useLocation } from "react-router-dom";
+import { requestWakeLock } from '../util/requestWakeLock';
 
 const searchTypes = ['music', 'album', 'artist']
 
@@ -538,6 +539,8 @@ export const useSkytunes = (onRefresh) => {
         return await getGroupByType(type, page, sort, direction);
       },
       getLocation: async() => {
+        const lock = await requestWakeLock();
+        console.log ({ lock })
         return location.pathname;
       },
       loadRequestParams: async (context) => { 

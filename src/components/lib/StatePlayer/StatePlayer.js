@@ -516,38 +516,9 @@ const StatePlayer = ({
   );
 };
 
-// const ThirtyButton = ({ direction, onClick }) => {
-//   return (
-//     <IconButton
-//       onClick={onClick}
-//       sx={{ position: "relative", width: 40, height: 40 }}
-//     >
-//       <i className={`fa-solid fa-arrow-rotate-${direction}`}></i>
-//       <Typography
-//         variant="caption"
-//         sx={{ fontSize: "0.5rem", fontWeight: 700, position: "absolute" }}
-//       >
-//         30
-//       </Typography>
-//     </IconButton>
-//   );
-// };
 
-// const Text = ({ scrolling, children }) => {
-//   if (scrolling) {
-//     return (
-//       <Marquee play gradientColor="#222">
-//         {children}
-//       </Marquee>
-//     );
-//   }
-//   return children;
-// };
+ 
 
-// const rbg = () => {
-//   const hu = () => Math.ceil(Math.random() * 255);
-//   return `rgb(${hu()},${hu()},${hu()})`;
-// };
 
 function bg() {
   var c = document.createElement("canvas");
