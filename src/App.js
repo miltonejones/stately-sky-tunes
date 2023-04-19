@@ -233,18 +233,19 @@ function Application() {
         <Toolbar>
  
           <Logo onClick={() => navigate("/")} src={logo} alt="sky-tunes" />
-          
-          <Responsive>
-            <Nowrap
-              width="fit-content"
-              hover
-              onClick={() => navigate("/")}
-              variant="h6"
-              sx={{ mr: 6, ml: 1 }}
-            >
-              {stateSkyTunes.appTitle}
-            </Nowrap>
 
+          <Nowrap
+            width="fit-content"
+            hover
+            onClick={() => navigate("/")}
+            variant="h6"
+            sx={{ mr: 6, ml: 1 }}
+        >
+          {stateSkyTunes.appTitle}
+        </Nowrap>
+
+          <Responsive>
+         
         
 
             <LiteButton
@@ -379,9 +380,11 @@ function Application() {
                 />
               )}
 
-              <BottomNav options={homeButtons} onClick={(value) => navigate(value)}   >
-                <SettingsMenu handler={statePlayer} machine={stateSkyTunes} />
-              </BottomNav>
+              <Responsive show>
+                <BottomNav options={homeButtons} onClick={(value) => navigate(value)}   >
+                  <SettingsMenu handler={statePlayer} machine={stateSkyTunes} />
+                </BottomNav>
+              </Responsive>
 
               {/* sort menu  */}
               {isGrid && (
