@@ -90,12 +90,12 @@ const voices = synth.getVoices();
 
   const selectedVoice = handler.voice;
 
-  React.useEffect(() => {
-    if (!!definition) return;
-    if (!selectedVoice) return;
-    define(selectedVoice);
+  // React.useEffect(() => {
+  //   if (!!definition) return;
+  //   if (!selectedVoice) return;
+  //   define(selectedVoice);
 
-  }, [definition, selectedVoice])
+  // }, [definition, selectedVoice])
 
   const availableVoices = voices?.filter(voice => !!voice.localService && voice.lang.indexOf('en') > -1);
 
