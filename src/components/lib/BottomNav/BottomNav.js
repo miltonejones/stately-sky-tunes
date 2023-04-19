@@ -3,7 +3,7 @@ import { BottomNavigation, BottomNavigationAction, Paper } from '@mui/material';
 
  
 
-const BottomNav = ({ options, onClick }) => {
+const BottomNav = ({ children, options, onClick }) => {
   const [value, setValue] = React.useState(0);
  return (
   <Paper sx={{ position: 'fixed', 
@@ -18,31 +18,13 @@ const BottomNav = ({ options, onClick }) => {
       }}
     >
 
-
       {options
         .filter(option => option.value !== 'music')
         .map(option =>  (
-
-      <BottomNavigationAction onClick={() => onClick(option.target)} label={option.label} icon={option.icon} />
-      
-        // <Collapse 
-        //   orientation="horizontal" 
-        //   in={!value || value === 'music' || value === option.value}
-        // >
-
-        // <ChipButton 
-        //     onClick={() => menu.handleClick(option.value)} 
-        //     variant={option.value === value ? "contained" : "outlined"} 
-        //     startIcon={typeIcons[option.value]}
-
-        //     rounded 
-        //     size="small"
-        //     color="primary" 
-        //   >{option.label}</ChipButton>
-
-
-        // </Collapse>
+          <BottomNavigationAction onClick={() => onClick(option.target)} label={option.label} icon={option.icon} />
         ))}
+
+        <BottomNavigationAction icon={children} label="Settings" />
  
     </BottomNavigation>
   </Paper>

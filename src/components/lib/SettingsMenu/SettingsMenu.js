@@ -10,17 +10,17 @@ import { DJ_OPTIONS }  from '../../../util/djOptions';
 import { getDefinition }  from '../../../util/getDefinition';
 
 
-const demoLanguages = { 
-  Danish: 'da-DK',
-  Dutch: 'nl-NL',
-  English: 'en-US',
-  French: 'fr-FR',
-  German: 'de-DE', 
-  Italian: 'it-IT',
-  Japanese: 'ja-JP', 
-  'Portuguese (Portugal, Brazil)': 'pt-PT', 
-  Spanish: 'es-ES',
-};
+// const demoLanguages = { 
+//   Danish: 'da-DK',
+//   Dutch: 'nl-NL',
+//   English: 'en-US',
+//   French: 'fr-FR',
+//   German: 'de-DE', 
+//   Italian: 'it-IT',
+//   Japanese: 'ja-JP', 
+//   'Portuguese (Portugal, Brazil)': 'pt-PT', 
+//   Spanish: 'es-ES',
+// };
 
 const djProps = {
    [DJ_OPTIONS.WEATHER]: 'Current weather (requires location permission)',
@@ -33,7 +33,18 @@ const djProps = {
 }
 
 
-const SettingsMenu = ({ handler, value, onChange }) => {
+const SettingsMenu = ({ handler, machine }) => {
+
+
+  const value = machine.active_machine;
+  const onChange = (value) => machine.send({
+      type: "CHANGE",
+      key: "active_machine",
+      value,
+    })
+  
+
+
   const [tab, setValue] = React.useState(0);
   const [definition, setDefinition] = React.useState('');
   const menu = useMenu(onChange);
@@ -92,7 +103,7 @@ const voices = synth.getVoices();
   //   availableVoices
   // })
 
-  const DEFAULT_VOICE = !availableVoices?.length ? '' : availableVoices[0].name;
+  // const DEFAULT_VOICE = !availableVoices?.length ? '' : availableVoices[0].name;
 
   return (
     <>

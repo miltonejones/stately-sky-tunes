@@ -2,27 +2,35 @@ import React from "react";
 import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
+import { styled } from '@mui/material';
+
+const L = styled(Typography)(({ theme }) => ({
+  color: theme.palette.text.secondary, 
+  [theme.breakpoints.down('md')]: {  
+    fontSize: '0.8rem'
+  }
+}))
 
 const NavLinks = ({ page, href, pageTitle, navigate }) => {
   if (!pageTitle) {
     return (
       <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
-        <Link underline="hover" color="inherit" onClick={() => navigate('/')}>
+        <L underline="hover" color="inherit" onClick={() => navigate('/')}>
           Home
-        </Link>
-        <Typography color="text.primary">{page}</Typography>
+        </L>
+        <L color="text.primary">{page}</L>
       </Breadcrumbs>
     );
   }
   return (
     <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
-      <Link underline="hover" color="inherit"  onClick={() => navigate('/')}>
+      <L underline="hover" color="inherit"  onClick={() => navigate('/')}>
         Home
-      </Link>
-      <Link underline="hover" color="inherit"  onClick={() => navigate(href)}>
+      </L>
+      <L underline="hover" color="inherit"  onClick={() => navigate(href)}>
         {page}
-      </Link>
-      <Typography color="text.primary">{pageTitle}</Typography>
+      </L>
+      <L color="text.primary">{pageTitle}</L>
     </Breadcrumbs>
   );
 };

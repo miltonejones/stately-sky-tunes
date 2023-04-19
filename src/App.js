@@ -9,15 +9,17 @@ import {
   Toolbar,
   Hero,
   Nowrap,
-  Reponsive
+  Responsive
 } from "./styled";
+
 import {
   Avatar,
   Box,
   Collapse,
   Pagination,
   Stack, 
-  LinearProgress,
+  LinearProgress, 
+  styled
 } from "@mui/material";
 
 import {
@@ -27,6 +29,7 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
+
 import {
   DataList,
   PlaylistDrawer,
@@ -46,6 +49,15 @@ import { StatePlayer, useStatePlayer } from "./components/lib";
 import { typeIcons } from "./styled"; 
 import { AppContext } from "./context";
 import { isWakeLockActive } from "./util/isWakeLockActive";
+
+
+const Logo = styled(Avatar)(( { theme }) => ({ 
+  [theme.breakpoints.down('md')]: { 
+    width: 24,
+    height: 24
+  }
+}));
+
 
 function App() {
   return (
@@ -219,13 +231,10 @@ function Application() {
 
         {/* toolbar */}
         <Toolbar>
-          {/* logo  */}
-          {/* <Reponsive show>
-          <i className="fa-solid fa-bars"></i>
-          </Reponsive> */}
-          <Avatar onClick={() => navigate("/")} src={logo} alt="sky-tunes" />
+ 
+          <Logo onClick={() => navigate("/")} src={logo} alt="sky-tunes" />
           
-          <Reponsive>
+          <Responsive>
             <Nowrap
               width="fit-content"
               hover
@@ -267,7 +276,7 @@ function Application() {
               search
             </LiteButton>
             
-          </Reponsive>
+          </Responsive>
           <Spacer />
         
           {/* search box */}
@@ -300,7 +309,7 @@ function Application() {
             }}
           />
 
-          <Reponsive>
+          <Responsive>
             <LiteButton
               variant="contained"
               color={isWakeLockActive() ? "primary" : "error"}
@@ -308,23 +317,12 @@ function Application() {
             >
               search
             </LiteButton>
-          </Reponsive>
+          </Responsive>
 
           {/* debugger toggle button */}
-          <Box sx={{ mr: 2 }}>
-            {/* <i onClick={() => stateSkyTunes.send("DEBUG")} class="fa-solid fa-gear"></i> */}
-            <SettingsMenu
-              handler={statePlayer}
-              value={stateSkyTunes.state.context.active_machine}
-              onChange={(value) =>
-                stateSkyTunes.send({
-                  type: "CHANGE",
-                  key: "active_machine",
-                  value,
-                })
-              }
-            />
-          </Box>
+          <Responsive sx={{ mr: 2 }}> 
+            <SettingsMenu handler={statePlayer} machine={stateSkyTunes} />
+          </Responsive>
         </Toolbar>
 
         {/* main workspace */}
@@ -332,8 +330,8 @@ function Application() {
           {/* breadcrumbs  */}
             <Flex between>
 
-              {/* <Reponsive>
-              </Reponsive> */}
+              {/* <Responsive>
+              </Responsive> */}
                 {["grid", "list"].some(stateSkyTunes.state.matches) &&
                 !!selectedKey && (
                   <>
@@ -381,7 +379,9 @@ function Application() {
                 />
               )}
 
-              <BottomNav options={homeButtons} onClick={(value) => navigate(value)}   />
+              <BottomNav options={homeButtons} onClick={(value) => navigate(value)}   >
+                <SettingsMenu handler={statePlayer} machine={stateSkyTunes} />
+              </BottomNav>
 
               {/* sort menu  */}
               {isGrid && (
