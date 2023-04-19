@@ -1,7 +1,7 @@
 import React from "react";
 import { Box } from "@mui/material";
 import { TuneList, Nowrap, Circle } from "../../../styled";
-// import { useMediaQuery, useTheme  } from '@mui/material';
+import { useMediaQuery, useTheme  } from '@mui/material';
 import moment from "moment";
 
 const DataList = ({
@@ -18,8 +18,8 @@ const DataList = ({
   direction ,
   sort: sortKey
 }) => {
-  // const theme = useTheme();
-  // const isMobile = useMediaQuery(theme.breakpoints.down('md')); 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md')); 
   
   if (!records?.length) {
     return <>No records to display</>;
@@ -122,8 +122,8 @@ const DataList = ({
           hover={!!field.href || !!field.play} 
 
           onClick={() => {
-            !!field.favorite && onList && onList(record);
-            !!field.href &&
+            !isMobile && !!field.favorite && onList && onList(record);
+            !isMobile && !!field.href &&
               navigate(`/list/${field.href}/${record[field.id]}`);
             !!field.play && onPlay && onPlay(record);
           }}

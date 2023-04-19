@@ -28,9 +28,9 @@ export const Player = styled(({ open, small, theme, ...props }) => <Card {...pro
 
 const SmallPlayer = ({ handler }) => { 
   const { handleList } = handler;
-  
+
   // const isPaused = handler.state.matches('opened.paused');
-  const maxWidth = 'calc(100vw - 142px)';
+  const maxWidth = 'calc(100vw - 172px)';
  return (
 
   <Player small elevation={4} anchor="bottom" open={['opened', 'replay'].some(handler.state.matches)}>

@@ -161,7 +161,7 @@ export const audioMachine = createMachine(
               src: "startAudio",
               onDone: [
                 {
-                  target: "preview",
+                  target: "playing",
                 },
               ],
               onError: [
@@ -201,19 +201,35 @@ export const audioMachine = createMachine(
               },
             },
           },
-          preview: {
-            entry: "assignNext",
-            invoke: {
-              src: "loadNext",
-              onDone: [
-                {
-                  target: "playing",
-                  actions: "assignIntros",
-                },
-              ],
-            },
-          },
+          // preview: {
+          //   entry: "assignNext",
+          //   invoke: {
+          //     src: "loadNext",
+          //     onDone: [
+          //       {
+          //         target: "playing",
+          //         actions: "assignIntros",
+          //       },
+          //     ],
+          //   },
+          // },
           playing: {
+            initial: 'preview',
+            states: {
+              preview: {
+                entry: "assignNext",
+                invoke: {
+                  src: "loadNext",
+                  onDone: [
+                    {
+                      target: "on",
+                      actions: "assignIntros",
+                    },
+                  ],
+                },
+              },
+              on: {}
+            },  
             on: {
               PAUSE: {
                 target: "paused",
