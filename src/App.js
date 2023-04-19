@@ -52,9 +52,19 @@ import { isWakeLockActive } from "./util/isWakeLockActive";
 
 
 const Logo = styled(Avatar)(( { theme }) => ({ 
+  
   [theme.breakpoints.down('md')]: { 
     width: 24,
     height: 24
+  }
+}));
+
+const Title = styled(props => <Flex {...props} />)(( { theme }) => ({ 
+  marginRight: theme.spacing(6),
+  marginLeft: theme.spacing(1),
+  fontSize: '1.3rem',
+  [theme.breakpoints.down('md')]: {  
+    fontSize: '1rem'
   }
 }));
 
@@ -234,15 +244,14 @@ function Application() {
  
           <Logo onClick={() => navigate("/")} src={logo} alt="sky-tunes" />
 
-          <Nowrap
+          <Title
+            wrap
             width="fit-content"
             hover
-            onClick={() => navigate("/")}
-            variant="h6"
-            sx={{ mr: 6, ml: 1 }}
+            onClick={() => navigate("/")} 
         >
           {stateSkyTunes.appTitle}
-        </Nowrap>
+        </Title>
 
           <Responsive>
          
