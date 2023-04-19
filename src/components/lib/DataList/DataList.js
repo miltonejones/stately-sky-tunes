@@ -1,6 +1,7 @@
 import React from "react";
 import { Box } from "@mui/material";
 import { TuneList, Nowrap, Circle } from "../../../styled";
+import { jsonLink } from "../../../util/jsonLink";
 import { useMediaQuery, useTheme  } from '@mui/material';
 import moment from "moment";
 
@@ -24,10 +25,20 @@ const DataList = ({
   if (!records?.length) {
     return <>No records to display</>;
   }
+ 
+  const pins = records.map(rec => ({
+    trackName: rec.Title,
+    artistName: rec.artistName
+  }))
   
   const fields = [
     {
       key: "albumImage",
+      json: 1,
+      label: <a 
+          download="playlist.json" 
+          href={jsonLink(pins)} 
+        ><i className="fa-solid fa-code" /></a>
     },
     {
       key: "Title",
@@ -103,7 +114,7 @@ const DataList = ({
         <Nowrap  
           hover 
           bold={sortKey === field.key} 
-          onClick={() => !!field.key && navigate(`/${prefix}/${field.key}/${dir}`)} 
+          onClick={() => !field.json && !!field.key && navigate(`/${prefix}/${field.key}/${dir}`)} 
           variant="subtitle2"
         >
           {!!field.key ? field.label : <>&nbsp;</>}{" "}{sortKey === field.key && <>{sortIcon}</>}
