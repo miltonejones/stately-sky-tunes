@@ -8,7 +8,7 @@ import {
   Spacer,
   Toolbar,
   Hero,
-  Nowrap,
+  // Nowrap,
   Responsive
 } from "./styled";
 

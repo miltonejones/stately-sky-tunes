@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  Avatar,
+  // Avatar,
   Card,
   IconButton,
   // Paper,
@@ -10,14 +10,14 @@ import {
   LinearProgress,
   Popover,
   Typography,
-  Drawer,
+  // Drawer,
   // styled,
 } from "@mui/material";
 // import Marquee from "react-fast-marquee";
 import { useMediaQuery, useTheme  } from '@mui/material';
 import { useMachine } from "@xstate/react";
 import { audioMachine, useMenu } from "../../../machines";
-import { Flex, Spacer, Bureau, ScrollingText, Nowrap, VocabDrawer } from "../../../styled";
+import { Flex, Bureau, ScrollingText, Nowrap, VocabDrawer } from "../../../styled";
 import { AudioConnector, frameLooper } from "./eq";
 import { Diagnostics } from "..";
 import { getIntro} from "../../../util/getIntro";  
@@ -25,6 +25,7 @@ import { speakText} from "../../../util/speakText";
 import { DJ_OPTIONS }  from '../../../util/djOptions';
 import { getRandomBoolean } from '../../../util/getRandomBoolean';
 import SmallPlayer from '../SmallPlayer/SmallPlayer';
+import TrackListDrawer from '../TrackListDrawer/TrackListDrawer';
 
 
 
@@ -346,13 +347,28 @@ const StatePlayer = (props) => {
     />
   );
 
+  const drawerProps = {
+    onList, 
+    listopen, 
+    handleList, 
+    trackList, 
+    handlePlay, 
+    FileKey,  
+    playlist_db 
+  }
+
   if (isMobile) {
-    return <SmallPlayer handler={props} />
+    return <>
+    <SmallPlayer handler={props} />
+    <TrackListDrawer {...drawerProps} />
+    </>
   }
   return (
     <>
+{/* 
       <Drawer anchor="left" onClose={handleList} open={listopen}>
         <Box sx={{ p: 2, width: 400 }}>
+
           {!!trackList &&
             trackList.map((track) => (
               <Flex
@@ -383,8 +399,11 @@ const StatePlayer = (props) => {
                 />
               </Flex>
             ))}{" "}
+
         </Box> 
-      </Drawer>
+      </Drawer> */}
+
+      <TrackListDrawer {...drawerProps} />
 
       <Bureau elevation={4} open={!idle}>
         {/* <pre>{JSON.stringify(rest, 0, 2)}</pre> */}

@@ -27,6 +27,8 @@ export const Player = styled(({ open, small, theme, ...props }) => <Card {...pro
 
 
 const SmallPlayer = ({ handler }) => { 
+  const { handleList } = handler;
+  
   // const isPaused = handler.state.matches('opened.paused');
   const maxWidth = 'calc(100vw - 142px)';
  return (
@@ -58,6 +60,11 @@ const SmallPlayer = ({ handler }) => {
               <IconButton color="primary" onClick={() => handler.send('PAUSE')}>
                 {handler.icon}
               </IconButton>
+              {!!handleList && (
+                <IconButton onClick={handleList}>
+                  <i class="fa-solid fa-list-check"></i>
+                </IconButton>
+              )}
             </Flex>
           </Stack>
         </Columns>
