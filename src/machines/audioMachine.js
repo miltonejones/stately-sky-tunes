@@ -211,6 +211,12 @@ export const audioMachine = createMachine(
                   actions: "assignIntros",
                 },
               ],
+              onError: [
+                {
+                  target: "playing",
+                  actions: "clearIntro",
+                },
+              ],
             },
           },
           playing: {
@@ -470,7 +476,11 @@ const persistTrack = track => {
   const update = memory.find(f => f.ID === track.ID)
     ? memory 
     : memory.concat(track);
-  localStorage.setItem(COOKIE_NAME, JSON.stringify(update));
+  try {
+    localStorage.setItem(COOKIE_NAME, JSON.stringify(update));
+  } catch (ex) {
+    console.log(ex.message)
+  }
 }
 
 const getPersistedTracks = () => JSON.parse(localStorage.getItem(COOKIE_NAME) || "[]");
