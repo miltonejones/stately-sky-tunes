@@ -18,7 +18,7 @@ export const Player = styled(({ open, small, theme, ...props }) => <Card {...pro
   position: 'fixed',
   bottom:  open ? 'calc(var(--bottom-bar-offset) + var(--bottom-menu-offset))' : -400,
   transition: "all 0.2s linear",
-  height: small ? 80 : 116,
+  height: small ? 'var(--player-offset)' : 116,
   width: '100vw',
   left: 0,
   backgroundColor: 'white'
@@ -36,7 +36,7 @@ const SmallPlayer = ({ handler }) => {
   <Player small elevation={4} anchor="bottom" open={['opened', 'replay'].some(handler.state.matches)}>
    <Layout data-testid="test-for-SmallPlayer">
      <Columns columns="56px 1fr">
-          <Avatar onClick={() => handler.manualPlay()} variant="rounded" sx={{ width: 56, height: 56 }} src={handler.albumImage} alt={handler.Title} />
+          <Avatar onClick={() => handler.manualPlay()} variant="rounded" sx={{ width: 64, height: 64 }} src={handler.albumImage} alt={handler.Title} />
           <Stack>
             <Columns spacing={1} sx={{ justifyContent: 'center', m: theme => theme.spacing(0, 1) }} columns="48px 1fr 48px 24px">
               <Nowrap wrap small>{handler.current_time_formatted}</Nowrap>
@@ -61,7 +61,7 @@ const SmallPlayer = ({ handler }) => {
             <Flex sx={{ m: theme => theme.spacing(0, 1) }}>
               <Stack>
                 <Nowrap sx={{ maxWidth }} small>{handler.Title}</Nowrap>
-                <Nowrap sx={{ maxWidth }} small muted>{handler.albumName} - {handler.artistName}</Nowrap>
+                <Nowrap tiny muted sx={{ maxWidth }}>{handler.albumName} - {handler.artistName}</Nowrap>
               </Stack>
               <Spacer />
               <IconButton color="primary" onClick={() => handler.send('PAUSE')}>
