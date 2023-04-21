@@ -133,6 +133,9 @@ const DataList = ({
           hover={!!field.href || !!field.play} 
 
           onClick={() => {
+            if (isMobile) {
+              return  onPlay && onPlay(record);
+            }
             !isMobile && !!field.favorite && onList && onList(record);
             !isMobile && !!field.href &&
               navigate(`/list/${field.href}/${record[field.id]}`);

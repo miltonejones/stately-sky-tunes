@@ -38,13 +38,13 @@ const SmallPlayer = ({ handler }) => {
      <Columns columns="56px 1fr">
           <Avatar onClick={() => handler.manualPlay()} variant="rounded" sx={{ width: 64, height: 64 }} src={handler.albumImage} alt={handler.Title} />
           <Stack>
-            <Columns spacing={1} sx={{ justifyContent: 'center', m: theme => theme.spacing(0, 1) }} columns="48px 1fr 48px 24px">
-              <Nowrap wrap small>{handler.current_time_formatted}</Nowrap>
+            <Columns spacing={1} sx={{ justifyContent: 'center', m: theme => theme.spacing(0, 1) }} columns="40px 1fr 40px 24px">
+              <Nowrap className="item-left" wrap small>{handler.current_time_formatted}</Nowrap>
               {handler.state.matches('opened.preview') ? <>loading...</> 
                 :     <Slider
-                min={0}
+                  min={0}
                   max={100}
-                  sx={{ width: "100%" }}
+                  sx={{ padding: '0px !important',  width: "100%" }}
                   onChange={handleSeek}
                   value={progress}
                 />}

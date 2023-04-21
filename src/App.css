@@ -16,12 +16,20 @@ body {
 /* Styles for mobile viewport */
 @media (max-width: 768px) {
   body {
-    /* --player-offset: 80px; */
+    --player-offset: 80px;
     --bottom-menu-offset: 56px;
     /* --bottom-bar-offset: 48px; */
     --top-bar-offset: 72px;
   }
 }
+
+.item-left {
+  text-align: right;
+}
+
+.item-right {
+  text-align: left;
+} 
 
 
 * {
