@@ -2,13 +2,27 @@ i, u {
   cursor: pointer;
 }
 
+/* Default styles */
 body {
   margin: 0;
-  overflow-x: hidden;
-
-  --bottom-bar-offset: 56px;
-  --top-bar-offset: 72px;
+  overflow: hidden;
+  background-color: #ebebeb;
+  --player-offset: 100px;
+  --bottom-bar-offset: 48px;
+  --bottom-menu-offset: 0px;
+  --top-bar-offset: 76px;
 }
+
+/* Styles for mobile viewport */
+@media (max-width: 768px) {
+  body {
+    --player-offset: 80px;
+    --bottom-menu-offset: 56px;
+    /* --bottom-bar-offset: 48px; */
+    --top-bar-offset: 72px;
+  }
+}
+
 
 * {
   box-sizing: border-box;

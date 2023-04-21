@@ -10,17 +10,17 @@ import { DJ_OPTIONS }  from '../../../util/djOptions';
 import { getDefinition }  from '../../../util/getDefinition';
 
 
-// const demoLanguages = { 
-//   Danish: 'da-DK',
-//   Dutch: 'nl-NL',
-//   English: 'en-US',
-//   French: 'fr-FR',
-//   German: 'de-DE', 
-//   Italian: 'it-IT',
-//   Japanese: 'ja-JP', 
-//   'Portuguese (Portugal, Brazil)': 'pt-PT', 
-//   Spanish: 'es-ES',
-// };
+const demoLanguages = { 
+  Danish: 'da-DK',
+  Dutch: 'nl-NL',
+  English: 'en-US',
+  French: 'fr-FR',
+  German: 'de-DE', 
+  Italian: 'it-IT',
+  Japanese: 'ja-JP', 
+  'Portuguese (Portugal, Brazil)': 'pt-PT', 
+  Spanish: 'es-ES',
+};
 
 const djProps = {
    [DJ_OPTIONS.WEATHER]: 'Current weather (requires location permission)',
@@ -79,7 +79,6 @@ const voices = synth.getVoices();
       key: e.target.name,
       value: e.target.value  
     })
-    define(e.target.value)
   }
 
   const define = async (value) => {
@@ -88,7 +87,7 @@ const voices = synth.getVoices();
     setDefinition(def)
   }
 
-  const selectedVoice = handler.voice;
+  // const selectedVoice = handler.voice;
 
   // React.useEffect(() => {
   //   if (!!definition) return;
@@ -97,7 +96,8 @@ const voices = synth.getVoices();
 
   // }, [definition, selectedVoice])
 
-  const availableVoices = voices?.filter(voice => !!voice.localService && voice.lang.indexOf('en') > -1);
+  const [prefix] = handler.language.split("-")
+  const availableVoices = voices?.filter(voice => !!voice.localService && voice.lang.indexOf(prefix) > -1);
 
   // console.log ({
   //   availableVoices
@@ -156,23 +156,40 @@ const voices = synth.getVoices();
 
          </Flex>
 
-
-        <Flex sx={{ mt: 2 }}>
+ 
+        <Flex sx={{ mt: 2,  }}>
           <TextField select
+            sx={{ minWidth: 400 , maxWidth: 'calc(100vw)' }}
             label="Choose DJ Voice"
-            value={handler.voice || DJ_OPTIONS.BOOMBOT}
             name="voice"
-            sx={{ minWidth: 400 }}
+            value={handler.voice || DJ_OPTIONS.BOOMBOT}  
             disabled={handler.options & DJ_OPTIONS.RANDOM}
             helperText={definition}
-            onChange={handleProp}
+            onChange={e => {
+              handleProp(e);
+              define(e.target.value);
+            }}
             size="small">
               <MenuItem>None selected</MenuItem>
               {availableVoices.map(f => <MenuItem value={f.name} key={f.name}>
                 {f.name}
               </MenuItem>)}
-            </TextField>
-        
+            </TextField> 
+        </Flex>
+
+        <Flex sx={{ mt: 2,  }}>
+          <TextField select
+            sx={{minWidth: 400 , maxWidth: 'calc(100vw)' }}
+            label="Choose voice language"
+            value={handler.language}
+            name="language"   
+            onChange={handleProp}
+            size="small">
+              <MenuItem>None selected</MenuItem>
+              {Object.keys(demoLanguages).map(f => <MenuItem value={demoLanguages[f]} key={f}>
+               {f}
+              </MenuItem>)}
+            </TextField> 
         </Flex>
 
             <Divider sx={{ m: theme => theme.spacing(2, 0) }} />

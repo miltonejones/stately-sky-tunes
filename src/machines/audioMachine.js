@@ -428,6 +428,7 @@ export const audioMachine = createMachine(
         options: getLocalSetting('options') || context.options,
         cadence: getLocalSetting('cadence') || context.cadence,
         voice: getLocalSetting('voice') || context.voice,
+        language: getLocalSetting('language') || context.language,
       })),
 
       assignResultsToContext: assign((context, event) => {
@@ -480,6 +481,7 @@ const persistTrack = track => {
     localStorage.setItem(COOKIE_NAME, JSON.stringify(update));
   } catch (ex) {
     console.log(ex.message)
+    localStorage.removeItem(COOKIE_NAME);
   }
 }
 

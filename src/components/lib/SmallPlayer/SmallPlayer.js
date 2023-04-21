@@ -1,5 +1,5 @@
 import React from 'react';
-import { styled, Card, Avatar, IconButton, Stack, LinearProgress, Box } from '@mui/material';
+import { styled, Card, Avatar, IconButton, Stack, Slider, Box } from '@mui/material';
 import { Flex, Spacer, Nowrap, Columns, VocabDrawer } from "../../../styled";
  
 const Layout = styled(Box)(({ theme }) => ({
@@ -16,7 +16,7 @@ const Layout = styled(Box)(({ theme }) => ({
  */
 export const Player = styled(({ open, small, theme, ...props }) => <Card {...props} />)(({ open, small, theme }) => ({
   position: 'fixed',
-  bottom:  open ? 'var(--bottom-bar-offset)' : -400,
+  bottom:  open ? 'calc(var(--bottom-bar-offset) + var(--bottom-menu-offset))' : -400,
   transition: "all 0.2s linear",
   height: small ? 80 : 116,
   width: '100vw',
@@ -27,7 +27,7 @@ export const Player = styled(({ open, small, theme, ...props }) => <Card {...pro
 
 
 const SmallPlayer = ({ handler }) => { 
-  const { handleList } = handler;
+  const { handleList, progress, handleSeek } = handler;
 
   // const isPaused = handler.state.matches('opened.paused');
   const maxWidth = 'calc(100vw - 172px)';
@@ -38,9 +38,16 @@ const SmallPlayer = ({ handler }) => {
      <Columns columns="56px 1fr">
           <Avatar onClick={() => handler.manualPlay()} variant="rounded" sx={{ width: 56, height: 56 }} src={handler.albumImage} alt={handler.Title} />
           <Stack>
-            <Columns spacing={1} sx={{ m: theme => theme.spacing(0, 1) }} columns="32px 1fr 32px 24px">
+            <Columns spacing={1} sx={{ justifyContent: 'center', m: theme => theme.spacing(0, 1) }} columns="48px 1fr 48px 24px">
               <Nowrap wrap small>{handler.current_time_formatted}</Nowrap>
-              <LinearProgress value={handler.progress} variant={!handler.progress ? "indeterminate" : "determinate"} />
+              {handler.state.matches('opened.preview') ? <>loading...</> 
+                :     <Slider
+                min={0}
+                  max={100}
+                  sx={{ width: "100%" }}
+                  onChange={handleSeek}
+                  value={progress}
+                />}
               <Nowrap wrap small muted>{handler.duration_formatted}</Nowrap> 
               <i
                 onClick={() => {

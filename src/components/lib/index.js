@@ -14,11 +14,13 @@ import ConfirmPopover from "./ConfirmPopover/ConfirmPopover";
 import SettingsMenu from "./SettingsMenu/SettingsMenu";
 import BottomNav from "./BottomNav/BottomNav";
 import StatePlayer, { useStatePlayer } from "./StatePlayer/StatePlayer";
+import AppFooter from "./AppFooter/AppFooter";
 
 export {
   AutoSelect,
   BottomNav,
   ConfirmPopover,
+  AppFooter,
   DataGrid,
   DataList,
   StatePlayer,

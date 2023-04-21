@@ -8,7 +8,9 @@ const BottomNav = ({ children, options, onClick }) => {
  return (
   <Paper sx={{ position: 'fixed', 
     backgroundColor: '#ebebeb',
-    bottom: 0, left: 0, right: 0,
+    bottom: 'var(--bottom-bar-offset)', 
+    
+    left: 0, right: 0,
     zIndex: 100 }} elevation={3}>
     <BottomNavigation
       showLabels

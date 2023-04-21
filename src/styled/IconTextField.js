@@ -4,24 +4,18 @@ import InputAdornment from "@mui/material/InputAdornment";
 
 const IconTextField = ({ endIcon, startIcon, ...props }) => {
   const startAdornment = !!startIcon
-    ? {
-        startAdornment: (
-          <InputAdornment position="start">{startIcon}</InputAdornment>
-        ),
-      }
+    ? <InputAdornment position="start">{startIcon}</InputAdornment>
     : null;
 
   const endAdornment = !!endIcon
-    ? {
-        endAdornment: <InputAdornment position="end">{endIcon}</InputAdornment>,
-      }
+    ? <InputAdornment position="end">{endIcon}</InputAdornment>
     : null;
 
   return (
     <TextField
       size="small"
       autoComplete="off"
-      InputProps={(startAdornment, endAdornment)}
+      InputProps={{startAdornment, endAdornment}}
       {...props}
     />
   );

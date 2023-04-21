@@ -30,7 +30,7 @@ import TrackListDrawer from '../TrackListDrawer/TrackListDrawer';
 
 
 const loadIntro = async (context) => {
-  const {intros, Title, artistName, options, upcoming = [] } = context;
+  const {intros, Title, artistName, options, upcoming = [], language } = context;
  
   if (intros[Title]) { 
     return intros[Title];
@@ -44,7 +44,8 @@ const loadIntro = async (context) => {
     options, 
 
     false, 
-    true 
+    true ,
+    language
 
   );    
   return Introduction;
@@ -86,7 +87,7 @@ export const useStatePlayer = (onPlayStart) => {
           const randomVoice = context.options & DJ_OPTIONS.RANDOM;  
           !!context.intro && 
             getRandomBoolean(context.cadence) &&
-                speakText (context.intro, randomVoice, 'en-US', context.voice, (value) => {
+                speakText (context.intro, randomVoice, context.language, context.voice, (value) => {
                 if (context.player) {
                   context.player.volume = !!value ? .5 : 1
                 }

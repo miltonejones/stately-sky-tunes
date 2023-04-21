@@ -1,3 +1,4 @@
+import Pill from './Pill';
 import VocabDrawer from './VocabDrawer';
 import Columns from './Columns';
 import Responsive from './Reponsive';
@@ -23,6 +24,7 @@ export const typeIcons = {
 }
 
 export {
+  Pill,
   VocabDrawer,
   Columns,
   Responsive,

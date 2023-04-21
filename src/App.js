@@ -41,6 +41,7 @@ import {
   Splash,
   SearchPage,
   SettingsMenu,
+  AppFooter,
   BottomNav
 } from "./components/lib";
 import { DataGrid, Diagnostics } from "./components/lib";
@@ -64,6 +65,7 @@ const Title = styled(props => <Flex {...props} />)(( { theme }) => ({
   marginLeft: theme.spacing(1),
   fontSize: '1.3rem',
   [theme.breakpoints.down('md')]: {  
+    marginRight: theme.spacing(0),
     fontSize: '1rem'
   }
 }));
@@ -200,6 +202,8 @@ function Application() {
     sortPage(num, sortKey, direction);
   };
 
+  const playerOffset = statePlayer.idle ? '0px' : "var(--player-offset)";
+
   const homeButtons = [
     {
       target: '/',
@@ -230,15 +234,13 @@ function Application() {
     >
       <Box
         sx={{
-          width: "100vw",
-          height: "100vh",
+          width: "100vw", 
           overflowY: "auto",
           overflowX: "hidden",
         }}
       >
         {/* page header */}
         <PageHead page={selectedPage} pageTitle={pageTitle} />
-
         {/* toolbar */}
         <Toolbar>
  
@@ -254,8 +256,6 @@ function Application() {
         </Title>
 
           <Responsive>
-         
-        
 
             <LiteButton
               onClick={() => navigate("/")}
@@ -291,20 +291,17 @@ function Application() {
         
           {/* search box */}
           <IconTextField
-            label="Search"
-            placeholder="Type a song, album or artist"
-            startIcon={<i className="fa-solid fa-magnifying-glass" />}
-            endIcon={
-              !search_param ? null : (
-                <i
-                  onClick={() => {
-                    handleChange("");
-                    navigate("/grid/music/1");
-                  }}
-                  className="fa-solid fa-xmark"
-                />
-              )
-            }
+            label="Find Music"
+            placeholder="Type a song, album or artist" 
+            endIcon={  <i
+              onClick={() => {
+                handleChange("");
+                navigate("/grid/music/1");
+              }}
+              className={!search_param ? "fa-solid fa-magnifying-glass" : "fa-solid fa-xmark"}
+            />
+            } 
+            startIcon={ <i className="fa-solid fa-music"></i> } 
             value={search_param}
             onKeyUp={(e) =>
               e.keyCode === 13 &&
@@ -336,7 +333,15 @@ function Application() {
         </Toolbar>
 
         {/* main workspace */}
-        <Stack sx={{ mt: 9, mb: 20 }}>
+        <Stack 
+          sx={{ 
+            mt: 9,  
+            height: `calc(100svh - var(--bottom-bar-offset) - var(--top-bar-offset) - ${playerOffset} - var(--bottom-menu-offset))`,
+            overflow: 'auto', 
+            backgroundColor: 'white' 
+          }}
+        >
+ 
           {/* breadcrumbs  */}
             <Flex between>
 
@@ -501,6 +506,8 @@ function Application() {
           {/* records returned from the state machine  */}
           {!!Form && <Form {...interfaceProps} />}
         </Stack>
+
+        <AppFooter />
 
         {/* audio player */}
         <StatePlayer

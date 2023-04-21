@@ -4,6 +4,7 @@ import { styled, Typography, Box } from "@mui/material";
 const Banner = styled(Box)(( { theme, on }) => ({
   width: "100vw",
   height: on ? "calc(100vw * .25)" : 0,
+  minHeight: on ? "calc(100vw * .25)" : 0,
   transition: 'height 0.4s linear',
   position: "relative",
   overflow: "hidden",
