@@ -23,7 +23,7 @@ import { Diagnostics } from "..";
 import { getIntro} from "../../../util/getIntro";  
 import { speakText} from "../../../util/speakText";  
 import { DJ_OPTIONS }  from '../../../util/djOptions';
-import { getRandomBoolean } from '../../../util/getRandomBoolean';
+// import { getRandomBoolean } from '../../../util/getRandomBoolean';
 import SmallPlayer from '../SmallPlayer/SmallPlayer';
 import TrackListDrawer from '../TrackListDrawer/TrackListDrawer';
 
@@ -85,9 +85,7 @@ export const useStatePlayer = (onPlayStart) => {
 
         setTimeout(() => {
           const randomVoice = context.options & DJ_OPTIONS.RANDOM;  
-          !!context.intro && 
-            getRandomBoolean(context.cadence) &&
-                speakText (context.intro, randomVoice, context.language, context.voice, (value) => {
+          !!context.intro &&   speakText (context.intro, randomVoice, context.language, context.voice, (value) => {
                 if (context.player) {
                   context.player.volume = !!value ? .5 : 1
                 }

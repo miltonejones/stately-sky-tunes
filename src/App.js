@@ -9,6 +9,7 @@ import {
   Toolbar,
   Hero,
   // Nowrap,
+  FlexMenu,
   Responsive
 } from "./styled";
 
@@ -416,8 +417,19 @@ function Application() {
                     ></i>
                   </Box>
 
-                  <Collapse orientation="horizontal" in={showSort}>
-                    <Flex sx={{ mr: 3 }}>
+                  <FlexMenu component={Collapse} 
+                    orientation="horizontal" 
+                    in={showSort}
+                    open={showSort}
+                    onClose={() => {
+                      stateSkyTunes.send({
+                        type: "CHANGE",
+                        key: "showSort",
+                        value: !showSort,
+                      });
+                    }}
+                    >
+                    <Flex sx={{ mr: 3, p: showSort ? 2 : 0 }}>
                       {[
                         mediaType === "genre"
                           ? "Genre"
@@ -442,29 +454,35 @@ function Application() {
                           {key}
                         </LiteButton>
                       ))}
+
+                        {!!headerSort && isLoaded && (
+                          <LiteButton
+                            sx={{ mr: 2 }}
+                            size="small"
+                            onClick={() =>
+                              navigate(
+                                "/" +
+                                  [typeKey, mediaType, mediaID, currentPage]
+                                    .filter((e) => !!e)
+                                    .join("/")
+                              )
+                            }
+                            startIcon={<i className="fa-solid fa-arrow-up-a-z" />}
+                          >
+                            reset sort
+                          </LiteButton>
+                        )}
+
                     </Flex>
-                  </Collapse>
+                  </FlexMenu>
                 </>
               )}
 
               {/* sort reset button */}
-              {!!headerSort && isLoaded && (
-                <LiteButton
-                  sx={{ mr: 2 }}
-                  size="small"
-                  onClick={() =>
-                    navigate(
-                      "/" +
-                        [typeKey, mediaType, mediaID, currentPage]
-                          .filter((e) => !!e)
-                          .join("/")
-                    )
-                  }
-                  startIcon={<i className="fa-solid fa-arrow-up-a-z" />}
-                >
-                  reset sort
-                </LiteButton>
-              )}
+              <Responsive>
+
+              </Responsive>
+
             </Flex>
           {stateSkyTunes.busy && (
             <LinearProgress

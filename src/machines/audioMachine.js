@@ -1,4 +1,5 @@
 import { createMachine, assign } from "xstate";
+import { getRandomBoolean } from '../util/getRandomBoolean';
 import moment from "moment";
 export const CLOUD_FRONT_URL = "https://s3.amazonaws.com/box.import/";
 function playerUrl(FileKey) {
@@ -296,7 +297,7 @@ export const audioMachine = createMachine(
   {
 
     guards: {
-      hasTrackInfo: context => !!context.artistName
+      hasTrackInfo: context => !!context.artistName && getRandomBoolean(context.cadence)
     },
 
     actions: { 

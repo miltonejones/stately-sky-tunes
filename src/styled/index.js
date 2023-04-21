@@ -1,3 +1,4 @@
+import FlexMenu from './FlexMenu';
 import Pill from './Pill';
 import VocabDrawer from './VocabDrawer';
 import Columns from './Columns';
@@ -24,6 +25,7 @@ export const typeIcons = {
 }
 
 export {
+  FlexMenu,
   Pill,
   VocabDrawer,
   Columns,
