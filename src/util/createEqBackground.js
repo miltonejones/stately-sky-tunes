@@ -22,7 +22,7 @@ export const createEqBackground = (width = 300, label = "skytunes equalizer") =>
   ctx.textAlign = 'right';
   
   // calculate the text offset based on the current time
-  const offset = (Date.now() / 50) % (canvas.width + ctx.measureText(label).width);
+  const offset = (Date.now() / 50) % (canvas.width);
 
   // add text to canvas
   ctx.fillText(label, canvas.width - offset, 12);
