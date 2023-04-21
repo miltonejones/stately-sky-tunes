@@ -1,3 +1,4 @@
+import Equalizer from './Equalizer';
 import FlexMenu from './FlexMenu';
 import Pill from './Pill';
 import VocabDrawer from './VocabDrawer';
@@ -25,6 +26,7 @@ export const typeIcons = {
 }
 
 export {
+  Equalizer,
   FlexMenu,
   Pill,
   VocabDrawer,

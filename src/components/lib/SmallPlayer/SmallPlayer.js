@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled, Card, Avatar, IconButton, Stack, Slider, Box } from '@mui/material';
-import { Flex, Spacer, Nowrap, Columns, VocabDrawer } from "../../../styled";
+import { Flex, Spacer, Equalizer, Nowrap, Columns, VocabDrawer } from "../../../styled";
  
 const Layout = styled(Box)(({ theme }) => ({
  margin: theme.spacing(1)
@@ -27,10 +27,17 @@ export const Player = styled(({ open, small, theme, ...props }) => <Card {...pro
 
 
 const SmallPlayer = ({ handler }) => { 
-  const { handleList, progress, handleSeek } = handler;
+  const { handleList, progress, eq, coords, handleSeek } = handler;
+
+  const handleEq = () =>
+    handler.send({
+      type: "TOGGLE",
+      key: "showeq",
+    });
 
   // const isPaused = handler.state.matches('opened.paused');
   const maxWidth = 'calc(100vw - 172px)';
+  const eqWidth = window.innerWidth - 160
  return (
 
   <Player small elevation={4} anchor="bottom" open={['opened', 'replay'].some(handler.state.matches)}>
@@ -58,11 +65,17 @@ const SmallPlayer = ({ handler }) => {
 
               {/* <TinyButton icon="Close" onClick={() => handler.send('CLOSE')} /> */}
             </Columns>
+
             <Flex sx={{ m: theme => theme.spacing(0, 1) }}>
-              <Stack>
+                {!!handler.showeq && !!coords && eq && <Equalizer label={`${handler.Title}`}  onClick={handleEq} width={eqWidth} coords={coords} />}
+
+              
+
+              {!handler.showeq && <Stack onClick={handleEq}>
                 <Nowrap sx={{ maxWidth }} small>{handler.Title}</Nowrap>
                 <Nowrap tiny muted sx={{ maxWidth }}>{handler.albumName} - {handler.artistName}</Nowrap>
-              </Stack>
+              </Stack>}
+
               <Spacer />
               <IconButton color="primary" onClick={() => handler.send('PAUSE')}>
                 {handler.icon}

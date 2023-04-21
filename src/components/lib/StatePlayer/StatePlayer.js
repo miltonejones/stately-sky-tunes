@@ -1,29 +1,23 @@
 import React from "react";
-import {
-  // Avatar,
+import { 
   Card,
-  IconButton,
-  // Paper,
+  IconButton, 
   Stack,
   Slider,
   Box,
   LinearProgress,
   Popover,
-  Typography,
-  // Drawer,
-  // styled,
-} from "@mui/material";
-// import Marquee from "react-fast-marquee";
+  Typography, 
+} from "@mui/material"; 
 import { useMediaQuery, useTheme  } from '@mui/material';
 import { useMachine } from "@xstate/react";
 import { audioMachine, useMenu } from "../../../machines";
-import { Flex, Bureau, ScrollingText, Nowrap, VocabDrawer } from "../../../styled";
+import { Flex, Bureau, Equalizer, ScrollingText, Nowrap, VocabDrawer } from "../../../styled";
 import { AudioConnector, frameLooper } from "./eq";
 import { Diagnostics } from "..";
 import { getIntro} from "../../../util/getIntro";  
 import { speakText} from "../../../util/speakText";  
-import { DJ_OPTIONS }  from '../../../util/djOptions';
-// import { getRandomBoolean } from '../../../util/getRandomBoolean';
+import { DJ_OPTIONS }  from '../../../util/djOptions'; 
 import SmallPlayer from '../SmallPlayer/SmallPlayer';
 import TrackListDrawer from '../TrackListDrawer/TrackListDrawer';
 
@@ -63,10 +57,7 @@ export const useStatePlayer = (onPlayStart) => {
       await new Promise((go) => setTimeout(go, 999));
     },
 
-    
     loadNext: async(context) => { 
-        
-
       return await loadIntro({
         ...context,
         ...context.nextProps
@@ -464,7 +455,9 @@ const StatePlayer = (props) => {
           <IconButton>{favoriteIcon}</IconButton>
           <Typography variant="caption">{duration_formatted}</Typography>
 
-          {!!coords && eq && (
+          {!!coords && eq && <Equalizer width={300} coords={coords} />}
+
+          {/* {!!coords && eq && (
             <Box>
               <Card sx={{ width: 300, mb: 1 }}>
                 <Stack
@@ -501,7 +494,10 @@ const StatePlayer = (props) => {
                 </Stack>
               </Card>
             </Box>
-          )}
+          )} */}
+
+
+
           <VolumeMenu
             volume={volume}
             onChange={(val) => {
