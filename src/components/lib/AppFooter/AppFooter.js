@@ -11,21 +11,23 @@ const AppFooter = () => {
       between
       sx={{ p: (t) => t.spacing(1, 3), 
       position: 'fixed',
+      backgroundColor: '#053d82',
+      color: 'white',
       bottom: 0, left: 0, right: 0,  
       height: 'var(--bottom-bar-offset)' }}
       spacing={1}
     >
-      {!small && <Flex spacing={2} small muted>
+      {!small && <Flex spacing={2} small>
         <AboutModal />
         <Flex spacing={1}>
         <i className="fa-brands fa-github"></i>
-          <Nowrap small hover muted onClick={() => window.open(GITHUB_URL)}>
+          <Nowrap small hover onClick={() => window.open(GITHUB_URL)}>
             Github Repo
           </Nowrap>
         </Flex>
       </Flex>}
 
-      {!small && <Nowrap small hover muted onClick={() => window.open(ITUNES_API)}>
+      {!small && <Nowrap small hover onClick={() => window.open(ITUNES_API)}>
         {' '}
         Powered by the <b>iTunes Search API</b>
       </Nowrap>}
@@ -35,7 +37,7 @@ const AppFooter = () => {
           width: 32,
           height: 32
         }} />
-        <Nowrap hover small muted onClick={() => window.open(XSTATE_HOME)}>
+        <Nowrap hover small onClick={() => window.open(XSTATE_HOME)}>
           <b>SkyTunes</b>. An xstate web application
         </Nowrap>
       </Flex>

@@ -174,7 +174,7 @@ const AboutModal = () => {
   };
   return (
     <>
-      <Nowrap onClick={menu.handleClick} hover small muted>
+      <Nowrap onClick={menu.handleClick} hover small>
         About SkyTunes
       </Nowrap>
       <Drawer

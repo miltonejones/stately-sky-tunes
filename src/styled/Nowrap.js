@@ -52,7 +52,7 @@ const Nowrap = styled(Typography)(
         ? theme.palette.primary.dark
         : muted
         ? theme.palette.text.secondary
-        : null,
+        : 'inherit',
       '&:hover': {
         textDecoration: hover ? 'underline' : 'none',
       }, 
