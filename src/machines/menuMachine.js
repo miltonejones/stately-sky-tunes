@@ -37,6 +37,11 @@ export const menuMachine = createMachine({
                 value: (context, event) => event.value,
               }),
             },
+            prop: {
+              actions:[ assign((_, event) => ({
+                [event.key]: event.value
+              })),]
+            }
           },
         },
       },
@@ -73,6 +78,7 @@ export const useMenu = (onChange) => {
   };
 
   return {
+    ...state.context,
     state,
     send,
     anchorEl,

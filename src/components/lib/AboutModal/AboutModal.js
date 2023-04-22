@@ -165,7 +165,7 @@ const AboutModal = () => {
   const selectedMachine = machines.find(
     (f) => f.diagnosticProps.id === menu.selectedMachine
   );
-  const selectMachine = (value) => {
+  const selectMachine = (value) => { 
     menu.send({
       type: 'prop',
       key: 'selectedMachine',
@@ -184,7 +184,7 @@ const AboutModal = () => {
       >
         <Layout>
           <Flex spacing={1}>
-            <Nowrap>State machines</Nowrap>
+            <Nowrap>State machines</Nowrap> 
             {machines.map((mac) => (
               <Pill
                 sx={{ textTransform: 'capitalize' }}
@@ -211,7 +211,7 @@ const AboutModal = () => {
               </Panel>
             )}
 
-            <Panel><AboutText selectMachine={selectMachine} /></Panel>
+            <Panel><AboutText  /></Panel>
             
           </Columns>
         </Layout>
@@ -222,11 +222,31 @@ const AboutModal = () => {
 AboutModal.defaultProps = {};
 export default AboutModal;
 
-const AboutText = ({ selectMachine }) => {
+const AboutText = () => {
   return (
     <Box sx={{ mt: 2 }}>
       <Nowrap variant="h5">About SkyTunes</Nowrap>
      
+<p>
+This code block is written in JavaScript and exports a function called `useSkytunes` using the `const` keyword. This function takes a single argument called `onRefresh` which is a callback function. The function uses several hooks from the React library, including `useParams` and `useLocation`, to get the current parameters and location of the application. It also uses a state machine called `skyTunesMachine` and the `useMachine` hook to handle state transitions.
+</p>
+<p>
+The `useSkytunes` function has several services defined that can be called asynchronously using the `await` keyword. These services include `loadArtistInfo`, which loads information about a specific artist, `playDashTracks`, which plays tracks from a specified dashboard, and `loadPlaylists`, which loads playlists for the user. There is also a service called `loadRequest`, which loads different types of data based on the context, such as loading a specific group or doing a search for a specific type of music.
+</p>
+<p>
+There is also a service called `getLocation` which uses the `requestWakeLock` function to request a wake lock from the browser and returns the current pathname of the application. This service is called asynchronously using the `await` keyword.
+</p>
+<p>
+The `useSkytunes` function also defines an object called `diagnosticProps` that contains diagnostic information about the state of the `skyTunesMachine` state machine, including the current state, the ID of the state machine, the available states, and the `send` function that is used to send events to the state machine.
+</p>
+<p>
+The `useEffect` hook is used to call the `send` function with an `OPEN` event when the location changes. This ensures that the state machine is always in the correct state based on the current location of the application.
+</p>
+<p>
+Finally, the `useSkytunes` function returns an object that contains several properties, including `handleAuto`, which is a function that is used to automatically play a specified dashboard. It also includes the current state of the state machine, the `send` function, the title of the application, a boolean value that indicates whether the application is currently loading data, and the `diagnosticProps` object that contains diagnostic information about the state machine.
+</p>
+
+
     </Box>
   );
 };

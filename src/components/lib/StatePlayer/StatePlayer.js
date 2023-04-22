@@ -1,6 +1,6 @@
 import React from "react";
 import { 
-  Card,
+  // Card,
   IconButton, 
   Stack,
   Slider,
@@ -322,8 +322,8 @@ const StatePlayer = (props) => {
     ...rest
   } = props;
 
-  const red =
-    "linear-gradient(0deg, rgba(2,160,5,1) 0%, rgba(226,163,15,1) 18px, rgba(255,0,42,1) 30px)";
+  // const red =
+  //   "linear-gradient(0deg, rgba(2,160,5,1) 0%, rgba(226,163,15,1) 18px, rgba(255,0,42,1) 30px)";
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md')); 
@@ -532,21 +532,21 @@ const StatePlayer = (props) => {
  
 
 
-function bg() {
-  var c = document.createElement("canvas");
-  c.width = 300;
-  c.height = 48;
-  var ctx = c.getContext("2d");
-  ctx.lineWidth = 0.5;
-  ctx.strokeStyle = "white";
-  ctx.beginPath();
-  for (let y = 0; y < 100; y += 4) {
-    ctx.moveTo(0, y);
-    ctx.lineTo(300, y);
-    ctx.stroke();
-  }
-  return c.toDataURL("image/png");
-}
+// function bg() {
+//   var c = document.createElement("canvas");
+//   c.width = 300;
+//   c.height = 48;
+//   var ctx = c.getContext("2d");
+//   ctx.lineWidth = 0.5;
+//   ctx.strokeStyle = "white";
+//   ctx.beginPath();
+//   for (let y = 0; y < 100; y += 4) {
+//     ctx.moveTo(0, y);
+//     ctx.lineTo(300, y);
+//     ctx.stroke();
+//   }
+//   return c.toDataURL("image/png");
+// }
 
 StatePlayer.defaultProps = {};
 export default StatePlayer;

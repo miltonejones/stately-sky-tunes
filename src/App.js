@@ -257,8 +257,19 @@ function Application() {
         </Title>
 
           <Responsive>
+            {homeButtons.map(btn => (
+              <LiteButton
+                key={btn.label}
+                onClick={() => navigate(btn.target)}
+                variant={
+                  btn.states.some(stateSkyTunes.state.matches) ? "contained" : "text"
+                }
+            >
+              {btn.label}
+            </LiteButton>
+            ))}
 
-            <LiteButton
+            {/* <LiteButton
               onClick={() => navigate("/")}
               variant={
                 stateSkyTunes.state.matches("splash") ? "contained" : "text"
@@ -285,7 +296,7 @@ function Application() {
               onClick={() => navigate(`/find`)}
             >
               search
-            </LiteButton>
+            </LiteButton> */}
             
           </Responsive>
           <Spacer />

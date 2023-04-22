@@ -36,7 +36,7 @@ const AppFooter = () => {
         <img src="/notify.png" style={{
           width: 32,
           height: 32
-        }} />
+        }} alt="logo" />
         <Nowrap hover small onClick={() => window.open(XSTATE_HOME)}>
           <b>SkyTunes</b>. An xstate web application
         </Nowrap>

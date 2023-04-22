@@ -11,6 +11,7 @@ body {
   --bottom-bar-offset: 48px;
   --bottom-menu-offset: 0px;
   --top-bar-offset: 76px;
+  --tiny-button-size: 24px;
 }
 
 /* Styles for mobile viewport */
@@ -20,6 +21,7 @@ body {
     --bottom-menu-offset: 56px;
     /* --bottom-bar-offset: 48px; */
     --top-bar-offset: 72px;
+    --tiny-button-size: 24px;
   }
 }
 
@@ -34,6 +36,20 @@ body {
 
 * {
   box-sizing: border-box;
+}
+
+i.fa-solid {
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  height: var(--tiny-button-size);
+  width: var(--tiny-button-size);
+  min-width: var(--tiny-button-size);
+  /* border: solid 1px #ebebeb; */
+  border-radius: 50%; 
+}
+i.fa-solid:hover {
+  border: solid 1px #bebebe;
 }
 
 i:hover,

@@ -1,6 +1,6 @@
 import React from "react";
 import { Box } from "@mui/material";
-import { TuneList, Nowrap, Circle } from "../../../styled";
+import { TuneList, Nowrap, Flex, Circle } from "../../../styled";
 import { jsonLink } from "../../../util/jsonLink";
 import { useMediaQuery, useTheme  } from '@mui/material';
 import moment from "moment";
@@ -153,12 +153,12 @@ const DataList = ({
           {field.key === "albumImage" ? (
             <Circle sx={{ ml: 1 }} size="small" src={record[field.key]} alt={field.key} />
           ) : (
-            <>
+            <Flex spacing={1}>
               {!!field.play && FileKey === record.FileKey && (
                 <i class="fa-solid fa-volume-high">{" "}</i>
               )} 
               {trueProp(record, field)}
-            </>
+            </Flex>
           )}
         </Nowrap>  
       ))}
