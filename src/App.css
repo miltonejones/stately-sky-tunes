@@ -12,6 +12,7 @@ body {
   --bottom-menu-offset: 0px;
   --top-bar-offset: 76px;
   --tiny-button-size: 24px;
+  --color-primary: #053d82;
 }
 
 /* Styles for mobile viewport */
@@ -21,7 +22,14 @@ body {
     --bottom-menu-offset: 56px;
     /* --bottom-bar-offset: 48px; */
     --top-bar-offset: 72px;
-    --tiny-button-size: 24px;
+    /* --tiny-button-size: 24px; */
+  }
+}
+
+@media screen and (orientation: landscape) { 
+  body {
+    --player-offset: 80px;
+    --bottom-menu-offset: 56px;
   }
 }
 
@@ -38,6 +46,7 @@ body {
   box-sizing: border-box;
 }
 
+i.fa-regular, 
 i.fa-solid {
   display: flex;
   justify-content: center;
@@ -47,6 +56,7 @@ i.fa-solid {
   min-width: var(--tiny-button-size);
   /* border: solid 1px #ebebeb; */
   border-radius: 50%; 
+  color: var(--color-primary);
 }
 i.fa-solid:hover {
   border: solid 1px #bebebe;

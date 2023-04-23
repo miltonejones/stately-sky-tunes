@@ -13,6 +13,9 @@ const Plaq = styled(Card)(({ theme, selected}) => ({
   outlineOffset: 1,
   [theme.breakpoints.down('md')]: {  
     width: "calc(48vw - 8px)",
+  },
+  '@media screen and (orientation: landscape)': {
+    width: "calc(32vw - 8px)",
   }
 }))
 
@@ -40,6 +43,7 @@ const InfoCard = ({
         component="img"
         sx={{ borderRadius: 2, width: "100%", aspectRatio: "1 / 1" }}
         width="100%"
+        data-action="http://about:blank"
         height="auto"
         image={pic.image}
         alt={Name}
