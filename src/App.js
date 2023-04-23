@@ -267,37 +267,7 @@ function Application() {
             >
               {btn.label}
             </LiteButton>
-            ))}
-
-            {/* <LiteButton
-              onClick={() => navigate("/")}
-              variant={
-                stateSkyTunes.state.matches("splash") ? "contained" : "text"
-              }
-            >
-              home
-            </LiteButton>
-
-            <LiteButton
-              onClick={() => navigate("/grid/music/1")}
-              variant={
-                ["list.loaded", "grid.loaded", "list"].some(
-                  stateSkyTunes.state.matches
-                )
-                  ? "contained"
-                  : "text"
-              }
-            >
-              library
-            </LiteButton>
-        
-            <LiteButton
-              variant={stateSkyTunes.state.matches("find") ? "contained" : "text"}
-              onClick={() => navigate(`/find`)}
-            >
-              search
-            </LiteButton> */}
-            
+            ))} 
           </Responsive>
           <Spacer />
         
@@ -488,11 +458,7 @@ function Application() {
                   </FlexMenu>
                 </>
               )}
-
-              {/* sort reset button */}
-              <Responsive>
-
-              </Responsive>
+ 
 
             </Flex>
           {stateSkyTunes.busy && (

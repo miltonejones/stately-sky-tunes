@@ -1,3 +1,5 @@
+import Progress from './Progress';
+import Player from './Player';
 import Equalizer from './Equalizer';
 import FlexMenu from './FlexMenu';
 import Pill from './Pill';
@@ -26,6 +28,8 @@ export const typeIcons = {
 }
 
 export {
+  Progress,
+  Player,
   Equalizer,
   FlexMenu,
   Pill,

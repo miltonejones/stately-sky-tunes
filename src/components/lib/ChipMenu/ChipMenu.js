@@ -19,12 +19,13 @@ const ChipButton = ({ children, ...props}) => {
 const ChipMenu = ({ options, value, onChange }) => { 
   
   const menu = useSelector(onChange);
+  const open = !!(menu.selected || value) && value !== 'music';
 
 
  return (
-    <Flex spacing={1} sx={{m: 2}}> 
+    <Flex spacing={open ? 0 : 1} sx={{m: 2}}> 
  
-      {!!(menu.selected || value) && value !== 'music' && <i onClick={menu.handleClose} className="fa-solid fa-xmark"></i>}
+      {open && <i onClick={menu.handleClose} className="fa-solid fa-xmark"></i>}
  
       {options
         .filter(option => option.value !== 'music')

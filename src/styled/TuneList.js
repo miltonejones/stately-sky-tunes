@@ -11,9 +11,9 @@ const TuneList = styled(Box)(({ theme, header }) => ({
     // border: 'solid 1px green',
     margin: theme.spacing(0, 1),
     paddingBottom: theme.spacing(1),
-    gridTemplateColumns: "40px 25% 20% 22% 10% 40px 5% 1fr",
+    gridTemplateColumns: "40px 25% 20% 2% 10% 1fr 32px 32px",
     gridTemplateAreas: `
-      "icon title title title title heart menu menu" 
+      "icon title title title title title heart menu" 
       "album album album album album album album album"
       "artist artist artist artist genre genre time time"
       `,
@@ -45,10 +45,10 @@ const TuneList = styled(Box)(({ theme, header }) => ({
       display: 'none'
     },
     '& .favorite': {
-      gridArea: 'heart'
+      gridArea: 'heart', 
     },
     '& .menu': {
-      gridArea: 'menu'
+      gridArea: 'menu', 
     },
   },
 }));
