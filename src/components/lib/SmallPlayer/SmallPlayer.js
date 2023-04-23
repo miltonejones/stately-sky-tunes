@@ -64,7 +64,7 @@ const SmallPlayer = ({ handler, track }) => {
                   DJ loading...
                 </Nowrap>
               ) : (
-                <Progress onChange={handleSeek} value={progress} />
+                <Progress min={0} max={100} onChange={handleSeek} value={progress} />
               )}
               <Nowrap wrap small muted>
                 {handler.duration_formatted}
