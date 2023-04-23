@@ -61,7 +61,7 @@ export const createInstructions = async (title, artist, upcoming = [], firstName
     time: isRandomlyTrue(shouldSayTime),
     next: isRandomlyTrue(shouldSayUpnext && !!nextUpcoming?.length),
     name: isRandomlyTrue(shouldSayUsername && firstName !== undefined && firstName !== 'undefined'),  
-    weather: isRandomlyTrue (shouldSayWeather && !!weather)
+    rain: isRandomlyTrue (shouldSayWeather && !!weather)
   };
  
   //  log positive conditions
@@ -80,7 +80,7 @@ export const createInstructions = async (title, artist, upcoming = [], firstName
       ${when.time && `If there is time the introduction should be topical to the time of day which is ${moment().format('hh:mm a')}.`}
       ${when.next && `If there is time the introduction should mention the upcoming tracks: ${nextUpcoming}.`}
       ${when.name && `If there is time the introduction should mention a listener named ${firstName}.`}
-      ${when.weather && `If there is time the introduction should mention the weather ${weatherText(weather)}.`}
+      ${when.rain && `If there is time the introduction should mention the weather ${weatherText(weather)}.`}
       
       The listeners locale setting is "${lang}"
 

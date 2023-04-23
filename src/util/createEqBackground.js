@@ -21,11 +21,23 @@ export const createEqBackground = (width = 300, label = "skytunes equalizer") =>
   ctx.font = 'italic 11px sans-serif';
   ctx.textAlign = 'right';
   
+  const textWidth = ctx.measureText(label).width;
+
   // calculate the text offset based on the current time
-  const offset = (Date.now() / 50) % (canvas.width);
+  const offset = (Date.now() / 50) % (canvas.width + textWidth);
+
+  // const text = offset < textWidth 
+  //   ? getSubstringByWidth(label, ctx, offset) 
+  //   : label;
 
   // add text to canvas
-  ctx.fillText(label, canvas.width - offset, 12);
+  ctx.fillText(label, canvas.width - offset + textWidth, 12);
+
+  // ctx.lineWidth = 2
+  // ctx.strokeStyle = "red";
+  // ctx.moveTo(canvas.width - offset, 0);
+  // ctx.lineTo(canvas.width - offset, canvas.height);
+  // ctx.stroke();
 
   // add text to canvas
   // ctx.fillText('skytunes equalizer', canvas.width - 10, 12);
@@ -33,4 +45,5 @@ export const createEqBackground = (width = 300, label = "skytunes equalizer") =>
   
   return canvas.toDataURL("image/png");
 }
+ 
  

@@ -189,9 +189,9 @@ export const useStatePlayer = (onPlayStart) => {
     });
 
   const icon = state.matches("opened.playing") ? (
-    <i class="fa-regular fa-circle-pause"></i>
+    <i class="fa-regular big fa-circle-pause"></i>
   ) : (
-    <i class="fa-solid fa-circle-play"></i>
+    <i class="fa-solid big fa-circle-play"></i>
   );
 
   const diagnosticProps = {
