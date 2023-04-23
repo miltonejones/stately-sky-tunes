@@ -1,5 +1,6 @@
 import React from 'react';
-import { Avatar, Stack, Box } from '@mui/material';
+import { Avatar, Stack, Box,
+  styled } from '@mui/material';
 import {
   Flex,
   Spacer,
@@ -8,8 +9,20 @@ import {
   Equalizer,
   Nowrap,
   Columns,
-  VocabDrawer,
+  VocabDrawer
 } from '../../../styled';
+
+
+
+const Responsive = styled(props => <Box {...props} />)(({ theme }) => ({ 
+  display: 'none',
+  '@media screen and (orientation: landscape)': {
+    display: 'inline-block'
+  } 
+}))
+
+
+
 
 const SmallPlayer = ({ handler }) => {
   const { handleList, progress, eq, coords, handleSeek } = handler;
@@ -21,7 +34,7 @@ const SmallPlayer = ({ handler }) => {
     });
 
   const maxWidth = 'calc(100vw - 172px)';
-  const eqWidth = window.innerWidth - 160;
+  const eqWidth = window.innerWidth * .4;
   return (
     <Player small open={['opened', 'replay'].some(handler.state.matches)} >
       <Box sx={{ m: 1 }}>
@@ -64,14 +77,8 @@ const SmallPlayer = ({ handler }) => {
             </Columns>
 
             <Flex spacing={1} sx={{ m: (theme) => theme.spacing(0, 1) }}>
-              {!!handler.showeq && !!coords && eq && (
-                <Equalizer
-                  label={`${handler.Title}`}
-                  onClick={handleEq}
-                  width={eqWidth}
-                  coords={coords}
-                />
-              )}
+
+
               {!handler.showeq && (
                 <Stack onClick={handleEq}>
                   <Nowrap sx={{ maxWidth }} small>
@@ -82,7 +89,24 @@ const SmallPlayer = ({ handler }) => {
                   </Nowrap>
                 </Stack>
               )}
+
               <Spacer />
+
+              <Responsive>
+
+                {!!coords && eq && (
+                  <Equalizer
+                    label={`${handler.Title}`}
+                    onClick={handleEq}
+                    width={eqWidth}
+                    coords={coords}
+                  />
+                )}
+
+              </Responsive>
+
+
+
               <Box onClick={() => handler.send('PAUSE')}>{handler.icon}</Box>
               {!!handleList && (
                 <i onClick={handleList} class="fa-solid fa-list-check"></i>
