@@ -2,13 +2,13 @@ import React from 'react';
 import { BottomNavigation, Drawer, BottomNavigationAction, Paper, Box, styled } from '@mui/material'; 
 import { Rotation, Logo, Flex, Nowrap, Spacer } from '../../../styled';
 
-const Nav = styled(Paper)(() => ({
+const Nav = styled(Paper)(({ theme }) => ({
   position: 'fixed', 
   backgroundColor: '#ebebeb',
   bottom: 'var(--bottom-bar-offset)',  
   left: 0, right: 0,
   zIndex: 100,
-  '@media screen and (orientation: landscape)': {
+  '@media screen and (max-width: 800px) and (orientation: landscape)': {
      display: 'none'
   }
 }))

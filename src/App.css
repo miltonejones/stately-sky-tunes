@@ -25,9 +25,11 @@ body {
     --top-bar-offset: 72px;
     /* --tiny-button-size: 24px; */
   }
+
+  
 }
 
-@media screen and (orientation: landscape) { 
+@media screen and (max-width: 800px) and (orientation: landscape) { 
   body {
     --top-bar-offset: 0px;
     --player-offset: 88px;

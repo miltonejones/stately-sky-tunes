@@ -325,7 +325,7 @@ function Application() {
             height: `calc(100svh - var(--bottom-bar-offset) - var(--top-bar-offset) - ${playerOffset} - var(--bottom-menu-offset))`,
             overflow: 'auto', 
             backgroundColor: 'white' ,
-            '@media screen and (orientation: landscape)': {
+            '@media screen and (max-width: 800px) and (orientation: landscape)': {
               mt:  0
             }
           }}
