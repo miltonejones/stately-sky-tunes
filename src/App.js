@@ -220,6 +220,8 @@ function Application() {
     },
   ]
 
+  const forensics = `${ window.innerWidth}x${ window.innerHeight}`
+
   return (
     <AppContext.Provider
       value={{
@@ -252,7 +254,7 @@ function Application() {
             hover
             onClick={() => navigate("/")} 
         >
-          {stateSkyTunes.appTitle}
+          {stateSkyTunes.appTitle} {forensics}
         </Title>
 
           <Responsive>
