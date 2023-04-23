@@ -8,7 +8,7 @@ const Nav = styled(Paper)(({ theme }) => ({
   bottom: 'var(--bottom-bar-offset)',  
   left: 0, right: 0,
   zIndex: 100,
-  '@media screen and (max-width: 767px) and (orientation: landscape)': {
+  '@media screen and (max-width: 913px) and (orientation: landscape)': {
      display: 'none'
   }
 }))

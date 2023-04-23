@@ -14,7 +14,7 @@ const Plaq = styled(Card)(({ theme, selected}) => ({
   [theme.breakpoints.down('md')]: {  
     width: "calc(48vw - 8px)",
   },
-  '@media screen and (max-width: 767px) and (orientation: landscape)': {
+  '@media screen and (max-width: 913px) and (orientation: landscape)': {
     width: "calc(22vw - 8px)",
   }
 }))

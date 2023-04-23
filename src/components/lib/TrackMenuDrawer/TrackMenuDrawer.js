@@ -18,7 +18,7 @@ const Cd = styled('img')(() => ({
   width: 150,
   aspectRatio: "1 / 1",
   borderRadius: 5,
-  '@media screen and (max-width: 767px) and (orientation: landscape)': {
+  '@media screen and (max-width: 913px) and (orientation: landscape)': {
     width: 48,
   } 
 }))

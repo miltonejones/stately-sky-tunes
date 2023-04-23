@@ -254,7 +254,7 @@ function Application() {
             hover
             onClick={() => navigate("/")} 
         >
-          {stateSkyTunes.appTitle} {forensics}
+          {stateSkyTunes.appTitle}  
         </Title>
 
           <Responsive>
@@ -327,7 +327,7 @@ function Application() {
             height: `calc(100svh - var(--bottom-bar-offset) - var(--top-bar-offset) - ${playerOffset} - var(--bottom-menu-offset))`,
             overflow: 'auto', 
             backgroundColor: 'white' ,
-            '@media screen and (max-width: 767px) and (orientation: landscape)': {
+            '@media screen and (max-width: 913px) and (orientation: landscape)': {
               mt:  0
             }
           }}
