@@ -1,7 +1,6 @@
 import React from "react";
 import { createKey } from "../../../machines/playlistMachine"; 
-import { TuneGrid, InfoCard } from "../../../styled"; 
-
+import { TuneGrid, InfoCard } from "../../../styled";
 
 const DataGrid = ({ records, navigate, sortPage, type, page, direction, sort: sortKey }) => { 
   if (!records) return <i /> 

@@ -13,7 +13,7 @@ const Toolbar = styled(Box)(({ theme }) => ({
   gap: theme.spacing(1),
   left: 0,
   width: '100vw' ,
-  '@media screen and (max-width: 913px) and (orientation: landscape)': {
+  '@media screen and (max-width: 912px) and (orientation: landscape)': {
      height: 16,
      overflow: 'hidden'
   }

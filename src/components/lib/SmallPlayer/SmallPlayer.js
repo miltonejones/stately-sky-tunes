@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Stack, Box,
+import { Avatar, Stack, Box, IconButton,
   styled, useMediaQuery } from '@mui/material';
 import {
   Flex,
@@ -16,7 +16,7 @@ import {
 
 const Responsive = styled(props => <Box {...props} />)(({ theme }) => ({ 
   display: 'none',
-  '@media screen and (max-width: 913px) and (orientation: landscape)': {
+  '@media screen and (max-width: 912px) and (orientation: landscape)': {
     display: 'inline-block'
   } 
 }))
@@ -26,7 +26,7 @@ const Responsive = styled(props => <Box {...props} />)(({ theme }) => ({
 
 const SmallPlayer = ({ handler, track }) => {
   const { handleList, progress, eq, coords, handleSeek, onMenu } = handler;
-  const rotated = useMediaQuery('@media screen and (max-width: 913px) and (orientation: landscape)');
+  const rotated = useMediaQuery('@media screen and (max-width: 912px) and (orientation: landscape)');
 
   const handleEq = () =>
     handler.send({
@@ -70,8 +70,8 @@ const SmallPlayer = ({ handler, track }) => {
                </>
               )}
               <Nowrap wrap small muted>
-                {/* {handler.duration_formatted} */}
-                {Math.floor(progress)}%
+                {handler.duration_formatted}
+                {/* {Math.floor(progress)}% */}
               </Nowrap>
               <i
                 onClick={() => {
@@ -84,16 +84,16 @@ const SmallPlayer = ({ handler, track }) => {
             <Flex spacing={1} sx={{ m: (theme) => theme.spacing(0, 1) }}>
 
 
-              {!handler.showeq && (
-                <Stack onClick={handleEq}>
-                  <Nowrap sx={{ maxWidth }} small>
-                    {handler.Title}
-                  </Nowrap>
-                  <Nowrap tiny muted sx={{ maxWidth }}>
-                    {handler.albumName} - {handler.artistName}
-                  </Nowrap>
-                </Stack>
-              )}
+              <Stack onClick={handleEq}>
+                <Nowrap sx={{ maxWidth }} small>
+                  {handler.Title}
+                </Nowrap>
+                <Nowrap tiny muted sx={{ maxWidth }}>
+                  {handler.albumName} - {handler.artistName}
+                </Nowrap>
+              </Stack>
+
+              <IconButton onClick={() => handler.send('PAUSE')}>{handler.icon}</IconButton>
 
               <Spacer />
 
@@ -108,11 +108,9 @@ const SmallPlayer = ({ handler, track }) => {
                   />
                 )}
 
-              </Responsive>
+              </Responsive> 
 
 
-
-              <Box onClick={() => handler.send('PAUSE')}>{handler.icon}</Box>
               {!!handleList && (
                 <i onClick={handleList} class="fa-solid fa-list-check"></i>
               )}
