@@ -1,6 +1,6 @@
 import React from 'react';
 import { Avatar, Stack, Box,
-  styled } from '@mui/material';
+  styled, useMediaQuery } from '@mui/material';
 import {
   Flex,
   Spacer,
@@ -26,6 +26,7 @@ const Responsive = styled(props => <Box {...props} />)(({ theme }) => ({
 
 const SmallPlayer = ({ handler }) => {
   const { handleList, progress, eq, coords, handleSeek } = handler;
+  const rotated = useMediaQuery('@media screen and (orientation: landscape)');
 
   const handleEq = () =>
     handler.send({
@@ -33,7 +34,7 @@ const SmallPlayer = ({ handler }) => {
       key: 'showeq',
     });
 
-  const maxWidth = 'calc(100vw - 172px)';
+  const maxWidth = rotated ? '35svw' : 'calc(100vw - 172px)';
   const eqWidth = window.innerWidth * .4;
   return (
     <Player small open={['opened', 'replay'].some(handler.state.matches)} >
@@ -96,7 +97,7 @@ const SmallPlayer = ({ handler }) => {
 
                 {!!coords && eq && (
                   <Equalizer
-                    label={`${handler.Title}`}
+                    label={`${handler.Title} - ${handler.artistName}`}
                     onClick={handleEq}
                     width={eqWidth}
                     coords={coords}

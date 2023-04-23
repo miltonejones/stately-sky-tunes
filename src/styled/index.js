@@ -1,3 +1,5 @@
+import Logo from './Logo';
+import Rotation from './Rotation';
 import Progress from './Progress';
 import Player from './Player';
 import Equalizer from './Equalizer';
@@ -28,6 +30,8 @@ export const typeIcons = {
 }
 
 export {
+  Logo,
+  Rotation,
   Progress,
   Player,
   Equalizer,

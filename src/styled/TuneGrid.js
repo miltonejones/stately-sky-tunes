@@ -11,7 +11,7 @@ const TuneGrid = styled(Box)(({ theme }) => ({
     gap: theme.spacing(1),
   },
   '@media screen and (orientation: landscape)': {
-    gridTemplateColumns: "1fr 1fr 1fr",
+    gridTemplateColumns: "1fr 1fr 1fr 1fr",
   }
 }));
 

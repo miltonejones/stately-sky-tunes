@@ -13,16 +13,19 @@ const TrackListDrawer = ({ onList, listopen, handleList, trackList, handlePlay, 
         <Flex
           spacing={1}
           sx={{ mb: 1 }}
-          onClick={() => handlePlay(track.FileKey, trackList, track)}
+          onClick={() => {
+            handleList();
+            handlePlay(track.FileKey, trackList, track);
+          }}
         >
           <Avatar src={track.albumImage} />
           <Stack>
-            <Nowrap variant="body2" width={260}>
+            <Flex  spacing={1}>
               {FileKey === track.FileKey && (
                 <i class="fa-solid fa-volume-high"></i>
               )}{" "}
-              {track.Title}
-            </Nowrap>
+             <Nowrap small > {track.Title}</Nowrap>
+            </Flex>
             <Nowrap variant="caption" width={260}>
               {track.artistName || track.albumName}
             </Nowrap>

@@ -10,7 +10,8 @@ import {
   Hero,
   // Nowrap,
   FlexMenu,
-  Responsive
+  Responsive,
+  Rotation
 } from "./styled";
 
 import {
@@ -48,18 +49,11 @@ import {
 import { DataGrid, Diagnostics } from "./components/lib";
 import { getPagination } from "./util/getPagination";
 import { StatePlayer, useStatePlayer } from "./components/lib";
-import { typeIcons } from "./styled"; 
+import { typeIcons, Logo } from "./styled"; 
 import { AppContext } from "./context";
 import { isWakeLockActive } from "./util/isWakeLockActive";
 
-
-const Logo = styled(Avatar)(( { theme }) => ({ 
-  
-  [theme.breakpoints.down('md')]: { 
-    width: 24,
-    height: 24
-  }
-}));
+ 
 
 const Title = styled(props => <Flex {...props} />)(( { theme }) => ({ 
   marginRight: theme.spacing(6),
@@ -243,8 +237,13 @@ function Application() {
         {/* page header */}
         <PageHead page={selectedPage} pageTitle={pageTitle} />
         {/* toolbar */}
-        <Toolbar>
  
+
+
+        <Rotation show>
+
+        <Toolbar>
+         
           <Logo onClick={() => navigate("/")} src={logo} alt="sky-tunes" />
 
           <Title
@@ -312,7 +311,12 @@ function Application() {
           <Responsive sx={{ mr: 2 }}> 
             <SettingsMenu handler={statePlayer} machine={stateSkyTunes} />
           </Responsive>
+
+
         </Toolbar>
+
+        </Rotation>
+
 
         {/* main workspace */}
         <Stack 
@@ -320,7 +324,10 @@ function Application() {
             mt: 9,  
             height: `calc(100svh - var(--bottom-bar-offset) - var(--top-bar-offset) - ${playerOffset} - var(--bottom-menu-offset))`,
             overflow: 'auto', 
-            backgroundColor: 'white' 
+            backgroundColor: 'white' ,
+            '@media screen and (orientation: landscape)': {
+              mt:  0
+            }
           }}
         >
  
@@ -332,6 +339,12 @@ function Application() {
                 {["grid", "list"].some(stateSkyTunes.state.matches) &&
                 !!selectedKey && (
                   <>
+                    <Responsive show>
+                      <BottomNav title={stateSkyTunes.appTitle} logo={logo} options={homeButtons} onClick={(value) => navigate(value)}   >
+                        <SettingsMenu handler={statePlayer} machine={stateSkyTunes} />
+                      </BottomNav>
+                    </Responsive>
+
                     <Collapse
                       in={!!hero?.imageLg && !bannerOpen}
                       orientation="horizontal"
@@ -375,12 +388,6 @@ function Application() {
 
                 />
               )}
-
-              <Responsive show>
-                <BottomNav options={homeButtons} onClick={(value) => navigate(value)}   >
-                  <SettingsMenu handler={statePlayer} machine={stateSkyTunes} />
-                </BottomNav>
-              </Responsive>
 
               {/* sort menu  */}
               {isGrid && (

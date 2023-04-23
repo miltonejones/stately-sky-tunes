@@ -15,7 +15,7 @@ const Plaq = styled(Card)(({ theme, selected}) => ({
     width: "calc(48vw - 8px)",
   },
   '@media screen and (orientation: landscape)': {
-    width: "calc(32vw - 8px)",
+    width: "calc(22vw - 8px)",
   }
 }))
 

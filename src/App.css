@@ -28,8 +28,9 @@ body {
 
 @media screen and (orientation: landscape) { 
   body {
-    --player-offset: 80px;
-    --bottom-menu-offset: 56px;
+    --top-bar-offset: 0px;
+    --player-offset: 88px;
+    --bottom-menu-offset: 0px;
   }
 }
 
