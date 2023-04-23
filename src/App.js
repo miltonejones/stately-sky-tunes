@@ -220,7 +220,7 @@ function Application() {
     },
   ]
 
-  const forensics = `${ window.innerWidth}x${ window.innerHeight}`
+  // const forensics = `${ window.innerWidth}x${ window.innerHeight}`
 
   return (
     <AppContext.Provider

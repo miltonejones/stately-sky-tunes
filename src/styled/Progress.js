@@ -1,5 +1,5 @@
 
-import React from 'react';
+// import React from 'react';
 import { styled, Slider } from '@mui/material';
 
 const Progress = styled(Slider)(
