@@ -7,11 +7,22 @@ import {
   Stack,
   Box,
   Collapse,
+  styled
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import { Flex, Spacer, Nowrap, LiteButton } from "../../../styled";
 import { AutoSelect, Diagnostics, ConfirmPopover } from "..";
 import { searchGroupByType } from "../../../connector"; 
+
+const Cd = styled('img')(() => ({
+  width: 150,
+  aspectRatio: "1 / 1",
+  borderRadius: 5,
+  '@media screen and (orientation: landscape)': {
+    width: 48,
+  } 
+}))
+
 
 const TrackMenuDrawer = ({
   track,
@@ -31,30 +42,30 @@ const TrackMenuDrawer = ({
 }) => {
 
 
-  const moveLinks = [
-    {
-      label: "Remove from playlist",
-      caption: "Remove track from this playlist",
-      icon: <i class="fa-solid fa-trash-can"></i>,
-      action: () => {
-        onListEdit(track);
-        send("CLOSE");
-      }, 
-      confirm: `Remove "${track.Title}" from playlist?`
-    },
-    {
-      label: "Move track up",
-      caption: "Move track up in the playlist",
-      icon: <i class="fa-solid fa-chevron-up"></i>,
-      action: () => onMove(track.FileKey, -1)
-    },
-    {
-      label: "Move track down",
-      caption: "Move track down in the playlist",
-      icon: <i class="fa-solid fa-chevron-down"></i>, 
-      action: () => onMove(track.FileKey, 1)
-    },
-  ]
+  // const moveLinks = [
+  //   {
+  //     label: "Remove from playlist",
+  //     caption: "Remove track from this playlist",
+  //     icon: <i class="fa-solid fa-trash-can"></i>,
+  //     action: () => {
+  //       onListEdit(track);
+  //       send("CLOSE");
+  //     }, 
+  //     confirm: `Remove "${track.Title}" from playlist?`
+  //   },
+  //   {
+  //     label: "Move track up",
+  //     caption: "Move track up in the playlist",
+  //     icon: <i class="fa-solid fa-chevron-up"></i>,
+  //     action: () => onMove(track.FileKey, -1)
+  //   },
+  //   {
+  //     label: "Move track down",
+  //     caption: "Move track down in the playlist",
+  //     icon: <i class="fa-solid fa-chevron-down"></i>, 
+  //     action: () => onMove(track.FileKey, 1)
+  //   },
+  // ]
 
   
   const navLinks = [
@@ -142,14 +153,9 @@ const TrackMenuDrawer = ({
           {/* {JSON.stringify(state.value)} */}
 
           <Flex start spacing={1}>
-            <img
+            <Cd
               src={track.albumImage}
               alt={track.Title}
-              style={{
-                width: 150,
-                aspectRatio: "1 / 1",
-                borderRadius: 5,
-              }}
             />
             <Stack>
               <Typography>{track.Title}</Typography>

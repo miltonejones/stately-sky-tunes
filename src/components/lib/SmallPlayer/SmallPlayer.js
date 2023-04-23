@@ -24,8 +24,8 @@ const Responsive = styled(props => <Box {...props} />)(({ theme }) => ({
 
 
 
-const SmallPlayer = ({ handler }) => {
-  const { handleList, progress, eq, coords, handleSeek } = handler;
+const SmallPlayer = ({ handler, track }) => {
+  const { handleList, progress, eq, coords, handleSeek, onMenu } = handler;
   const rotated = useMediaQuery('@media screen and (orientation: landscape)');
 
   const handleEq = () =>
@@ -34,7 +34,7 @@ const SmallPlayer = ({ handler }) => {
       key: 'showeq',
     });
 
-  const maxWidth = rotated ? '35svw' : 'calc(100vw - 172px)';
+  const maxWidth = rotated ? '32vw' : 'calc(100vw - 172px)';
   const eqWidth = window.innerWidth * .4;
   return (
     <Player small open={['opened', 'replay'].some(handler.state.matches)} >
@@ -112,6 +112,16 @@ const SmallPlayer = ({ handler }) => {
               {!!handleList && (
                 <i onClick={handleList} class="fa-solid fa-list-check"></i>
               )}
+
+            <Responsive>
+
+              <i
+                onClick={() => onMenu(track)}
+                className="fa-solid fa-ellipsis-vertical"
+              ></i>
+
+
+            </Responsive>
             </Flex>
           </Stack>
         </Columns>

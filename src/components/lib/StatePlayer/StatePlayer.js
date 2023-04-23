@@ -349,7 +349,7 @@ const StatePlayer = (props) => {
 
   if (isMobile) {
     return <>
-    <SmallPlayer handler={props} />
+    <SmallPlayer handler={props} track={rest} />
     <TrackListDrawer {...drawerProps} />
     </>
   }
@@ -512,6 +512,8 @@ const StatePlayer = (props) => {
             onClick={() => onMenu(rest)}
             className="fa-solid fa-ellipsis-vertical"
           ></i>
+
+
           {/* <Box onClick={handleDebug} sx={{ mr: 2 }}>
             <i class="fa-solid fa-gear"></i>
           </Box> */}
