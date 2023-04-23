@@ -16,7 +16,7 @@ import {
 
 const Responsive = styled(props => <Box {...props} />)(({ theme }) => ({ 
   display: 'none',
-  '@media screen and (max-width: 800px) and (orientation: landscape)': {
+  '@media screen and (max-width: 767px) and (orientation: landscape)': {
     display: 'inline-block'
   } 
 }))
@@ -26,7 +26,7 @@ const Responsive = styled(props => <Box {...props} />)(({ theme }) => ({
 
 const SmallPlayer = ({ handler, track }) => {
   const { handleList, progress, eq, coords, handleSeek, onMenu } = handler;
-  const rotated = useMediaQuery('@media screen and (max-width: 800px) and (orientation: landscape)');
+  const rotated = useMediaQuery('@media screen and (max-width: 767px) and (orientation: landscape)');
 
   const handleEq = () =>
     handler.send({
