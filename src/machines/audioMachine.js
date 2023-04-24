@@ -483,7 +483,7 @@ export const audioMachine = createMachine(
         const index = context.trackList.map((f) => f.FileKey).indexOf(context.FileKey) + 1;
         const track = context.trackList[index];
         const upcoming = context.trackList?.slice(index + 1);
-        alert ( track.dedication)
+        // alert ( track.dedication)
         persistTrack(track);
         return {
           ...track,

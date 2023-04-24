@@ -19,7 +19,7 @@ const TrackListDrawer = ({ onList, listopen, handler, handleList, trackList, han
       }
  return (
   <Drawer anchor="left" onClose={handleList} open={listopen}>
-  <Box sx={{ p: 2, width: 400 }}>
+  <Box sx={{ p: 2, width: 400, maxWidth: '80vw', }}>
 
     {!!trackList &&
       trackList.map((track) => (
@@ -37,15 +37,17 @@ const TrackListDrawer = ({ onList, listopen, handler, handleList, trackList, han
               {FileKey === track.FileKey && (
                 <i class="fa-solid fa-volume-high"></i>
               )}{" "}
-             <Nowrap small sx={{ maxWidth: FileKey === track.FileKey ? 200 : 240 }} >
+             <Nowrap small sx={{ 
+                maxWidth: `calc(80vw - ${FileKey === track.FileKey ? "180px" : "140px"})` , 
+                width: FileKey === track.FileKey ? 200 : 240 }} >
               {track.Title}
               </Nowrap>
             </Flex>
-            <Nowrap variant="caption" width={260}>
+            <Nowrap variant="caption" sx={{ maxWidth: 'calc(80vw - 140px)' }}  width={260}>
               {track.artistName || track.albumName}
             </Nowrap>
            {!!track.dedication && <Nowrap muted variant="caption" width={260}>
-              {track.dedication}
+             Dedicated to <b>{track.dedication}</b>
             </Nowrap>}
           </Stack>
           <Spacer />
