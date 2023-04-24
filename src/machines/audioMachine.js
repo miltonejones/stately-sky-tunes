@@ -96,6 +96,17 @@ export const audioMachine = createMachine(
         },
       },
 
+      shuffle: {
+        invoke: {
+          src: "generateList",
+          // onDone: [
+          //   {
+          //     target: "opened"
+          //   }
+          // ]
+        }
+      },
+
       opened: {
         initial: "dj",
 
@@ -290,6 +301,13 @@ export const audioMachine = createMachine(
     on: {
       PROP: {
         actions: "applyChanges"
+      },
+
+      SHUFFLE: {
+        target: "shuffle",
+        actions: assign((_, event) => ({
+          trackList: event.trackList
+        }))
       }
     }
 

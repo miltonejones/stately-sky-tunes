@@ -34,8 +34,8 @@ const SmallPlayer = ({ handler, track }) => {
       key: 'showeq',
     });
 
-  const maxWidth = rotated ? '32vw' : 'calc(100vw - 172px)';
-  const eqWidth = window.innerWidth * .4;
+  const maxWidth = rotated ? '30vw' : 'calc(100vw - 200px)';
+  const eqWidth = window.innerWidth * .375;
   return (
     <Player small open={['opened', 'replay'].some(handler.state.matches)} >
       <Box sx={{ m: 1 }}>
@@ -59,6 +59,7 @@ const SmallPlayer = ({ handler, track }) => {
               <Nowrap wrap small>
                 {handler.current_time_formatted}
               </Nowrap>
+
               {handler.state.matches('opened.preview') ? (
                 <Nowrap tiny muted>
                   DJ loading...
@@ -69,10 +70,12 @@ const SmallPlayer = ({ handler, track }) => {
                 {/* [{progress}] */}
                </>
               )}
+
               <Nowrap wrap small muted>
                 {handler.duration_formatted}
                 {/* {Math.floor(progress)}% */}
               </Nowrap>
+              
               <i
                 onClick={() => {
                   handler.send('CLOSE');
@@ -93,9 +96,14 @@ const SmallPlayer = ({ handler, track }) => {
                 </Nowrap>
               </Stack>
 
-              <IconButton onClick={() => handler.send('PAUSE')}>{handler.icon}</IconButton>
 
               <Spacer />
+
+              <IconButton onClick={() => handler.send('PAUSE')}>{handler.icon}</IconButton>
+
+              <Responsive>
+                <i className="fa-solid fa-forward" onClick={() => handler.send('END')}></i>
+              </Responsive>
 
               <Responsive>
 

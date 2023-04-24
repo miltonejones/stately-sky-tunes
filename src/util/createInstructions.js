@@ -100,6 +100,25 @@ export const createInstructions = async (title, artist, upcoming = [], firstName
   return create(instructions);
 }
 
+
+export const createPlaylist = async (files, lang) => {
+
+    const weather = await getWeather();
+
+
+    const instructions = `
+      Assume that the current time  is ${moment().format('hh:mm a')}.
+      Assume that the  current weather is ${weatherText(weather)}. 
+      Create a random playlist from these songs: ${JSON.stringify(files)}.
+      Where possible the songs should be topical to the time of day OR to the weather. 
+      The listeners locale setting is "${lang}"
+      Important:  return an array of the indices of the selected songs only. Do not include the song titles are any other content.
+      `;
+
+    const create = (content) => ([{ role: 'user', content }]);
+    return create(instructions); 
+}
+
 const weatherText = (weather) => {
   if (!weather) return '';
   const { current, location }  = weather;

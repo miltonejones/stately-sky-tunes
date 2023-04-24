@@ -19,6 +19,7 @@ import {
   Box,
   Collapse,
   Pagination,
+  IconButton,
   Stack, 
   LinearProgress, 
   styled
@@ -161,6 +162,13 @@ function Application() {
     statePlayer.handlePlay(file.FileKey, records || response.records, file);
   };
 
+  const handleShuffle = (records) => {
+    statePlayer.send({
+      type: 'SHUFFLE',
+      trackList: records || response.records
+    })
+  };
+
   const handleChange = (value) => {
     stateSkyTunes.send({
       type: "CHANGE",
@@ -299,6 +307,7 @@ function Application() {
             }}
           />
 
+          {/* search button */}
           <Responsive>
             <LiteButton
               variant="contained"
@@ -336,8 +345,7 @@ function Application() {
           {/* breadcrumbs  */}
             <Flex between>
 
-              {/* <Responsive>
-              </Responsive> */}
+            
                 {["grid", "list"].some(stateSkyTunes.state.matches) &&
                 !!selectedKey && (
                   <>
@@ -505,6 +513,14 @@ function Application() {
                 onChange={(a, b) => openPage(b)}
               />
             )}
+
+            {/* shuffle button (TBD) */}
+
+            {/* {!isGrid && <IconButton onClick={() => handleShuffle(interfaceProps.records)}>
+              <i className="fa-solid fa-shuffle"></i>
+              </IconButton>} */}
+
+
           </Flex>
  
           {/* records returned from the state machine  */}

@@ -20,7 +20,8 @@ import { speakText} from "../../../util/speakText";
 import { DJ_OPTIONS }  from '../../../util/djOptions'; 
 import SmallPlayer from '../SmallPlayer/SmallPlayer';
 import TrackListDrawer from '../TrackListDrawer/TrackListDrawer';
-
+import { createPlaylist } from '../../../util/createInstructions';
+import { generateText } from '../../../util/generateText';
 
 
 const loadIntro = async (context) => {
@@ -55,6 +56,21 @@ export const useStatePlayer = (onPlayStart) => {
       context.player.pause();
       context.player.src = null;
       await new Promise((go) => setTimeout(go, 999));
+    },
+
+    generateList: async (context) => {
+      const { trackList, language } = context;
+      const files = trackList.slice(0,50).map(p => `${p.Title} by ${p.artistName}`);
+      const query = await createPlaylist(files, language);
+      
+      console.log (query, query[0].content.length);
+
+       const intro = await generateText(query, 1, 128); 
+
+      console.log (intro);
+
+      return true;
+
     },
 
     loadNext: async(context) => { 
@@ -430,7 +446,7 @@ const StatePlayer = (props) => {
             </IconButton>
             {/* <ThirtyButton direction="right" onClick={() => handleSkip(30)} /> */}
             <IconButton onClick={() => send("END")}>
-              <i class="fa-solid fa-forward"></i>
+              <i className="fa-solid fa-forward"></i>
             </IconButton>
             {/* [{volume}] */}
           </Stack>
