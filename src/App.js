@@ -541,6 +541,7 @@ function Application() {
 
         <TrackMenuDrawer
           {...stateMenu}
+          handler={statePlayer}
           onMove={(file, offset) => stateList.handleMove(mediaID, file, offset)}
           onListEdit={(track) => stateList.handleEdit(mediaID, track)}
           onList={stateList.handleOpen}

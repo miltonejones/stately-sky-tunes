@@ -40,7 +40,7 @@ if ('speechSynthesis' in window && 'SpeechSynthesisUtterance' in window) {
 
 
 
-export const createInstructions = async (title, artist, upcoming = [], firstName, options, isNew, addedInfo = false, lang = 'en-US') => {
+export const createInstructions = async (title, artist, upcoming = [], firstName, options, isNew, addedInfo = false, lang = 'en-US', dedicateName = false) => {
   const nextUpcoming = upcoming.slice(0, 2).map(({ Title, artistName }) => `${dotless(Title)} by ${dotless(artistName)}`).join(' and ');
 
 
@@ -81,6 +81,7 @@ export const createInstructions = async (title, artist, upcoming = [], firstName
       ${when.next && `If there is time the introduction should mention the upcoming tracks: ${nextUpcoming}.`}
       ${when.name && `If there is time the introduction should mention a listener named ${firstName}.`}
       ${when.rain && `If there is time the introduction should mention the weather ${weatherText(weather)}.`}
+      ${!!dedicateName && `This song is dedication to listener "${dedicateName}"`}
       
       The listeners locale setting is "${lang}"
 

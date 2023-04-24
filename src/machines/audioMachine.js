@@ -34,7 +34,7 @@ export const audioMachine = createMachine(
     context: {
       intros: {},
       options: 47,
-      cadence: .9,
+      cadence: .3,
       language: 'en-US',
       nextProps: {},
       image:
@@ -315,7 +315,7 @@ export const audioMachine = createMachine(
   {
 
     guards: {
-      hasTrackInfo: context => !!context.artistName && getRandomBoolean(context.cadence)
+      hasTrackInfo: context => (!!context.artistName && getRandomBoolean(context.cadence)) || !!context.dedicateName
     },
 
     actions: { 
@@ -376,8 +376,11 @@ export const audioMachine = createMachine(
           .concat([{ ...event.track, inserted: !0 }])
           .concat(context.trackList.slice(index));
 
+        // alert  (event.track.dedication)
+
         return {
-          trackList 
+          trackList , 
+          dedicateName: event.track.dedication,
         };
       }),
       clearPlayer: assign((context, event) => {
@@ -465,6 +468,7 @@ export const audioMachine = createMachine(
         return {
           ...track,
           upcoming,
+          dedicateName: track.dedication,
           FileKey: track.FileKey,
           src: playerUrl(track.FileKey),
           scrolling: track.Title?.length > 35,
@@ -479,6 +483,7 @@ export const audioMachine = createMachine(
         return {
           ...event,
           upcoming,
+          dedicateName: event.dedication,
           FileKey: event.value,
           trackList: event.trackList,
           src: playerUrl(event.value),

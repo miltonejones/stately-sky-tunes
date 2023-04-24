@@ -23,6 +23,16 @@ const Cd = styled('img')(() => ({
   } 
 }))
 
+const Prompt = (props) => {
+  return <Stack spacing={1}>
+    <Nowrap small>Enter dedication name</Nowrap>
+    <TextField size="small" 
+      label="enter name" 
+      {...props} 
+      />
+  </Stack>
+}
+
 
 const TrackMenuDrawer = ({
   track,
@@ -39,6 +49,7 @@ const TrackMenuDrawer = ({
   handleGoto,
   listkind,
   send,
+  handler
 }) => {
 
 
@@ -93,6 +104,28 @@ const TrackMenuDrawer = ({
       caption: "Open the track editor",
       action: () => send("EDIT"),
       icon: <i class="fa-solid fa-pen"></i>,
+    },
+    {
+      label: "Dedicate song",
+      caption: "Introduce song with dedication",
+      confirm: <Prompt value={handler.dedication}
+        name="dedication"
+        onChange={e => {
+          handler.send({
+            type: 'PROP',
+            key: e.target.name,
+            value: e.target.value
+          })
+        }}
+        />,
+      icon: <i class="fa-solid fa-radio"></i>,
+      action: () => {  
+        onQueue({
+          ...track,
+          dedication: handler.dedication
+        });
+        send("CLOSE");
+      },
     },
     {
       label: "Add to queue",
@@ -204,7 +237,8 @@ const TrackMenuDrawer = ({
               {navLinks
                 .filter(nav => !nav.hide)
                 .map((nav) => (
-                <ConfirmBox confirm={nav.confirm} 
+                <ConfirmBox 
+                  confirm={nav.confirm} 
                   onChange={ok => !!ok && nav.action && nav.action()}><Flex
                   sx={{ mb: 1, cursor: "pointer" }}
                   onClick={() => !!nav.action && !nav.confirm && nav.action()}

@@ -25,12 +25,12 @@ import { generateText } from '../../../util/generateText';
 
 
 const loadIntro = async (context) => {
-  const {intros, Title, artistName, options, upcoming = [], language } = context;
+  const {intros, Title, artistName, options, upcoming = [], dedicateName, language } = context;
  
   if (intros[Title]) { 
     return intros[Title];
   }
-
+ 
   const { Introduction } = await getIntro(
     Title, 
     artistName, 
@@ -40,7 +40,8 @@ const loadIntro = async (context) => {
 
     false, 
     true ,
-    language
+    language,
+    dedicateName
 
   );    
   return Introduction;
