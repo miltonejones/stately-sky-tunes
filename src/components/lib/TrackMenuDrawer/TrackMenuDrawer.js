@@ -57,7 +57,7 @@ const TrackMenuDrawer = ({
   //   {
   //     label: "Remove from playlist",
   //     caption: "Remove track from this playlist",
-  //     icon: <i class="fa-solid fa-trash-can"></i>,
+  //     icon: <i className="fa-solid fa-trash-can"></i>,
   //     action: () => {
   //       onListEdit(track);
   //       send("CLOSE");
@@ -67,13 +67,13 @@ const TrackMenuDrawer = ({
   //   {
   //     label: "Move track up",
   //     caption: "Move track up in the playlist",
-  //     icon: <i class="fa-solid fa-chevron-up"></i>,
+  //     icon: <i className="fa-solid fa-chevron-up"></i>,
   //     action: () => onMove(track.FileKey, -1)
   //   },
   //   {
   //     label: "Move track down",
   //     caption: "Move track down in the playlist",
-  //     icon: <i class="fa-solid fa-chevron-down"></i>, 
+  //     icon: <i className="fa-solid fa-chevron-down"></i>, 
   //     action: () => onMove(track.FileKey, 1)
   //   },
   // ]
@@ -84,26 +84,26 @@ const TrackMenuDrawer = ({
       label: "View Artist",
       action: () => handleGoto("/list/artist/" + track.artistFk),
       caption: track.artistName,
-      icon: <i class="fa-solid fa-person"></i>,
+      icon: <i className="fa-solid fa-person"></i>,
       hide: !track.artistFk,
     },
     {
       label: "View Album",
       action: () => handleGoto("/list/album/" + track.albumFk),
       caption: track.albumName,
-      icon: <i class="fa-solid fa-compact-disc"></i>,
+      icon: <i className="fa-solid fa-compact-disc"></i>,
     },
     {
       label: "View Genre",
       action: () => handleGoto("/list/genre/" + track.Genre),
       caption: track.Genre,
-      icon: <i class="fa-solid fa-tag"></i>,
+      icon: <i className="fa-solid fa-tag"></i>,
     },
     {
       label: "Edit this track",
       caption: "Open the track editor",
       action: () => send("EDIT"),
-      icon: <i class="fa-solid fa-pen"></i>,
+      icon: <i className="fa-solid fa-pen"></i>,
     },
     {
       label: "Dedicate song",
@@ -118,7 +118,7 @@ const TrackMenuDrawer = ({
           })
         }}
         />,
-      icon: <i class="fa-solid fa-radio"></i>,
+      icon: <i className="fa-solid fa-radio"></i>,
       action: () => {  
         onQueue({
           ...track,
@@ -130,7 +130,7 @@ const TrackMenuDrawer = ({
     {
       label: "Add to queue",
       caption: "Play this song next",
-      icon: <i class="fa-solid fa-list-check"></i>,
+      icon: <i className="fa-solid fa-list-check"></i>,
       action: () => {
         onQueue(track);
         send("CLOSE");
@@ -143,14 +143,14 @@ const TrackMenuDrawer = ({
         send("CLOSE");
       },
       caption: listkind === 'playlist' ? "Save this song to another playlist" : "Save this song to play later",
-      icon: <i class="fa-solid fa-list-ol"></i>,
+      icon: <i className="fa-solid fa-list-ol"></i>,
     },
 
 
     {
       label: "Remove from playlist",
       caption: "Remove track from this playlist",
-      icon: <i class="fa-solid fa-trash-can"></i>,
+      icon: <i className="fa-solid fa-trash-can"></i>,
       action: () => {
         onListEdit(track);
         send("CLOSE");
@@ -161,14 +161,14 @@ const TrackMenuDrawer = ({
     {
       label: "Move track up",
       caption: "Move track up in the playlist",
-      icon: <i class="fa-solid fa-chevron-up"></i>,
+      icon: <i className="fa-solid fa-chevron-up"></i>,
       action: () => onMove(track.FileKey, -1),
       hide: listkind !== 'playlist' 
     },
     {
       label: "Move track down",
       caption: "Move track down in the playlist",
-      icon: <i class="fa-solid fa-chevron-down"></i>, 
+      icon: <i className="fa-solid fa-chevron-down"></i>, 
       action: () => onMove(track.FileKey, 1),
       hide: listkind !== 'playlist' 
     },
@@ -195,7 +195,7 @@ const TrackMenuDrawer = ({
               <Typography variant="caption">{track.artistName}</Typography>
             </Stack>
             <Spacer />
-            {/* {state.matches('opened') &&   <i onClick={() => send('DEBUG')} class="fa-solid fa-gear"></i>} */}
+            {/* {state.matches('opened') &&   <i onClick={() => send('DEBUG')} className="fa-solid fa-gear"></i>} */}
           </Flex>
 
           <Collapse in={state.matches("editing.itunes.loaded")}>
@@ -409,7 +409,7 @@ function EditForm({
         /> */}
       </Flex>
       <Flex spacing={1}>
-        <i onClick={() => send("LOOKUP")} class="fa-brands fa-apple"></i>
+        <i onClick={() => send("LOOKUP")} className="fa-brands fa-apple"></i>
         <Spacer />
         <LiteButton size="small" onClick={() => send("CLOSE")}>
           cancel

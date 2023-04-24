@@ -361,7 +361,8 @@ const StatePlayer = (props) => {
     trackList, 
     handlePlay, 
     FileKey,  
-    playlist_db 
+    playlist_db ,
+    handler: props
   }
 
   if (isMobile) {

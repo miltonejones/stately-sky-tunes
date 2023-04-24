@@ -303,6 +303,10 @@ export const audioMachine = createMachine(
         actions: "applyChanges"
       },
 
+      DEDICATE: {
+        actions: 'updateQueue'
+      },
+
       SHUFFLE: {
         target: "shuffle",
         actions: assign((_, event) => ({
@@ -361,6 +365,7 @@ export const audioMachine = createMachine(
         persistTrack(track); 
         return {
           ...track, 
+          dedicateName: track.dedication,
           trackList: [track],
           src: playerUrl(track.FileKey),
           scrolling: track.Title?.length > 35,
@@ -383,6 +388,20 @@ export const audioMachine = createMachine(
           dedicateName: event.track.dedication,
         };
       }),
+
+      updateQueue: assign((context, event) => {  
+
+        const trackList = context.trackList
+          .map(f => f.ID === event.track.ID 
+              ? event.track
+              : f) ; 
+        return {
+          trackList ,
+          intros: {}
+        };
+      }),
+
+
       clearPlayer: assign((context, event) => {
         context.player.pause();
         return {
@@ -464,6 +483,7 @@ export const audioMachine = createMachine(
         const index = context.trackList.map((f) => f.FileKey).indexOf(context.FileKey) + 1;
         const track = context.trackList[index];
         const upcoming = context.trackList?.slice(index + 1);
+        alert ( track.dedication)
         persistTrack(track);
         return {
           ...track,

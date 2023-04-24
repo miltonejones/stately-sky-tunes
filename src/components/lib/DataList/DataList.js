@@ -32,7 +32,7 @@ const DataList = ({
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const rotated = useMediaQuery('@media screen and (max-width: 912px) and (orientation: landscape)');
+  // const rotated = useMediaQuery('@media screen and (max-width: 912px) and (orientation: landscape)');
 
   if (!records?.length) {
     return <>No records to display</>;

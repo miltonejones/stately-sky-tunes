@@ -19,7 +19,7 @@ import {
   Box,
   Collapse,
   Pagination,
-  IconButton,
+  // IconButton,
   Stack, 
   LinearProgress, 
   styled
@@ -162,12 +162,12 @@ function Application() {
     statePlayer.handlePlay(file.FileKey, records || response.records, file);
   };
 
-  const handleShuffle = (records) => {
-    statePlayer.send({
-      type: 'SHUFFLE',
-      trackList: records || response.records
-    })
-  };
+  // const handleShuffle = (records) => {
+  //   statePlayer.send({
+  //     type: 'SHUFFLE',
+  //     trackList: records || response.records
+  //   })
+  // };
 
   const handleChange = (value) => {
     stateSkyTunes.send({
