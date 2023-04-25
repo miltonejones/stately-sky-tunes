@@ -23,11 +23,10 @@ const Cd = styled('img')(() => ({
   } 
 }))
 
-const Prompt = (props) => {
+const Prompt = ({label, ...props}) => {
   return <Stack spacing={1}>
-    <Nowrap small>Enter dedication name</Nowrap>
-    <TextField size="small" 
-      label="enter name" 
+    <Nowrap small>{label}</Nowrap>
+    <TextField size="small"  
       {...props} 
       />
   </Stack>
@@ -106,10 +105,13 @@ const TrackMenuDrawer = ({
       icon: <i className="fa-solid fa-pen"></i>,
     },
     {
+      
       label: "Dedicate song",
       caption: "Introduce song with dedication",
       confirm: <Prompt value={handler.dedication}
         name="dedication"
+        label="Enter dedication name"
+        placeholder="Type name"
         onChange={e => {
           handler.send({
             type: 'PROP',
@@ -118,6 +120,8 @@ const TrackMenuDrawer = ({
           })
         }}
         />,
+
+
       icon: <i className="fa-solid fa-radio"></i>,
       action: () => {  
         onQueue({

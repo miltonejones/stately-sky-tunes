@@ -1,14 +1,12 @@
 import React from 'react';
 import { Drawer, Avatar, Stack, Box } from '@mui/material';
-import { Flex, Spacer, Nowrap } from "../../../styled";
+import { Flex, Spacer, Nowrap, Prompt } from "../../../styled";
+import {  ConfirmPopover } from "..";
   
 
 const TrackListDrawer = ({ onList, listopen, handler, handleList, trackList, handlePlay, FileKey,  playlist_db }) => {
 
-    const handleDedicate = (tr) => {
-    const dedication = window.prompt('dedicate to')
-    if (!dedication) return;
-
+    const handleDedicate = (tr, dedication) => {  
     handler.send({
       type: 'DEDICATE',
       track: {
@@ -52,8 +50,24 @@ const TrackListDrawer = ({ onList, listopen, handler, handleList, trackList, han
           </Stack>
           <Spacer />
 
-          <i onClick={() => handleDedicate(track)} className="fa-solid fa-radio"></i>
+          <ConfirmPopover message={
+            <Prompt value={handler.dedication}
+              name="dedication"
+              label="Enter dedication name"
+              placeholder="Type name"
+              onChange={e => {
+                handler.send({
+                  type: 'PROP',
+                  key: e.target.name,
+                  value: e.target.value
+                })
+              }}
+            />
+          } onChange={e => !!e && handleDedicate(track, handler.dedication)}>
+          <i className="fa-solid fa-radio"></i>
+          </ConfirmPopover> 
 
+          
           <i
             onClick={() => onList(track)}
             className={`${

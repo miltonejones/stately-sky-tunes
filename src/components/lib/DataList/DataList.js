@@ -112,7 +112,7 @@ const DataList = ({
         : moment.utc(record[field.key]).format("mm:ss");
     }
 
-    return <Nowrap bold={FileKey === record.FileKey} small={!isMobile} tiny={isMobile}>{record[field.key]}</Nowrap>;
+    return <Nowrap bold={FileKey === record.FileKey} small={field.play || !isMobile} tiny={isMobile}>{record[field.key]}</Nowrap>;
   };
 
   const prefix = [type === "music" ? "grid" : "list", type, id, page || 1]
@@ -126,6 +126,7 @@ const DataList = ({
   return (
     <>
       <TuneList header sx={{ m: 2, pt: 2 }}>
+
         {fields.map((field) => (
           <Nowrap
             hover
@@ -141,6 +142,7 @@ const DataList = ({
             {sortKey === field.key && <>{sortIcon}</>}
           </Nowrap>
         ))}
+        
       </TuneList>
 
       <Columns>

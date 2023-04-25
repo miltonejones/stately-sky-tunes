@@ -1,11 +1,12 @@
 import React from 'react';
-import { styled, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import { useMenu } from "../../../machines";
+import { FlexMenu } from "../../../styled";
 import { Typography, Stack, Divider, TextField, Button,  Popover } from '@mui/material';
  
-const Layout = styled(Box)(({ theme }) => ({
- margin: theme.spacing(4)
-}));
+// const Layout = styled(Box)(({ theme }) => ({
+//  margin: theme.spacing(4)
+// }));
  
 const ConfirmPopover = ( { onChange, message, prompt, caption, children }) => {
   const menu = useMenu(onChange);
@@ -13,7 +14,7 @@ const ConfirmPopover = ( { onChange, message, prompt, caption, children }) => {
  return (
    <>
     <Box onClick={handleClick}>{children}</Box>
-   <Popover anchorEl={anchorEl} open={!!anchorEl} onClose={() => send('close')}>
+   <FlexMenu component={Popover} anchorEl={anchorEl} open={!!anchorEl} onClose={() => send('close')}>
       <Stack sx={{p: 2,  maxWidth: 600,  minWidth: 400}}>
         <Typography>{message}</Typography>
         {!!caption && <Typography variant="caption" color="error" sx={{fontWeight: 600}}>{caption}</Typography>}
@@ -27,7 +28,7 @@ const ConfirmPopover = ( { onChange, message, prompt, caption, children }) => {
           <Button variant="contained" onClick={handleClose(prompt || true)}>okay</Button>
         </Stack>
       </Stack>
-   </Popover>
+   </FlexMenu>
    </>
  );
 }

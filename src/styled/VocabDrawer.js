@@ -8,7 +8,7 @@
 import React from 'react';
 import { styled, Box, Drawer } from '@mui/material'; 
 
-const VocabDrawer = ({ children, open = false, anchor = "bottom", ...otherProps }) => {
+const VocabDrawer = ({ children, open = true, anchor = "bottom", ...otherProps }) => {
   return (
     <Drawer open={open} anchor={anchor} {...otherProps}>
       <Inner>{children}</Inner>

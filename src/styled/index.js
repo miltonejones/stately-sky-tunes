@@ -1,3 +1,4 @@
+import Prompt from './Prompt';
 import Logo from './Logo';
 import Rotation from './Rotation';
 import Progress from './Progress';
@@ -30,6 +31,7 @@ export const typeIcons = {
 }
 
 export {
+  Prompt,
   Logo,
   Rotation,
   Progress,
