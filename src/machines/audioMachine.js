@@ -1,5 +1,6 @@
 import { createMachine, assign } from "xstate";
 import { getRandomBoolean } from '../util/getRandomBoolean';
+import { startPlayer } from '../util/startPlayer';
 import moment from "moment";
 export const CLOUD_FRONT_URL = "https://s3.amazonaws.com/box.import/";
 function playerUrl(FileKey) {
@@ -421,8 +422,8 @@ export const audioMachine = createMachine(
       pausePlayer: assign((context, event) => {
         context.player.pause();
       }),
-      playPlayer: assign((context, event) => {
-        context.player.play();
+      playPlayer: assign((context, event) => { 
+        startPlayer(context.player); 
       }),
       seekPlayer: assign((context, event) => {
         context.player.currentTime = event.value;

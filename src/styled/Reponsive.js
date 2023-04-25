@@ -4,7 +4,7 @@
  * @param {Object} theme - MUI theme object
  */
 
-import { styled, Box } from '@mui/material';
+import { styled } from '@mui/material';
 import Flex from './Flex';
 
 

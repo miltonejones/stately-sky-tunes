@@ -22,6 +22,7 @@ import SmallPlayer from '../SmallPlayer/SmallPlayer';
 import TrackListDrawer from '../TrackListDrawer/TrackListDrawer';
 import { createPlaylist } from '../../../util/createInstructions';
 import { generateText } from '../../../util/generateText';
+import { startPlayer } from '../../../util/startPlayer';
 
 
 const loadIntro = async (context) => {
@@ -88,8 +89,7 @@ export const useStatePlayer = (onPlayStart) => {
     startAudio: async (context) => {
       try {
         context.player.src = context.src;
-        context.player.play();
-
+        startPlayer(context.player);
 
         setTimeout(() => {
           const randomVoice = context.options & DJ_OPTIONS.RANDOM;  
@@ -219,8 +219,8 @@ export const useStatePlayer = (onPlayStart) => {
   };
 
   const manualPlay = () => {
-    alert (JSON.stringify(state.value));
-    state.context.player.play();
+    alert (JSON.stringify(state.value)); 
+    startPlayer(state.context.player); 
   }
 
   return {
