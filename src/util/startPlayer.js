@@ -1,5 +1,6 @@
 export const startPlayer = player => {
   try {
+    alert(1)
     player.play();
   } catch (ex) {
     console.log(ex.message) ;

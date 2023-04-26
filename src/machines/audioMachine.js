@@ -423,7 +423,8 @@ export const audioMachine = createMachine(
         context.player.pause();
       }),
       playPlayer: assign((context, event) => { 
-        startPlayer(context.player); 
+        // startPlayer(context.player); 
+        context.player.play();
       }),
       seekPlayer: assign((context, event) => {
         context.player.currentTime = event.value;

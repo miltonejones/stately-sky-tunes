@@ -89,7 +89,8 @@ export const useStatePlayer = (onPlayStart) => {
     startAudio: async (context) => {
       try {
         context.player.src = context.src;
-        startPlayer(context.player);
+        context.player.play();
+        // startPlayer(context.player);
 
         setTimeout(() => {
           const randomVoice = context.options & DJ_OPTIONS.RANDOM;  
@@ -118,7 +119,7 @@ export const useStatePlayer = (onPlayStart) => {
       if (context.eq) {
         const { analyser } = connector.connect(audio);
         
-        if (!analyser) return false;
+        // if (!analyser) return false;
 
         frameLooper(analyser, (coords) => {
           send({
@@ -126,8 +127,8 @@ export const useStatePlayer = (onPlayStart) => {
             coords,
           });
         });
-        
-        return true;
+
+        // return true;
 
       }
 
