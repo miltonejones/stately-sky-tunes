@@ -410,6 +410,7 @@ export const audioMachine = createMachine(
           progress: null,
           currentTime: 0,
           duration: 0,
+          FileKey: null,
           current_time_formatted: "0:00",
         };
       }),

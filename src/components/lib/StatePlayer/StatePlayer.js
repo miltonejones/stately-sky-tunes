@@ -119,7 +119,7 @@ export const useStatePlayer = (onPlayStart) => {
       if (context.eq) {
         const { analyser } = connector.connect(audio);
         
-        // if (!analyser) return false;
+        if (!analyser) return false;
 
         frameLooper(analyser, (coords) => {
           send({
