@@ -230,6 +230,17 @@ function Application() {
 
   // const forensics = `${ window.innerWidth}x${ window.innerHeight}`
 
+  const footerContent =  <Responsive show>
+                      <BottomNav 
+                        title={stateSkyTunes.appTitle} 
+                        logo={logo} 
+                        options={homeButtons} 
+                        onClick={(value) => navigate(value)}   
+                      >
+                        <SettingsMenu handler={statePlayer} machine={stateSkyTunes} />
+                      </BottomNav>
+                    </Responsive> ;
+
   return (
     <AppContext.Provider
       value={{
@@ -350,11 +361,7 @@ function Application() {
                 {["grid", "list"].some(stateSkyTunes.state.matches) &&
                 !!selectedKey && (
                   <>
-                    <Responsive show>
-                      <BottomNav title={stateSkyTunes.appTitle} logo={logo} options={homeButtons} onClick={(value) => navigate(value)}   >
-                        <SettingsMenu handler={statePlayer} machine={stateSkyTunes} />
-                      </BottomNav>
-                    </Responsive>
+                    {footerContent}
 
                     <Collapse
                       in={!!hero?.imageLg && !bannerOpen}
@@ -486,6 +493,8 @@ function Application() {
               color="primary"
             />
           )}
+
+          {stateSkyTunes.state.matches('splash') && <>{footerContent}</>}
 
           {/* carousel  */}
           {!!carouselImages && <StateCarousel images={carouselImages} />}

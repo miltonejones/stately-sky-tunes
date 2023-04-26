@@ -65,7 +65,7 @@ export const useStatePlayer = (onPlayStart) => {
       const files = trackList.slice(0,50).map(p => `${p.Title} by ${p.artistName}`);
       const query = await createPlaylist(files, language);
       
-      console.log (query, query[0].content.length);
+      // console.log (query, query[0].content.length);
 
        const intro = await generateText(query, 1, 128); 
 
@@ -118,7 +118,7 @@ export const useStatePlayer = (onPlayStart) => {
       if (context.eq) {
         const { analyser } = connector.connect(audio);
         
-        if (!analyser) return;
+        if (!analyser) return false;
 
         frameLooper(analyser, (coords) => {
           send({
@@ -126,6 +126,9 @@ export const useStatePlayer = (onPlayStart) => {
             coords,
           });
         });
+        
+        return true;
+
       }
 
       audio.addEventListener("ended", () => {
