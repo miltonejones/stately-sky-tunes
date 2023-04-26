@@ -26,16 +26,16 @@ const frameLooper = (analyser, fn) => {
 class AudioConnector {
   connect(audio) {
     audio.crossOrigin = 'anonymous';
-    try {
+    // try {
       this.context = new AudioContext();
       this.analyser = this.context.createAnalyser();
       this.source = this.context.createMediaElementSource(audio);
       this.source.connect(this.analyser);
       this.analyser.connect(this.context.destination);
       this.connected = true;
-    } catch (ex) {
-      console.log (ex.message);
-    }
+    // } catch (ex) {
+    //   console.log (ex.message);
+    // }
 
 
     return {
