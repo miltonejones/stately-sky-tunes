@@ -335,6 +335,7 @@ function Application() {
             mt: 9,  
             height: `calc(100svh - var(--bottom-bar-offset) - var(--top-bar-offset) - ${playerOffset} - var(--bottom-menu-offset))`,
             overflow: 'auto', 
+            overflowX: 'hidden',
             backgroundColor: 'white' ,
             '@media screen and (max-width: 912px) and (orientation: landscape)': {
               mt:  0
