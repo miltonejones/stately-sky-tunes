@@ -119,7 +119,6 @@ export const audioMachine = createMachine(
         },
         states: {
 
-
           dj: {
             initial: "idle",
             states: {
@@ -175,6 +174,7 @@ export const audioMachine = createMachine(
               onDone: [
                 {
                   target: "preview",
+                  actions: "assignNext"
                 },
               ],
               onError: [
@@ -215,7 +215,7 @@ export const audioMachine = createMachine(
             },
           },
           preview: {
-            entry: "assignNext",
+            // entry: "assignNext",
             invoke: {
               src: "loadNext",
               onDone: [
@@ -232,6 +232,8 @@ export const audioMachine = createMachine(
               ],
             },
           },
+
+
           playing: {
             on: {
               PAUSE: {
@@ -262,9 +264,12 @@ export const audioMachine = createMachine(
                 target: "#audio_player.replay",
                 actions: "assignNextTrackToContext",
               },
-              QUEUE: {
-                actions: "addToQueue",
-              },
+              QUEUE: [
+                {
+                  target: "preview", 
+                  actions: "addToQueue",
+                } 
+              ],
               TOGGLE: {
                 actions: assign((context, event) => ({
                   [event.key]: !context[event.key],
@@ -295,6 +300,20 @@ export const audioMachine = createMachine(
               }, 
             },
           },
+
+          // dedicate: {
+          //   invoke: {
+          //     src: 'loadNext',
+          //     onDone: [
+          //       {
+          //         target: "playing",
+          //         actions: "assignIntros",
+          //       },
+          //     ],
+          //   }
+          // }
+
+
         },
       },
     },
@@ -320,7 +339,8 @@ export const audioMachine = createMachine(
   {
 
     guards: {
-      hasTrackInfo: context => (!!context.artistName && getRandomBoolean(context.cadence)) || !!context.dedicateName
+      hasTrackInfo: context => (!!context.artistName && getRandomBoolean(context.cadence)) || !!context.dedicateName,
+      hasDedication: context => !!context.queued?.dedication
     },
 
     actions: { 
@@ -331,6 +351,8 @@ export const audioMachine = createMachine(
           [event.key]: event.value,
         }
       }), 
+
+      
       
       assignNext: assign((context, event) => {
         const { upcoming } = context;
@@ -361,15 +383,22 @@ export const audioMachine = createMachine(
       clearIntro: assign({
         intro: null 
       }),
+
+
       initQueue: assign((context, event) => { 
         const { track } = event ;
         persistTrack(track); 
+        const { Title, artistName } = track;
         return {
           ...track, 
+          queued: track,
           dedicateName: track.dedication,
           trackList: [track],
           src: playerUrl(track.FileKey),
           scrolling: track.Title?.length > 35,
+          nextProps: {
+           Title, artistName , 
+          }
         }; 
       }),
       
@@ -382,23 +411,33 @@ export const audioMachine = createMachine(
           .concat([{ ...event.track, inserted: !0 }])
           .concat(context.trackList.slice(index));
 
-        // alert  (event.track.dedication)
+          const { Title, artistName } = event.track;
 
         return {
           trackList , 
+          queued: event.track,
           dedicateName: event.track.dedication,
+          nextProps: {
+           Title, artistName , 
+          }
         };
       }),
 
       updateQueue: assign((context, event) => {  
 
+        const { Title, artistName } = event.track;
         const trackList = context.trackList
           .map(f => f.ID === event.track.ID 
               ? event.track
               : f) ; 
+
         return {
           trackList ,
-          intros: {}
+          queued: event.track,
+          nextProps: {
+           Title, artistName , 
+          }
+          // intros: {}
         };
       }),
 
@@ -411,6 +450,7 @@ export const audioMachine = createMachine(
           currentTime: 0,
           duration: 0,
           FileKey: null,
+          queued: null,
           current_time_formatted: "0:00",
         };
       }),

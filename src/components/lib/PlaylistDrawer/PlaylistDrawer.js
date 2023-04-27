@@ -23,21 +23,18 @@ const PlaylistDrawer = ({ state, send, handleEdit,  diagnosticProps, createKey }
             .sort((a,b) => a.Title.toLowerCase() >  b.Title.toLowerCase() ? 1 : -1)
             .map((playlist) => (
             <Flex
-              onClick={() =>
-                handleEdit(playlist.listKey || createKey(playlist.Title))
-              }
+              onClick={() =>  handleEdit(playlist.listKey || createKey(playlist.Title))}
               sx={{ mb: 1, width: 380, maxWidth: '75vw' }}
               spacing={1}
             >
               <Circle size="small" src={playlist.image} />
               <Typography variant="body2">{playlist.Title}</Typography>
               <Spacer />
-              <i
-                className={`fa-${
+              <i className={`fa-${
                   playlist.related.indexOf(track.FileKey) > -1
                     ? "solid"
                     : "regular"
-                } fa-heart`}
+                } fa-heart`} 
               />
             </Flex>
           ))}
