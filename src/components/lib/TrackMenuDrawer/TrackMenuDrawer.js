@@ -10,7 +10,7 @@ import {
   styled
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
-import { Flex, Spacer, Nowrap, LiteButton } from "../../../styled";
+import { Flex, Spacer, Nowrap, Prompt, LiteButton } from "../../../styled";
 import { AutoSelect, Diagnostics, ConfirmPopover } from "..";
 import { searchGroupByType } from "../../../connector"; 
 
@@ -22,15 +22,7 @@ const Cd = styled('img')(() => ({
     width: 48,
   } 
 }))
-
-const Prompt = ({label, ...props}) => {
-  return <Stack spacing={1}>
-    <Nowrap small>{label}</Nowrap>
-    <TextField size="small"  
-      {...props} 
-      />
-  </Stack>
-}
+ 
 
 
 const TrackMenuDrawer = ({
@@ -112,6 +104,13 @@ const TrackMenuDrawer = ({
         name="dedication"
         label="Enter dedication name"
         placeholder="Type name"
+        onSubmit={e =>  {  
+          onQueue({
+            ...track,
+            dedication: handler.dedication
+          });
+          send("CLOSE");
+        }}
         onChange={e => {
           handler.send({
             type: 'PROP',

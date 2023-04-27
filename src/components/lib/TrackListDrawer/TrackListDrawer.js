@@ -54,6 +54,7 @@ const TrackListDrawer = ({ onList, listopen, handler, handleList, trackList, han
             <Prompt value={handler.dedication}
               name="dedication"
               label="Enter dedication name"
+              onSubmit={e => handleDedicate(track, handler.dedication)}
               placeholder="Type name"
               onChange={e => {
                 handler.send({
@@ -63,7 +64,9 @@ const TrackListDrawer = ({ onList, listopen, handler, handleList, trackList, han
                 })
               }}
             />
-          } onChange={e => !!e && handleDedicate(track, handler.dedication)}>
+          } 
+          onChange={e => !!e && handleDedicate(track, handler.dedication)}
+          >
           <i className="fa-solid fa-radio"></i>
           </ConfirmPopover> 
 

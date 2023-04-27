@@ -8,12 +8,20 @@ import React from 'react';
 import { TextField, Stack } from '@mui/material';
 import Nowrap from './Nowrap';
 
-const Prompt = ({label, ...props}) => {
+const Prompt = ({label, onSubmit, ...props}) => {
   return (
+
+    <form
+    onSubmit={(e) => {
+      e.preventDefault();
+      onSubmit && onSubmit()
+    }}
+  > 
     <Stack spacing={1}>
       <Nowrap small>{label}</Nowrap>
       <TextField size="small" {...props} />
     </Stack>
+    </form>
   );
 }
 

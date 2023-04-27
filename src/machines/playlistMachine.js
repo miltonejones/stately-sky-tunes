@@ -38,6 +38,10 @@ export const playlistMachine = createMachine(
                   listname: (context, event) => event.listname,
                 }),
               },
+              CREATE: {
+                target: 'creating',
+                actions: 'assignPlaylist',
+              },
               CLOSE: {
                 target: "#playlist.idle",
                 actions: assign({
@@ -62,6 +66,17 @@ export const playlistMachine = createMachine(
                 {
                   target: "error",
                   actions: "assignProblem",
+                },
+              ],
+            },
+          },
+          
+          creating: {
+            invoke: {
+              src: 'createList',
+              onDone: [
+                {
+                  target: 'refresh',
                 },
               ],
             },
@@ -103,10 +118,7 @@ export const playlistMachine = createMachine(
           },
           EDIT: {
             target: "#playlist.opened.adding",
-            actions: assign((context, event) => ({
-              listname: event.listname,
-              track: event.track,
-            })),
+            actions: "assignPlaylist",
           },
           MOVE: {
             target: 'moving',
@@ -160,6 +172,13 @@ export const playlistMachine = createMachine(
         },
       },
     },
+    on: {
+      PROP: {
+        actions: assign((_, event) => ({
+          [event.key]: event.value
+        }))
+      }
+    },
     context: {
       open: false,
       playlists: [],
@@ -172,6 +191,11 @@ export const playlistMachine = createMachine(
   },
   {
     actions: {
+
+      assignPlaylist:  assign((context, event) => ({
+        listname: event.listname,
+        track: event.track,
+      })),
       assignProblem: assign((context, event) => {
         return {
           errorMsg: event.data.message,
@@ -202,6 +226,19 @@ export const usePlaylist = (onRefresh) => {
     services: {
 
       listRefreshed: async() => onRefresh && onRefresh(),
+
+
+      createList: async(context) => {
+        const { track, listname } = context;
+        const playlist = {
+          Title: listname,
+          listKey: createKey(listname),
+          related: [
+            track.FileKey
+          ]
+        }
+        return await savePlaylist(playlist); 
+      },
       
       editList: async (context) => {
         const { track, listname, playlists } = context;

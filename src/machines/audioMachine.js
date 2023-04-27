@@ -1,6 +1,6 @@
 import { createMachine, assign } from "xstate";
 import { getRandomBoolean } from '../util/getRandomBoolean';
-import { startPlayer } from '../util/startPlayer';
+// import { startPlayer } from '../util/startPlayer';
 import moment from "moment";
 export const CLOUD_FRONT_URL = "https://s3.amazonaws.com/box.import/";
 function playerUrl(FileKey) {

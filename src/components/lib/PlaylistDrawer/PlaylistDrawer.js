@@ -1,6 +1,6 @@
 import React from "react";
 import { Drawer, Typography, Box } from "@mui/material"; 
-import { Flex, Spacer, ScrollingText , Circle} from "../../../styled";
+import { Flex, Spacer, ScrollingText, Prompt , Circle} from "../../../styled";
 import { Diagnostics } from "..";
 
 const PlaylistDrawer = ({ state, send, handleEdit,  diagnosticProps, createKey }) => {
@@ -41,6 +41,34 @@ const PlaylistDrawer = ({ state, send, handleEdit,  diagnosticProps, createKey }
               />
             </Flex>
           ))}
+
+          <Prompt
+            label="New Playlist"
+            placeholder="Type new list name"
+            name="newlist"
+            value={state.context.newlist}
+            onSubmit={ () => {
+              send({
+                type: 'CREATE',
+                listname: state.context.newlist,
+                track
+              });
+
+              send({
+                type: 'PROP',
+                key: "newlist",
+                value: null
+              })
+
+            }}
+            onChange={e => {
+              send({
+                type: 'PROP',
+                key: e.target.name,
+                value: e.target.value
+              })
+            }}
+          />
         </Box>
       </Drawer>
     </>
