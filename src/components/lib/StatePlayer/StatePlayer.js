@@ -1,54 +1,67 @@
 import React from "react";
-import { 
+import {
   // Card,
-  IconButton, 
+  IconButton,
   Stack,
   Slider,
   Box,
   LinearProgress,
   Popover,
-  Typography, 
-} from "@mui/material"; 
-import { useMediaQuery, useTheme  } from '@mui/material';
+  Typography,
+} from "@mui/material";
+import { useMediaQuery, useTheme } from "@mui/material";
 import { useMachine } from "@xstate/react";
 import { audioMachine, useMenu } from "../../../machines";
-import { Flex, Bureau, Equalizer, ScrollingText, Nowrap, VocabDrawer } from "../../../styled";
+import {
+  Flex,
+  Bureau,
+  Equalizer,
+  ScrollingText,
+  Nowrap,
+  VocabDrawer,
+} from "../../../styled";
 import { AudioConnector, frameLooper } from "./eq";
 import { Diagnostics } from "..";
-import { getIntro} from "../../../util/getIntro";  
-import { speakText} from "../../../util/speakText";  
-import { DJ_OPTIONS }  from '../../../util/djOptions'; 
-import SmallPlayer from '../SmallPlayer/SmallPlayer';
-import TrackListDrawer from '../TrackListDrawer/TrackListDrawer';
-import { createPlaylist } from '../../../util/createInstructions';
-import { generateText } from '../../../util/generateText';
-import { startPlayer } from '../../../util/startPlayer';
+import { getIntro } from "../../../util/getIntro";
+import { speakText } from "../../../util/speakText";
+import { DJ_OPTIONS } from "../../../util/djOptions";
+import SmallPlayer from "../SmallPlayer/SmallPlayer";
+import TrackListDrawer from "../TrackListDrawer/TrackListDrawer";
+import { createPlaylist } from "../../../util/createInstructions";
+import { generateText } from "../../../util/generateText";
+import { startPlayer } from "../../../util/startPlayer";
 
+const audio = new Audio();
 
 const loadIntro = async (context) => {
-  const {intros, Title, artistName, options, upcoming = [], dedicateName, language } = context;
- 
-  if (intros[Title]) { 
+  const {
+    intros,
+    Title,
+    artistName,
+    options,
+    upcoming = [],
+    dedicateName,
+    language,
+  } = context;
+
+  if (intros[Title]) {
     return intros[Title];
   }
- 
-  const { Introduction } = await getIntro(
-    Title, 
-    artistName, 
-    upcoming, 
-    "Milton", 
-    options, 
 
-    false, 
-    true ,
+  const { Introduction } = await getIntro(
+    Title,
+    artistName,
+    upcoming,
+    "Milton",
+    options,
+
+    false,
+    true,
     language,
     dedicateName
-
-  );    
+  );
   return Introduction;
-}
-
- 
+};
 
 const connector = new AudioConnector();
 
@@ -62,28 +75,29 @@ export const useStatePlayer = (onPlayStart) => {
 
     generateList: async (context) => {
       const { trackList, language } = context;
-      const files = trackList.slice(0,50).map(p => `${p.Title} by ${p.artistName}`);
+      const files = trackList
+        .slice(0, 50)
+        .map((p) => `${p.Title} by ${p.artistName}`);
       const query = await createPlaylist(files, language);
-      
+
       // console.log (query, query[0].content.length);
 
-       const intro = await generateText(query, 1, 128); 
+      const intro = await generateText(query, 1, 128);
 
-      console.log (intro);
+      console.log(intro);
 
       return true;
-
     },
 
-    loadNext: async(context) => { 
+    loadNext: async (context) => {
       return await loadIntro({
         ...context,
-        ...context.nextProps
-      }); 
+        ...context.nextProps,
+      });
     },
 
     loadNarration: async (context) => {
-      return await loadIntro(context)
+      return await loadIntro(context);
     },
 
     startAudio: async (context) => {
@@ -93,19 +107,25 @@ export const useStatePlayer = (onPlayStart) => {
         // startPlayer(context.player);
 
         setTimeout(() => {
-          const randomVoice = context.options & DJ_OPTIONS.RANDOM;  
-          !!context.intro &&   speakText (context.intro, randomVoice, context.language, context.voice, (value) => {
+          const randomVoice = context.options & DJ_OPTIONS.RANDOM;
+          !!context.intro &&
+            speakText(
+              context.intro,
+              randomVoice,
+              context.language,
+              context.voice,
+              (value) => {
                 if (context.player) {
-                  context.player.volume = !!value ? .5 : 1
+                  context.player.volume = !!value ? 0.5 : 1;
                 }
                 send({
-                  type: 'PROP',
-                  key: 'vocab',
-                  value
-                })
-              })
+                  type: "PROP",
+                  key: "vocab",
+                  value,
+                });
+              }
+            );
         }, 499);
-
 
         return context.player;
       } catch (e) {
@@ -114,23 +134,42 @@ export const useStatePlayer = (onPlayStart) => {
     },
     audioStarted: async (context) =>
       onPlayStart && onPlayStart(context.artistFk),
-    loadAudio: async (context) => {
-      const audio = new Audio();
-      if (context.eq) {
-        const { analyser } = connector.connect(audio);
-        
-        if (!analyser) return false;
 
-        frameLooper(analyser, (coords) => {
-          send({
-            type: "COORDS",
-            coords,
-          });
-        });
-
-        // return true;
-
+    startEq: async (context) => {
+      const { analyser } = connector.connect(audio);
+      if (!analyser) {
+        return false;
       }
+      frameLooper(analyser, (coords) => {
+        send({
+          type: "COORDS",
+          coords,
+        });
+      });
+      return analyser;
+    },
+
+    loadAudio: async (context) => {
+      const { player } = context;
+      if (player) {
+        console.log({ player });
+        alert("Player already attached!");
+      }
+
+      // if (context.eq) {
+      //   const { analyser } = connector.connect(audio);
+
+      //   if (!analyser) {
+      //     return false;
+      //   }
+
+      //   frameLooper(analyser, (coords) => {
+      //     send({
+      //       type: "COORDS",
+      //       coords,
+      //     });
+      //   });
+      // }
 
       audio.addEventListener("ended", () => {
         send("END");
@@ -141,11 +180,11 @@ export const useStatePlayer = (onPlayStart) => {
         send("ERROR");
       });
 
-      audio.addEventListener("timeupdate", () => { 
+      audio.addEventListener("timeupdate", () => {
         send({
           type: "PROGRESS",
           currentTime: audio.currentTime,
-          duration: audio.duration, 
+          duration: audio.duration,
         });
       });
       return audio;
@@ -165,7 +204,7 @@ export const useStatePlayer = (onPlayStart) => {
     });
   };
 
-  const handleSkip = (secs) => { 
+  const handleSkip = (secs) => {
     send({
       type: "SEEK",
       value: currentTime + Number(secs),
@@ -226,9 +265,9 @@ export const useStatePlayer = (onPlayStart) => {
   };
 
   const manualPlay = () => {
-    alert (JSON.stringify(state.value)); 
-    startPlayer(state.context.player); 
-  }
+    alert(JSON.stringify(state.value));
+    startPlayer(state.context.player);
+  };
 
   return {
     diagnosticProps,
@@ -255,7 +294,7 @@ export const useStatePlayer = (onPlayStart) => {
 const Progress = ({ progress, vocab, handleSeek, src }) => {
   const open = Boolean(progress);
   if (vocab) {
-    return <VocabDrawer>{vocab}</VocabDrawer>
+    return <VocabDrawer>{vocab}</VocabDrawer>;
   }
   if (!open)
     return (
@@ -320,7 +359,7 @@ const StatePlayer = (props) => {
     onMenu,
     onList,
     playlist_db,
-  
+
     // player methods
     handleClose,
     handleSeek,
@@ -328,7 +367,7 @@ const StatePlayer = (props) => {
     handleSkip,
     handleList,
     handleEq,
-  
+
     // context vars
     src,
     owner,
@@ -350,8 +389,8 @@ const StatePlayer = (props) => {
   //   "linear-gradient(0deg, rgba(2,160,5,1) 0%, rgba(226,163,15,1) 18px, rgba(255,0,42,1) 30px)";
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md')); 
-  
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   const { FileKey, Title, albumImage, artistName } = rest;
   const isFavorite = playlist_db && playlist_db.indexOf(FileKey) > -1;
   const favoriteIcon = (
@@ -362,25 +401,27 @@ const StatePlayer = (props) => {
   );
 
   const drawerProps = {
-    onList, 
-    listopen, 
-    handleList, 
-    trackList, 
-    handlePlay, 
-    FileKey,  
-    playlist_db ,
-    handler: props
-  }
+    onList,
+    listopen,
+    handleList,
+    trackList,
+    handlePlay,
+    FileKey,
+    playlist_db,
+    handler: props,
+  };
 
   if (isMobile) {
-    return <>
-    <SmallPlayer handler={props} track={rest} />
-    <TrackListDrawer {...drawerProps} />
-    </>
+    return (
+      <>
+        <SmallPlayer handler={props} audio={audio} track={rest} />
+        <TrackListDrawer {...drawerProps} />
+      </>
+    );
   }
   return (
     <>
-{/* 
+      {/* 
       <Drawer anchor="left" onClose={handleList} open={listopen}>
         <Box sx={{ p: 2, width: 400 }}>
 
@@ -462,7 +503,7 @@ const StatePlayer = (props) => {
 
           <Typography variant="caption">{current_time_formatted}</Typography>
 
-          <Box sx={{ ml: 1, mr: 1, width: "calc(100vw - 500px)" }}>  
+          <Box sx={{ ml: 1, mr: 1, width: "calc(100vw - 500px)" }}>
             {state.matches("opened.error.fatal") ? (
               <Typography onClick={() => send("RECOVER")}>
                 Could not load audio "{src}". Please try again later.
@@ -521,8 +562,6 @@ const StatePlayer = (props) => {
             </Box>
           )} */}
 
-
-
           <VolumeMenu
             volume={volume}
             onChange={(val) => {
@@ -537,7 +576,6 @@ const StatePlayer = (props) => {
             onClick={() => onMenu(rest)}
             className="fa-solid fa-ellipsis-vertical"
           ></i>
-
 
           {/* <Box onClick={handleDebug} sx={{ mr: 2 }}>
             <i class="fa-solid fa-gear"></i>
@@ -554,26 +592,6 @@ const StatePlayer = (props) => {
     </>
   );
 };
-
-
- 
-
-
-// function bg() {
-//   var c = document.createElement("canvas");
-//   c.width = 300;
-//   c.height = 48;
-//   var ctx = c.getContext("2d");
-//   ctx.lineWidth = 0.5;
-//   ctx.strokeStyle = "white";
-//   ctx.beginPath();
-//   for (let y = 0; y < 100; y += 4) {
-//     ctx.moveTo(0, y);
-//     ctx.lineTo(300, y);
-//     ctx.stroke();
-//   }
-//   return c.toDataURL("image/png");
-// }
 
 StatePlayer.defaultProps = {};
 export default StatePlayer;
